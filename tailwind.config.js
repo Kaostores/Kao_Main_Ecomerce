@@ -47,6 +47,7 @@ module.exports = {
 				lightGray: "#F3F3F3",
 				red: "#DA0000",
 				iconGray: "#757575",
+				cardBrown: "#B80000",
 			},
 			borderRadius: {
 				lg: "var(--radius)",

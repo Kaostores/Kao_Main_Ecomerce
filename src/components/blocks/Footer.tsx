@@ -1,7 +1,7 @@
 import React from "react";
 
 const Footer = () => {
-	return <div className='h-[200px] bg-primary w-full text-white'>Footer</div>;
+	return <div className='h-[200px] bg-primary w-full text-white mt-3'>Footer</div>;
 };
 
 export default Footer;
