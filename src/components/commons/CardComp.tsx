@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import pic1 from "@/assets/pngegg (84) 1.png";
 import { BsStars } from "react-icons/bs";
 import pic2 from "@/assets/noto_fire.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
+import { Rating } from "react-simple-star-rating";
 
-const CardComp = ({deal}:any) => {
+const CardComp = ({ deal }: any) => {
+	const [ratingValue, setRatingValue] = useState(5);
+
 	return (
-		<div className='min-h-[250px] pb-3 w-[230px] bg-ascentBlue rounded-sm'>
+		<div className='min-h-[250px] pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
 			<div className='h-[170px] relative w-[100%] '>
 				<img
 					className='w-[100%] h-[100%] object-contain pt-8 rounded-sm'
@@ -39,7 +42,10 @@ const CardComp = ({deal}:any) => {
 			<div className='p-2'>
 				<div className='text-[12px]'>Twin Watches- Handmade Selly Oak Wood</div>
 				<div className='flex justify-between'>
-					<div>rating</div>
+					<div className='flex text-[10px] '>
+						(12)
+						{/* <Rating  size={10}   initialValue={ratingValue} /> */}
+					</div>
 					<div className='text-right'>
 						<div className='flex font-bold'>
 							<div className='text-[10px] mt-2 mr-2'>NGN </div>
