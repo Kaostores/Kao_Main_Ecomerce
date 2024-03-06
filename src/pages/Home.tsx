@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import HomeSectionAtm from "@/components/HomeSectionAtm";
 import AdvertComp from "@/components/commons/AdvertComp";
 import BrandsComp from "@/components/commons/BrandsComp";
 import CardComp from "@/components/commons/CardComp";
@@ -58,6 +59,9 @@ const Home = () => {
 				<BrandsComp />
 				<BrandsComp />
 				<BrandsComp />
+			</div>
+			<div className="flex mb-7">
+				<HomeSectionAtm  />
 			</div>
 		</div>
 	);
