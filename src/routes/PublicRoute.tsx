@@ -1,4 +1,6 @@
+import DashboardLayout from "@/components/layouts/DashboardLayout";
 import WebLayouts from "@/components/layouts/WebLayouts";
+import Dashboardhome from "@/pages/Dashboard/Dashboardhome";
 import Home from "@/pages/Home";
 
 const PublicRoute = () => {
@@ -13,6 +15,16 @@ const PublicRoute = () => {
 				},
 			],
 		},
+		{
+			path: "/dashboard",
+			element: <DashboardLayout />,
+			children: [
+				{
+					index: true,
+					element: <Dashboardhome />
+				}
+			]
+		}
 	];
 };
 
