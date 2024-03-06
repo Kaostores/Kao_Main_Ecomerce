@@ -5,14 +5,14 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { FaRegStar, FaRegBell } from "react-icons/fa";
 import { RiCouponLine } from "react-icons/ri";
 import { MdOutlineSupportAgent } from "react-icons/md";
-import img from "../../assets/orders.svg"
+import { GrLogout } from "react-icons/gr";
 
 const Sidebar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const active = location?.pathname;
   return (
-    <div className="w-[25%] h-[80vh] bg-[#F4F4F4] rounded-[8px] flex-col overflow-hidden">
+    <div className="w-[25%] h-[90vh] bg-[#F4F4F4] rounded-[8px] flex-col overflow-hidden relative">
         <div
 			onClick={() => {
 				navigate("/dashboard");
@@ -139,6 +139,13 @@ const Sidebar = () => {
 				<MdOutlineSupportAgent />
 			</div>
 			<div className='font-medium  text-[15px] ml-[20px] '>Help and Support</div>
+		</div>
+		
+        <div className="flex items-center pl-[20px] absolute bottom-[40px]">
+			<div className='text-[20px] text-[#DA0000]  font-bold'>
+				<GrLogout />
+			</div>
+			<div className='font-medium  text-[15px] ml-[20px] text-[#DA0000]'>Help and Support</div>
 		</div>
     </div>
   )
