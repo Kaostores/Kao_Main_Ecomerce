@@ -4,12 +4,13 @@ import { BsStars } from "react-icons/bs";
 import pic2 from "@/assets/noto_fire.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import StarRating from "../StarRating";
+import { Link } from "react-router-dom";
 
 const CardComp = ({ deal }: any) => {
 	const [ratingValue, setRatingValue] = useState(5);
 
 	return (
-		<div className='min-h-[250px] pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
+		<div className='min-h-[250px] overflow-hidden pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
 			<div className='h-[170px] relative w-[100%] '>
 				<img
 					className='w-[100%] h-[100%] object-contain pt-8 rounded-sm'
@@ -40,11 +41,15 @@ const CardComp = ({ deal }: any) => {
 				</div>
 			</div>
 			<div className='p-2'>
-				<div className='text-[12px]'>Twin Watches- Handmade Selly Oak Wood</div>
+				<Link to = '/product-details'>
+					<div className='text-[12px]'>
+						Twin Watches- Handmade Selly Oak Wood
+					</div>
+				</Link>
 				<div className='flex justify-between'>
 					<div className='flex text-[10px] '>
 						(12)
-						<StarRating  />
+						<StarRating />
 						{/* <Rating  size={10}   initialValue={ratingValue} /> */}
 					</div>
 					<div className='text-right'>
