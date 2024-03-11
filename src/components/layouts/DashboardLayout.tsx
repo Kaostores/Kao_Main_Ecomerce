@@ -10,7 +10,9 @@ const DashboardLayout = () => {
         <div className="w-full flex justify-center">
             <div className="flex w-[85%] mt-[15px]">
                 <Sidebar />
-                <Outlet />
+                <div className="ml-[15px] flex-1 bg-[#F4F4F4] rounded-[8px] w-[75%] h-[100%]">
+                  <Outlet />
+                </div>
             </div>
         </div>
         <Footer />
