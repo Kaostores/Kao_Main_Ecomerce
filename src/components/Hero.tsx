@@ -1,14 +1,24 @@
 import React from "react";
-import pic2 from '@/assets/ep_sell.svg'
-import pic1 from '@/assets/lucide_locate-fixed.svg'
-import pic3 from '@/assets/bulk.png'
-import pic4 from '@/assets/hero2.png'
+import pic2 from "@/assets/ep_sell.svg";
+import pic1 from "@/assets/lucide_locate-fixed.svg";
+import pic3 from "@/assets/bulk.png";
+import pic4 from "@/assets/hero2.png";
+import Slider from "react-slick";
 
 const Hero = () => {
+	var settings = {
+		dots: true,
+		infinite: true,
+		speed: 500,
+		slidesToShow: 1,
+		slidesToScroll: 1,
+	};
 	return (
 		<div className=' flex w-full sm:flex-col md:flex-col mt-7 sm:mt-3  gap-5 '>
 			<div className='flex-1 bg-ascentBlue rounded-sm'>
-				<img src={pic4} />
+				{/* <Slider {...settings}> */}
+					<img src={pic4} />
+				{/* </Slider> */}
 			</div>
 			<div className='w-[270px] sm:w-[100%] md:w-[100%]  sm:flex-row md:flex-row  gap-4 flex flex-col'>
 				<div className='bg-ascentBlue rounded-sm h-[70px] flex justify-between pl-5 pr-5 items-center flex-1'>

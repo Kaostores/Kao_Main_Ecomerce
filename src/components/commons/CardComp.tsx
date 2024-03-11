@@ -3,7 +3,7 @@ import pic1 from "@/assets/pngegg (84) 1.png";
 import { BsStars } from "react-icons/bs";
 import pic2 from "@/assets/noto_fire.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { Rating } from "react-simple-star-rating";
+import StarRating from "../StarRating";
 
 const CardComp = ({ deal }: any) => {
 	const [ratingValue, setRatingValue] = useState(5);
@@ -44,6 +44,7 @@ const CardComp = ({ deal }: any) => {
 				<div className='flex justify-between'>
 					<div className='flex text-[10px] '>
 						(12)
+						<StarRating  />
 						{/* <Rating  size={10}   initialValue={ratingValue} /> */}
 					</div>
 					<div className='text-right'>
