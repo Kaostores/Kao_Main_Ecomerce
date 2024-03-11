@@ -9,6 +9,7 @@ import Voucher from "@/pages/Dashboard/Voucher";
 import Home from "@/pages/Home";
 import Inbox from "@/pages/Dashboard/Inbox";
 import Support from "@/pages/Dashboard/Support";
+import ProductDetails from "@/pages/ProductDetails";
 
 const PublicRoute = () => {
 	return [
@@ -20,6 +21,11 @@ const PublicRoute = () => {
 					index: true,
 					element: <Home />,
 				},
+
+				{
+					path: "product-details",
+					element: <ProductDetails />,
+				},
 			],
 		},
 		{
@@ -28,38 +34,38 @@ const PublicRoute = () => {
 			children: [
 				{
 					index: true,
-					element: <Dashboardhome />
+					element: <Dashboardhome />,
 				},
 				{
 					path: "account",
-					element: <Account />
+					element: <Account />,
 				},
 				{
 					path: "order",
-					element: <Order />
+					element: <Order />,
 				},
 				{
 					path: "reviews",
-					element: <Reviews />
+					element: <Reviews />,
 				},
 				{
 					path: "items",
-					element: <Items />
+					element: <Items />,
 				},
 				{
 					path: "voucher",
-					element: <Voucher />
+					element: <Voucher />,
 				},
 				{
 					path: "inbox",
-					element: <Inbox />
+					element: <Inbox />,
 				},
 				{
 					path: "support",
-					element: <Support />
-				}
-			]
-		}
+					element: <Support />,
+				},
+			],
+		},
 	];
 };
 
