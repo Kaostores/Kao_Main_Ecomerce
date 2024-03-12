@@ -10,10 +10,10 @@ const CardComp = ({ deal }: any) => {
 	const [ratingValue, setRatingValue] = useState(5);
 
 	return (
-		<div className='min-h-[250px]  overflow-hidden pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
+		<div className='h-[270px]   pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
 			<div className='h-[170px] relative w-[100%] '>
 				<img
-					className='w-[100%] h-[100%] object-contain pt-8 rounded-sm'
+					className='w-[100%] h-[100%] object-contain pt-10 rounded-sm'
 					src={pic1}
 				/>
 				<div className='absolute top-2 pl-3 pr-3 flex justify-between w-full'>
@@ -46,10 +46,10 @@ const CardComp = ({ deal }: any) => {
 						Twin Watches- Handmade Selly Oak Wood
 					</div>
 				</Link>
-				<div className='flex justify-between '>
-					<div className='flex text-[10px]  '>
+				<div className='flex justify-between overflow-hidden '>
+					<div className='flex text-[10px] '>
 						(12)
-						{/* <StarRating /> */}
+						<StarRating />
 						{/* <Rating  size={10}   initialValue={ratingValue} /> */}
 					</div>
 					<div className='text-right'>

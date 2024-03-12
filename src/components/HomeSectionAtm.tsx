@@ -10,7 +10,7 @@ const HomeSectionAtm = () => {
 				<span className='flex text-primary'>payments accepted</span>
 			</div>
 			<div className='flex-1'>
-				<img src={pic} />
+				<img className="sm:h-[50px] object-cover" src={pic} />
 			</div>
 		</div>
 	);
