@@ -7,6 +7,7 @@ import SearchInput from "../commons/SearchInput";
 import { AiOutlineMenu } from "react-icons/ai";
 import MegaMenu from "../commons/MegaMenu";
 import Auth from "../Auth/Auth";
+import { Link } from "react-router-dom";
 
 const Header = () => {
 	const [showMegaMenu, setShowMegaMenu] = useState(false);
@@ -41,7 +42,9 @@ const Header = () => {
 						className='text-[30px] hidden sm:block text-primary'>
 						<AiOutlineMenu />
 					</div>
-					<img src={pic} className='w-[70px]' />
+					<Link to='/'>
+						<img src={pic} className='w-[70px]' />
+					</Link>
 				</div>
 
 				<div className='sm:hidden flex-1'>
@@ -56,16 +59,17 @@ const Header = () => {
 						Help <MdKeyboardArrowDown />{" "}
 					</div>
 				</div>
+				<Link to='/cart'>
+					<div className='relative inline-block sm:hidden'>
+						<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>
+							<MdOutlineShoppingCart />
+						</div>
 
-				<div className='relative inline-block sm:hidden'>
-					<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>
-						<MdOutlineShoppingCart />
+						<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
+							0
+						</span>
 					</div>
-
-					<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
-						0
-					</span>
-				</div>
+				</Link>
 
 				<div
 					onClick={onOpen}
@@ -80,14 +84,17 @@ const Header = () => {
 					<div onClick={onOpen} className='text-primary'>
 						<FaRegUser />
 					</div>
-					<div className='relative inline-block '>
-						<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>
-							<MdOutlineShoppingCart />
+					<Link to='/cart'>
+						<div className='relative inline-block '>
+							<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>
+								<MdOutlineShoppingCart />
+							</div>
+
+							<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
+								0
+							</span>
 						</div>
-						<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
-							0
-						</span>
-					</div>
+					</Link>
 				</div>
 			</div>
 			<div className='hidden sm:flex flex-1  w-[90%] sm:mb-3'>

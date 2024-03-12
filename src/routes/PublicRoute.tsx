@@ -10,6 +10,7 @@ import Home from "@/pages/Home";
 import Inbox from "@/pages/Dashboard/Inbox";
 import Support from "@/pages/Dashboard/Support";
 import ProductDetails from "@/pages/ProductDetails";
+import Cart from "@/pages/Cart";
 
 const PublicRoute = () => {
 	return [
@@ -25,6 +26,11 @@ const PublicRoute = () => {
 				{
 					path: "product-details",
 					element: <ProductDetails />,
+				},
+
+				{
+					path: "cart",
+					element: <Cart />,
 				},
 			],
 		},
