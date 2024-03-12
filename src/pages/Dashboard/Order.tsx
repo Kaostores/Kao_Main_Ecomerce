@@ -212,7 +212,7 @@ const Order = () => {
       </div>
       ) : null}
       {show3 ? (
-        <div className="w-[100%] flex mt-[30px]">
+        <div className="w-[100%] flex">
         <CancelledOrders />
       </div>
       ) : null}
