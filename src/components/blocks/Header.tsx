@@ -6,13 +6,33 @@ import { FaRegUser } from "react-icons/fa6";
 import SearchInput from "../commons/SearchInput";
 import { AiOutlineMenu } from "react-icons/ai";
 import MegaMenu from "../commons/MegaMenu";
+import Auth from "../Auth/Auth";
 
 const Header = () => {
 	const [showMegaMenu, setShowMegaMenu] = useState(false);
+	const [open, setOpen] = useState({
+		state: false,
+		type: "register",
+	});
+
+	const onClose = () => {
+		setOpen({
+			...open,
+			state: false,
+		});
+	};
+
+	const onOpen = () => {
+		setOpen({
+			type: "register",
+			state: true,
+		});
+	};
 
 	// if (showMegaMenu) return <MegaMenu />;
 	return (
 		<div className='w-[100%] flex flex-col justify-center items-center'>
+			<Auth open={open} onClose={onClose} />
 			{showMegaMenu ? <MegaMenu setShowMegaMenu={setShowMegaMenu} /> : null}
 			<div className='w-[85%] sm:w-[90%] flex items-center gap-5 sm:justify-between  '>
 				<div className='flex items-center'>
@@ -47,14 +67,17 @@ const Header = () => {
 					</span>
 				</div>
 
-				<div className='flex items-center cursor-pointer sm:hidden'>
+				<div
+					onClick={onOpen}
+					className='flex items-center cursor-pointer sm:hidden'>
 					<div className='text-primary'>
 						<FaRegUser />
 					</div>
 					<div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
 				</div>
+
 				<div className='hidden sm:flex gap-3 items-center'>
-					<div className='text-primary'>
+					<div onClick={onOpen} className='text-primary'>
 						<FaRegUser />
 					</div>
 					<div className='relative inline-block '>

@@ -9,11 +9,11 @@ const StarRating = () => {
 	};
 
 	return (
-		<div className='flex'>
+		<div style = {{overflow : 'hidden'}} className='flex overflow-hidden'>
 			{[...Array(5)].map((_, index) => {
 				const ratingValue = index + 1;
 				return (
-					<label key={index} className='cursor-pointer'>
+					<label key={index} className='cursor-pointer overflow-hidden'>
 						<input
 							type='radio'
 							name='rating'
