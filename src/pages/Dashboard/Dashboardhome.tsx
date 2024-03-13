@@ -7,7 +7,7 @@ import WalletHistoryTable from "./Subpages/WalletHistoryTable";
 
 const Dashboardhome = () => {
   return (
-    <div className="w-[100%] flex-col p-[15px]">
+    <div className="w-[100%] flex-col p-[15px] mb-[60px]">
       
       <div className="w-[100%] flex items-center mt-[14px] justify-between">
         <div className="flex items-center">
