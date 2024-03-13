@@ -1,10 +1,22 @@
 import {useState} from "react"
 import img from "../../assets/watch.png"
+import { IoIosArrowBack } from "react-icons/io";
+import ReviewPage from "./Subpages/ReviewPage";
 
 const Reviews = () => {
   const [show, setShow] = useState(true)
   const [show2, setShow2] = useState(false)
+  const [pending, setPending] = useState(true)
+  const [review, setReview] = useState(false)
 
+  const Reviewpage = () => {
+    setReview(true)
+    setPending(false)
+  }
+  const Pendingpage = () => {
+    setPending(true)
+    setReview(false)
+  }
   const Toggle2 = () => {
     setShow(false)
     setShow2(true)
@@ -14,7 +26,9 @@ const Reviews = () => {
     setShow2(false)
   }
   return (
-    <div className="w-[100%] flex flex-col p-[15px]">
+    <>
+      {pending ? (
+        <div className="w-[100%] flex flex-col p-[15px]">
       <div className="w-[100%] flex items-center">
         <div onClick={Toggle1} className={`pl-[7px] pr-[5px] h-[35px] flex items-center cursor-pointer ${show ? 'border-b-[4px] border-primary text-primary' : 'text-iconGray'}`}>
           <p className="text-[15px]">Pending reviews</p>
@@ -48,7 +62,7 @@ const Reviews = () => {
                 </div>
             </div>
             <div className="flex flex-col items-end">
-              <p className="text-primary text-[14px] font-[600]">Drop review</p>
+              <p onClick={Reviewpage} className="text-primary text-[14px] font-[600] cursor-pointer">Drop review</p>
             </div>
         </div>
         
@@ -110,6 +124,21 @@ const Reviews = () => {
         <div>hghghg</div>
       ) : null}
     </div>
+      ) : null}
+
+      {review ? (
+        <div className="w-[100%] flex flex-col p-[15px]">
+          <div className="w-[100%] flex items-center">
+            <div onClick={Pendingpage} className="text-primary text-[20px] cursor-pointer"><IoIosArrowBack /></div>
+            <h3 className="text-primary ml-[12px] text-[15px] font-[500]">Rate and Review</h3>
+          </div>
+
+          <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[4px]"></div>
+
+          <ReviewPage />
+        </div>
+      ) : null}
+    </>
   )
 }
 
