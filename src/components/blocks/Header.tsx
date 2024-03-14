@@ -81,7 +81,7 @@ const Header = () => {
 				</div>
 
 				<div className='hidden sm:flex gap-3 items-center'>
-					<div onClick={onOpen} className='text-primary'>
+					<div onClick={onOpen} className='text-primary -mt-2'>
 						<FaRegUser />
 					</div>
 					<Link to='/cart'>

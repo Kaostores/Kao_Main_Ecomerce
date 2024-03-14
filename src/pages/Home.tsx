@@ -60,9 +60,6 @@ const Home = () => {
 				<BrandsComp />
 				<BrandsComp />
 			</div>
-			<div className="flex mb-7">
-				<HomeSectionAtm  />
-			</div>
 		</div>
 	);
 };
