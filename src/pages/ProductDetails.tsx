@@ -141,7 +141,7 @@ const ProductDetails = () => {
 									<div className='text-[13px]'>Call us for Bulk Purchase</div>
 									<div className='text-[13px] text-primary'>0905729875</div>
 								</div>
-								<div className='xl:w-[300px] sm:w-[280px] bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px]'>
+								<div className='xl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px]'>
 									<div>Add to cart</div>
 								</div>
 								<div className='flex items-center mb-[20px]'>
