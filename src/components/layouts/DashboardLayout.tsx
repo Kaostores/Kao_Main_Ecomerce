@@ -8,11 +8,11 @@ const DashboardLayout = () => {
     <div className="w-full h-screen">
         <Header />
         <div className="w-full flex justify-center">
-            <div className="flex w-[85%] mt-[15px]">
+            <div className="flex w-[85%] mt-[15px] sm:w-[90%]">
                 <Sidebar />
-                <div className="ml-[15px] flex-1 bg-[#F4F4F4] rounded-[8px] w-[75%] h-[100%]">
+                {/* <div className="ml-[15px] flex-1 bg-[#F4F4F4] rounded-[8px] w-[75%] h-[100%]"> */}
                   <Outlet />
-                </div>
+                {/* </div> */}
             </div>
         </div>
         <Footer />

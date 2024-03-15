@@ -12,7 +12,7 @@ const Sidebar = () => {
     const navigate = useNavigate();
     const active = location?.pathname;
   return (
-    <div className="w-[25%] h-[90vh] bg-[#F4F4F4] rounded-[8px] flex-col overflow-hidden relative">
+    <div className="w-[25%] h-[90vh] bg-[#F4F4F4] rounded-[8px] flex-col overflow-hidden relative sm:hidden">
         <div
 			onClick={() => {
 				navigate("/dashboard");
@@ -145,7 +145,7 @@ const Sidebar = () => {
 			<div className='text-[20px] text-[#DA0000]  font-bold'>
 				<GrLogout />
 			</div>
-			<div className='font-medium  text-[15px] ml-[20px] text-[#DA0000]'>Help and Support</div>
+			<div className='font-medium  text-[15px] ml-[20px] text-[#DA0000]'>Logout</div>
 		</div>
     </div>
   )
