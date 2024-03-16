@@ -9,8 +9,10 @@ import im3 from "../../src/assets/shoe.png";
 import { Button } from "@/components/ui/button";
 import CardComp from "@/components/commons/CardComp";
 import BrandsComp from "@/components/commons/BrandsComp";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
+	const navigate = useNavigate()
 	return (
 		<div className='w-[100%] min-h-[100%] flex xl:justify-center items-center '>
 			<div className='w-[100%]  flex flex-col my-[10px]'>
@@ -113,6 +115,9 @@ const Cart = () => {
 										<div>NGN 12,000</div>
 									</div>
 									<Button
+										onClick={() => {
+											navigate("/cart/checkout");
+										}}
 										variant='secondary'
 										className='w-full bg-secondary text-white'
 										type='submit'>
@@ -152,7 +157,7 @@ const Cart = () => {
 									</div>
 								</div>
 							</div>
-							<div className='p-[20px] min-h-[200px] rounded-sm flex flex-col bg-ascentGray'>
+							<div className='p-[20px] min-h-[200px] rounded-sm flex flex-col bg-[#F0F3FA]'>
 								<div className='font-semibold text-[25px] mb-[10px]'>
 									Summary
 								</div>
@@ -175,6 +180,9 @@ const Cart = () => {
 									</div>
 
 									<Button
+										onClick={() => {
+											navigate("/cart/checkout");
+										}}
 										variant='secondary'
 										className='w-full mt-4 bg-[#de801c] text-white'
 										type='submit'>

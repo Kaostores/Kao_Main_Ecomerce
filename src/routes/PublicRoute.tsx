@@ -11,6 +11,7 @@ import Inbox from "@/pages/Dashboard/Inbox";
 import Support from "@/pages/Dashboard/Support";
 import ProductDetails from "@/pages/ProductDetails";
 import Cart from "@/pages/Cart";
+import Checkout from "@/pages/Dashboard/CheckOut";
 
 const PublicRoute = () => {
 	return [
@@ -30,7 +31,17 @@ const PublicRoute = () => {
 
 				{
 					path: "cart",
-					element: <Cart />,
+					children: [
+						{
+							index: true,
+							element: <Cart />,
+						},
+
+						{
+							path: "checkout",
+							element: <Checkout />,
+						},
+					],
 				},
 			],
 		},
