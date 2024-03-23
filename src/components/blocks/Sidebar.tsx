@@ -12,7 +12,7 @@ const Sidebar = () => {
     const navigate = useNavigate();
     const active = location?.pathname;
   return (
-    <div className="w-[25%] h-[90vh] bg-[#F4F4F4] rounded-[8px] flex-col overflow-hidden relative sm:hidden">
+    <div className="w-[25%] md:w-[30%] h-[90vh] bg-[#F4F4F4] rounded-[8px] flex-col overflow-hidden relative md:hidden sm:hidden">
         <div
 			onClick={() => {
 				navigate("/dashboard");
@@ -127,11 +127,11 @@ const Sidebar = () => {
 		
         <div
 			onClick={() => {
-				navigate("/dashboard/support");
+				navigate("/help&support");
 			}}
 			className={`w-full min-h-[45px] flex justify-start  items-center pl-[20px] mb-[5px] cursor-pointer 
              ${
-				active === "/dashboard/support" ? "bg-[#0333ae] text-[#fff]" : "text-[#757575]"
+				active === "/help&support" ? "bg-[#0333ae] text-[#fff]" : "text-[#757575]"
 			}
              }
              `}>

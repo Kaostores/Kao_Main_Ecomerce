@@ -2,7 +2,9 @@ import {useState} from "react"
 import img from "../../assets/watch.png"
 import { IoIosArrowBack } from "react-icons/io";
 import ReviewPage from "./Subpages/ReviewPage";
-import { FaRegStar  } from "react-icons/fa";
+import { FaRegStar } from "react-icons/fa";
+import Recomended from "./Subpages/Recomended";
+import { useNavigate } from "react-router-dom";
 
 const Reviews = () => {
   const [show, setShow] = useState(true)
@@ -10,6 +12,8 @@ const Reviews = () => {
   const [pending, setPending] = useState(true)
   const [review, setReview] = useState(false)
   const [selectedStars, setSelectedStars] = useState(0);
+
+  const Navigate = useNavigate()
 
     const handleStarClick = (index: any) => {
         const selectedStarsCount = index + 1;
@@ -34,9 +38,16 @@ const Reviews = () => {
   }
   return (
     <>
-      {pending ? (
-        <div className="w-[100%] flex flex-col p-[15px]">
-      <div className="w-[100%] flex items-center">
+      <div className="w-[100%] flex flex-col sm:items-center bg-[#F4F4F4] sm:bg-white ml-[15px] rounded-[8px]">
+        {pending ? (
+        <div className="w-[100%] flex flex-col p-[15px] sm:p-0 sm:items-center">
+          <div onClick={()=>Navigate(-1)} className="w-[100%] justify-center items-center hidden sm:flex sm:mb-[20px]">
+        <div className="w-[90%] flex items-center">
+          <div className="text-primary text-[20px] cursor-pointer"><IoIosArrowBack /></div>
+          <h3 className="text-primary ml-[12px] text-[17px] font-[600]">My reviews</h3>
+        </div>
+      </div>
+      <div className="w-[100%] sm:w-[90%] flex items-center">
         <div onClick={Toggle1} className={`pl-[7px] pr-[5px] h-[35px] flex items-center cursor-pointer ${show ? 'border-b-[4px] border-primary text-primary' : 'text-iconGray'}`}>
           <p className="text-[15px]">Pending reviews</p>
         </div>
@@ -48,83 +59,78 @@ const Reviews = () => {
       <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[2px]"></div>
 
       {show ? (
-        <div className="w-[100%] flex flex-col">
-          <div className="w-[100%] flex justify-between mt-[30px]">
-            <div className="flex items-center">
+        <div className="w-[100%] flex flex-col items-center">
+          <div className="w-[100%] sm:w-[90%] flex justify-between mt-[20px] sm:mt-[30px]">
+            <div className="flex items-center sm:w-[100%]">
                 <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
                     <img src={img} alt="" className="h-[60px]"/>
                 </div>
-                <div className="flex flex-col ml-[15px]">
+                <div className="flex flex-col ml-[15px] sm:flex-1">
                     <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
                     <div className="flex items-center mt-[12px]">
-                        <p className="text-iconGray text-[12px]">Delivered on:</p>
-                        <p className="text-[12px] ml-[4px] text-iconGray"><span>2/2/2024 </span> | Order no:</p>
-                        <p className="text-[12px] text-iconGray ml-[3px]">7879489857</p>
+                        <p className="text-iconGray text-[13px]">Brand:</p>
+                        <p className="text-[13px] font-[500] ml-[4px] sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
                     </div>
                     <div className="flex items-center mt-[12px]">
                         <p className="text-[13px]">Price:</p>
                         <span className="flex items-center text-[13px] font-[600] ml-[4px]">NGN</span>
-                        <h3 className="text-[15px] ml-[3px] font-[600]">20,000</h3>
+                        <div className="w-[100%] flex items-center sm:justify-between">
+                          <h3 className="text-[15px] ml-[3px] font-[600]">20,000</h3>
+                          <h4 onClick={Reviewpage} className="text-primary text-[14px] hidden cursor-pointer font-[600] sm:flex">Drop review</h4>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col items-end">
-              <p onClick={Reviewpage} className="text-primary text-[14px] font-[600] cursor-pointer">Drop review</p>
-            </div>
+            <h4 onClick={Reviewpage} className="text-primary text-[14px] cursor-pointer font-[600] sm:hidden">Drop review</h4>
         </div>
-        
-        <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[22px]"></div>
-        
-        <div className="w-[100%] flex justify-between mt-[30px]">
-            <div className="flex items-center">
+          <div className="w-[100%] sm:w-[90%] flex justify-between mt-[20px] sm:mt-[30px]">
+            <div className="flex items-center sm:w-[100%]">
                 <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
                     <img src={img} alt="" className="h-[60px]"/>
                 </div>
-                <div className="flex flex-col ml-[15px]">
+                <div className="flex flex-col ml-[15px] sm:flex-1">
                     <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
                     <div className="flex items-center mt-[12px]">
-                        <p className="text-iconGray text-[12px]">Delivered on:</p>
-                        <p className="text-[12px] ml-[4px] text-iconGray"><span>2/2/2024 </span> | Order no:</p>
-                        <p className="text-[12px] text-iconGray ml-[3px]">7879489857</p>
+                        <p className="text-iconGray text-[13px]">Brand:</p>
+                        <p className="text-[13px] font-[500] ml-[4px] sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
                     </div>
                     <div className="flex items-center mt-[12px]">
                         <p className="text-[13px]">Price:</p>
                         <span className="flex items-center text-[13px] font-[600] ml-[4px]">NGN</span>
-                        <h3 className="text-[15px] ml-[3px] font-[600]">20,000</h3>
+                        <div className="w-[100%] flex items-center sm:justify-between">
+                          <h3 className="text-[15px] ml-[3px] font-[600]">20,000</h3>
+                          <h4 onClick={Reviewpage} className="text-primary text-[14px] hidden cursor-pointer font-[600] sm:flex">Drop review</h4>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col items-end">
-              <p className="text-primary text-[14px] font-[600]">Drop review</p>
-            </div>
+            <h4 onClick={Reviewpage} className="text-primary text-[14px] cursor-pointer font-[600] sm:hidden">Drop review</h4>
         </div>
-        
-        <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[22px]"></div>
-        
-        <div className="w-[100%] flex justify-between mt-[30px]">
-            <div className="flex items-center">
+          <div className="w-[100%] sm:w-[90%] flex justify-between mt-[20px] sm:mt-[30px]">
+            <div className="flex items-center sm:w-[100%]">
                 <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
                     <img src={img} alt="" className="h-[60px]"/>
                 </div>
-                <div className="flex flex-col ml-[15px]">
+                <div className="flex flex-col ml-[15px] sm:flex-1 sm:hiden">
                     <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
                     <div className="flex items-center mt-[12px]">
-                        <p className="text-iconGray text-[12px]">Delivered on:</p>
-                        <p className="text-[12px] ml-[4px] text-iconGray"><span>2/2/2024 </span> | Order no:</p>
-                        <p className="text-[12px] text-iconGray ml-[3px]">7879489857</p>
+                        <p className="text-iconGray text-[13px]">Brand:</p>
+                        <p className="text-[13px] font-[500] ml-[4px] sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
                     </div>
                     <div className="flex items-center mt-[12px]">
                         <p className="text-[13px]">Price:</p>
                         <span className="flex items-center text-[13px] font-[600] ml-[4px]">NGN</span>
-                        <h3 className="text-[15px] ml-[3px] font-[600]">20,000</h3>
+                        <div className="w-[100%] flex items-center sm:justify-between">
+                          <h3 className="text-[15px] ml-[3px] font-[600]">20,000</h3>
+                          <h4 onClick={Reviewpage} className="text-primary text-[14px] hidden cursor-pointer font-[600] sm:flex">Drop review</h4>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col items-end">
-              <p className="text-primary text-[14px] font-[600]">Drop review</p>
-            </div>
+            <h4 onClick={Reviewpage} className="text-primary text-[14px] cursor-pointer font-[600] sm:hidden">Drop review</h4>
         </div>
         </div>
+        
       ) : null}
 
       {show2 ? (
@@ -220,17 +226,22 @@ const Reviews = () => {
       ) : null}
 
       {review ? (
-        <div className="w-[100%] flex flex-col p-[15px]">
+        <div className="w-[90%] flex flex-col p-[15px] sm:p-0">
           <div className="w-[100%] flex items-center">
             <div onClick={Pendingpage} className="text-primary text-[20px] cursor-pointer"><IoIosArrowBack /></div>
-            <h3 className="text-primary ml-[12px] text-[15px] font-[500]">Rate and Review</h3>
+            <h3 className="text-primary ml-[12px] text-[15px] font-[500] sm:font-[600]">Rate and Review</h3>
           </div>
 
-          <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[4px]"></div>
+          <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[4px] sm:hidden"></div>
 
           <ReviewPage />
         </div>
       ) : null}
+      
+      <div className="w-[90%]">
+        <Recomended />
+      </div>
+      </div>
     </>
   )
 }
