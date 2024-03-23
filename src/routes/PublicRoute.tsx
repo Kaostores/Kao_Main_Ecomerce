@@ -12,6 +12,8 @@ import Support from "@/pages/Dashboard/Support";
 import ProductDetails from "@/pages/ProductDetails";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Dashboard/CheckOut";
+import Contact from "@/pages/Contact";
+import SearchPage from "@/pages/Search";
 
 const PublicRoute = () => {
 	return [
@@ -27,6 +29,15 @@ const PublicRoute = () => {
 				{
 					path: "product-details",
 					element: <ProductDetails />,
+				},
+
+				{
+					path: "contact",
+					element: <Contact />,
+				},
+				{
+					path: "search",
+					element: <SearchPage />,
 				},
 
 				{

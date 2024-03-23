@@ -30,7 +30,7 @@ const formSchema = z.object({
 	}),
 });
 
-const Auth = ({ open, onClose }: any) => {
+const Auth = ({ open, onClose, onOpenRegister }: any) => {
 	// Define your form.
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -48,10 +48,12 @@ const Auth = ({ open, onClose }: any) => {
 	}
 
 	return (
-		<Dialog open={open?.state} onOpenChange={() => onClose()}>
+		<Dialog
+			open={open?.type === "login" ? open?.state : false}
+			onOpenChange={() => onClose()}>
 			<DialogContent className='overflow-y-scroll   '>
 				<DialogHeader>
-					<DialogTitle className='mb-3'>Register</DialogTitle>
+					<DialogTitle className='mb-3'>Login</DialogTitle>
 				</DialogHeader>
 				<DialogDescription className='text-left w-full'>
 					<Form {...form}>
@@ -73,23 +75,7 @@ const Auth = ({ open, onClose }: any) => {
 									</FormItem>
 								)}
 							/>
-							<FormField
-								control={form.control}
-								name='Password'
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Password</FormLabel>
-										<FormControl>
-											<Input placeholder='input your password' {...field} />
-										</FormControl>
-										<FormMessage
-											style={{
-												color: "red",
-											}}
-										/>
-									</FormItem>
-								)}
-							/>
+
 							<div className=' flex justify-center'>
 								<Button
 									variant='secondary'
@@ -100,6 +86,14 @@ const Auth = ({ open, onClose }: any) => {
 							</div>
 						</form>
 					</Form>
+					<div className='mt-2 flex justify-center'>
+						Don't have an account?{" "}
+						<span
+							onClick={onOpenRegister}
+							className='ml-2 underline font-bold cursor-pointer'>
+							Register
+						</span>
+					</div>
 					<div className='flex items-center gap-3 mt-7 mb-7'>
 						<div className='flex-1 h-[1px] bg-black'></div>
 						<div className='font-bold'>Or Continue with</div>

@@ -6,11 +6,13 @@ import { FaRegUser } from "react-icons/fa6";
 import SearchInput from "../commons/SearchInput";
 import { AiOutlineMenu } from "react-icons/ai";
 import MegaMenu from "../commons/MegaMenu";
-import Auth from "../Auth/Auth";
-import { Link } from "react-router-dom";
+import Register from "../Auth/Register";
+import Login from "../Auth/Login";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
 	const [showMegaMenu, setShowMegaMenu] = useState(false);
+	const navigate = useNavigate()
 	const [open, setOpen] = useState({
 		state: false,
 		type: "register",
@@ -18,14 +20,21 @@ const Header = () => {
 
 	const onClose = () => {
 		setOpen({
-			...open,
+			type : '',
 			state: false,
 		});
 	};
 
-	const onOpen = () => {
+	const onOpenRegister = () => {
 		setOpen({
 			type: "register",
+			state: true,
+		});
+	};
+
+	const onOpenLogin = () => {
+		setOpen({
+			type: "login",
 			state: true,
 		});
 	};
@@ -33,7 +42,8 @@ const Header = () => {
 	// if (showMegaMenu) return <MegaMenu />;
 	return (
 		<div className='w-[100%] flex flex-col justify-center items-center'>
-			<Auth open={open} onClose={onClose} />
+			<Register open={open} onClose={onClose} onOpenLogin={onOpenLogin} />
+			<Login open={open} onClose={onClose} onOpenRegister={onOpenRegister} />
 			{showMegaMenu ? <MegaMenu setShowMegaMenu={setShowMegaMenu} /> : null}
 			<div className='w-[85%] sm:w-[90%] flex items-center gap-5 sm:justify-between  '>
 				<div className='flex items-center'>
@@ -72,7 +82,10 @@ const Header = () => {
 				</Link>
 
 				<div
-					onClick={onOpen}
+					onClick={() => {
+						onOpenRegister();
+						console.log(open);
+					}}
 					className='flex items-center cursor-pointer sm:hidden'>
 					<div className='text-primary'>
 						<FaRegUser />
@@ -81,7 +94,7 @@ const Header = () => {
 				</div>
 
 				<div className='hidden sm:flex gap-3 items-center'>
-					<div onClick={onOpen} className='text-primary -mt-2'>
+					<div onClick={onOpenRegister} className='text-primary -mt-2'>
 						<FaRegUser />
 					</div>
 					<Link to='/cart'>
@@ -110,7 +123,13 @@ const Header = () => {
 						</div>
 						Browser Categories
 					</div>
-					<div className='t'>Computer and Accessories</div>
+					<div
+						onClick={() => {
+							navigate("/search");
+						}}
+						className='text-lightGray cursor-pointer'>
+						Computer and Accessories
+					</div>
 					<div className='text-lightGray'>Phones and Tablets</div>
 					<div className='text-lightGray'>Electronics</div>
 					<div className='text-lightGray'>Baby kits</div>
