@@ -8,10 +8,10 @@ import Reviews from "@/pages/Dashboard/Reviews";
 import Voucher from "@/pages/Dashboard/Voucher";
 import Home from "@/pages/Home";
 import Inbox from "@/pages/Dashboard/Inbox";
-import Support from "@/pages/Dashboard/Support";
 import ProductDetails from "@/pages/ProductDetails";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Dashboard/CheckOut";
+import HelpandSupport from "@/pages/HelpandSupport";
 import Contact from "@/pages/Contact";
 import SearchPage from "@/pages/Search";
 
@@ -29,6 +29,10 @@ const PublicRoute = () => {
 				{
 					path: "product-details",
 					element: <ProductDetails />,
+				},
+				{
+					path: "help&support",
+					element: <HelpandSupport />
 				},
 
 				{
@@ -87,10 +91,6 @@ const PublicRoute = () => {
 				{
 					path: "inbox",
 					element: <Inbox />,
-				},
-				{
-					path: "support",
-					element: <Support />,
 				},
 			],
 		},

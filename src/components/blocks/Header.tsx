@@ -61,7 +61,9 @@ const Header = () => {
 					<SearchInput />
 				</div>
 
-				<div className='flex gap-2 sm:hidden'>
+				<div onClick={()=>{
+					navigate("/help&support");
+				}} className='flex gap-2 sm:hidden cursor-pointer'>
 					<div className='h-[30px] w-[30px] rounded-[50%] bg-ascentGray flex justify-center items-center text-primary'>
 						?
 					</div>

@@ -8,7 +8,7 @@ import img7 from "../../../assets/techno.png"
 
 const Recomended = () => {
   return (
-    <div className="w-[100%] hidden sm:flex mt-[150px] flex-col">
+    <div className="w-[100%] sm:w-[100%] hidden md:flex sm:flex mt-[150px] flex-col">
         <p className="text-[15px] font-[600]">Recommended For You </p>
         
         <div className="w-[100%] flex flex-wrap justify-between mt-[20px]">

@@ -21,6 +21,7 @@ module.exports = {
 		extend: {
 			backgroundImage: {
 				bb: "url('./src/assets/Ic.png')",
+				frame: "url('./src/assets/frame.png')"
 			},
 			screens: {
 				sm: { min: "300px", max: "767px" },

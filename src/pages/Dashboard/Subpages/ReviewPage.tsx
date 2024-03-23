@@ -31,10 +31,10 @@ const ReviewPage = () => {
         </div>
         <div className="flex flex-col">
             <h3 className="text-[14px] font-[600] mt-[25px]">Drop a review</h3>
-            <textarea className="w-[70%] h-[180px] resize-none border border-border rounded-md bg-transparent mt-[12px] outline-none p-[10px]"></textarea>
+            <textarea className="w-[70%] sm:w-[100%] h-[180px] resize-none border border-border rounded-md bg-transparent mt-[12px] outline-none p-[10px]"></textarea>
         </div>
         
-        <button className="w-[190px] h-[43px] flex justify-center items-center text-[white] bg-secondary mt-[30px] text-[14px] rounded-sm">Save review</button>
+        <button className="w-[190px] sm:w-[100%] h-[43px] flex justify-center items-center text-[white] bg-secondary mt-[30px] text-[14px] rounded-sm">Save review</button>
     </div>
   )
 }
