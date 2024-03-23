@@ -9,8 +9,10 @@ import { FaFacebookF } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+	const navigate = useNavigate()
 	return (
 		<div className='w-full mt-10'>
 			<div className='min-h-[70px]   w-full bg-ascentGray flex items-center justify-center'>
@@ -48,7 +50,7 @@ const Footer = () => {
 				<div className='justify-between text-white flex w-[85%] '>
 					<div className='text-[15px] md:text-[13px]'>
 						<div className='font-bold mb-2'>ABOUT US</div>
-						<div className='mb-1 cursor-pointer hover:underline transition ease-in-out delay-150'>
+						<div onClick={()=> navigate('/contact')} className='mb-1 cursor-pointer hover:underline transition ease-in-out delay-150'>
 							Contact Us
 						</div>
 						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
