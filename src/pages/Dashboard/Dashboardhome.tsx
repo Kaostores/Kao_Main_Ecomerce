@@ -107,14 +107,14 @@ const Dashboardhome = () => {
       ) : null}
       </div>
 
-      <div className="hidden md:flex sm:flex w-[100%] flex-col sm:items-center relative">
-        <div className="flex flex-col sm:w-[90%]">
+      <div className="hidden md:flex sm:flex w-[100%] flex-col md:items-center sm:items-center relative">
+        <div className="flex flex-col md:w-[85%] sm:w-[90%]">
           <h3 className="text-[18px] font-[600]">Hello, Temiloluwa</h3>
           <p className="text-[14px]">temiloluwamorafa@gmail.com</p>
         </div>
         <div className="h-[1px] w-full bg-[#F1F1F1] mt-[20px]"></div>
 
-        <div className="w-[100%] sm:w-[90%] p-[10px] rounded-sm bg-ascentGray mt-[28px] flex items-center justify-between">
+        <div className="w-[100%] md:w-[85%] sm:w-[90%] p-[10px] rounded-sm bg-ascentGray mt-[28px] flex items-center justify-between">
           <div className="flex items-center">
             <div className="text-primary text-[30px]"><IoWallet /></div>
             <p className="text-primary ml-[7px] text-[17px]">Kao wallet balance:</p>
@@ -122,13 +122,13 @@ const Dashboardhome = () => {
           <h3 className="text-[16px] font-[600] text-primary">NGN 36,000</h3>
         </div>
 
-        <div onClick={Toggle2} className="w-[100%] sm:w-[90%] flex items-center justify-between mt-[20px] cursor-pointer">
+        <div onClick={Toggle2} className="w-[100%] md:w-[85%] sm:w-[90%] flex items-center justify-between mt-[20px] cursor-pointer">
           <p className="text-primary text-[16px]">Top up wallet</p>
           <div className="text-primary text-[20px]"><IoIosArrowForward /></div>
         </div>
         <div className="h-[1px] w-full bg-[#F1F1F1] mt-[20px]"></div>
 
-        <div className="w-[100%] sm:w-[90%] flex flex-col mt-[20px]">
+        <div className="w-[100%] md:w-[85%] sm:w-[90%] flex flex-col mt-[20px]">
           <div onClick={() => {navigate("/dashboard/account");}}
             className={`w-full min-h-[45px] flex justify-between items-center mb-[5px] cursor-pointer 
                   ${active === "/dashboard/account" ? "bg-[#0333ae] text-[#fff]" : "text-[#757575]"}
@@ -208,7 +208,7 @@ const Dashboardhome = () => {
           </div>
         </div>
 
-        <div className="w-[100%] sm:w-[90%]">
+        <div className="w-[100%] md:w-[85%] sm:w-[90%]">
           <Recomended />
         </div>
 
