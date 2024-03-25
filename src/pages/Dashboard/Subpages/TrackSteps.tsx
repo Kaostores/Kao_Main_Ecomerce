@@ -7,7 +7,7 @@ const TrackSteps = () => {
     });
     
     return (
-        <div className="max-w-lg  px-4 sm:px-0 h-[300px]">
+        <div className="max-w-lg  px-4 md:px-0 sm:px-0 h-[300px]">
             <ul
                 aria-label="Steps"
                 className="flex flex-col items-center"

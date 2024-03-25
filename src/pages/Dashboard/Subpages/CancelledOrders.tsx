@@ -12,7 +12,7 @@ const CancelledOrders = () => {
                     <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
                     <div className="flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap">
                         <p className="text-iconGray text-[13px]">Brand:</p>
-                        <p className="text-[13px] font-[500] ml-[4px] sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
+                        <p className="text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
                     </div>
                     <div className="flex items-center mt-[12px]">
                         <p className="text-[13px]">Price:</p>
@@ -44,7 +44,7 @@ const CancelledOrders = () => {
                     <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
                     <div className="flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap">
                         <p className="text-iconGray text-[13px]">Brand:</p>
-                        <p className="text-[13px] font-[500] ml-[4px] sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
+                        <p className="text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
                     </div>
                     <div className="flex items-center mt-[12px]">
                         <p className="text-[13px]">Price:</p>

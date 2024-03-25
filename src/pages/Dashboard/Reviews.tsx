@@ -38,16 +38,16 @@ const Reviews = () => {
   }
   return (
     <>
-      <div className="w-[100%] flex flex-col sm:items-center bg-[#F4F4F4] sm:bg-white ml-[15px] rounded-[8px]">
+      <div className="w-[100%] flex flex-col md:items-center sm:items-center bg-[#F4F4F4] md:bg-white sm:bg-white ml-[15px] md:ml-0 sm:ml-0 rounded-[8px]">
         {pending ? (
-        <div className="w-[100%] flex flex-col p-[15px] sm:p-0 sm:items-center">
-          <div onClick={()=>Navigate(-1)} className="w-[100%] justify-center items-center hidden sm:flex sm:mb-[20px]">
-        <div className="w-[90%] flex items-center">
-          <div className="text-primary text-[20px] cursor-pointer"><IoIosArrowBack /></div>
+        <div className="w-[100%] flex flex-col p-[15px] md:p-0 sm:p-0 md:items-center sm:items-center">
+          <div onClick={()=>Navigate(-1)} className="w-[100%] justify-center items-center hidden md:flex sm:flex md:mb-[20px] sm:mb-[20px] md:mt-[10px]">
+        <div className="w-[90%] md:w-[85%] flex items-center">
+          <div className="text-primary text-[20px] cursor-pointer ml-[-4px]"><IoIosArrowBack /></div>
           <h3 className="text-primary ml-[12px] text-[17px] font-[600]">My reviews</h3>
         </div>
       </div>
-      <div className="w-[100%] sm:w-[90%] flex items-center">
+      <div className="w-[100%] md:w-[85%] sm:w-[90%] flex items-center">
         <div onClick={Toggle1} className={`pl-[7px] pr-[5px] h-[35px] flex items-center cursor-pointer ${show ? 'border-b-[4px] border-primary text-primary' : 'text-iconGray'}`}>
           <p className="text-[15px]">Pending reviews</p>
         </div>
@@ -60,16 +60,16 @@ const Reviews = () => {
 
       {show ? (
         <div className="w-[100%] flex flex-col items-center">
-          <div className="w-[100%] sm:w-[90%] flex justify-between mt-[20px] sm:mt-[30px]">
+          <div className="w-[100%] md:w-[85%] sm:w-[90%] flex justify-between mt-[20px] sm:mt-[30px]">
             <div className="flex items-center sm:w-[100%]">
                 <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
                     <img src={img} alt="" className="h-[60px]"/>
                 </div>
                 <div className="flex flex-col ml-[15px] sm:flex-1">
                     <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
-                    <div className="flex items-center mt-[12px]">
+                    <div className="flex items-center mt-[12px] sm:flex-wrap">
                         <p className="text-iconGray text-[13px]">Brand:</p>
-                        <p className="text-[13px] font-[500] ml-[4px] sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
+                        <p className="text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
                     </div>
                     <div className="flex items-center mt-[12px]">
                         <p className="text-[13px]">Price:</p>
@@ -83,16 +83,16 @@ const Reviews = () => {
             </div>
             <h4 onClick={Reviewpage} className="text-primary text-[14px] cursor-pointer font-[600] sm:hidden">Drop review</h4>
         </div>
-          <div className="w-[100%] sm:w-[90%] flex justify-between mt-[20px] sm:mt-[30px]">
+          <div className="w-[100%] md:w-[85%] sm:w-[90%] flex justify-between mt-[20px] md:mt-[40px] sm:mt-[30px]">
             <div className="flex items-center sm:w-[100%]">
                 <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
                     <img src={img} alt="" className="h-[60px]"/>
                 </div>
                 <div className="flex flex-col ml-[15px] sm:flex-1">
                     <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
-                    <div className="flex items-center mt-[12px]">
+                    <div className="flex items-center mt-[12px] sm:flex-wrap">
                         <p className="text-iconGray text-[13px]">Brand:</p>
-                        <p className="text-[13px] font-[500] ml-[4px] sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
+                        <p className="text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
                     </div>
                     <div className="flex items-center mt-[12px]">
                         <p className="text-[13px]">Price:</p>
@@ -106,16 +106,16 @@ const Reviews = () => {
             </div>
             <h4 onClick={Reviewpage} className="text-primary text-[14px] cursor-pointer font-[600] sm:hidden">Drop review</h4>
         </div>
-          <div className="w-[100%] sm:w-[90%] flex justify-between mt-[20px] sm:mt-[30px]">
+          <div className="w-[100%] md:w-[85%] sm:w-[90%] flex justify-between mt-[20px] md:mt-[40px] sm:mt-[30px]">
             <div className="flex items-center sm:w-[100%]">
                 <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
                     <img src={img} alt="" className="h-[60px]"/>
                 </div>
                 <div className="flex flex-col ml-[15px] sm:flex-1 sm:hiden">
                     <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
-                    <div className="flex items-center mt-[12px]">
+                    <div className="flex items-center mt-[12px] sm:flex-wrap">
                         <p className="text-iconGray text-[13px]">Brand:</p>
-                        <p className="text-[13px] font-[500] ml-[4px] sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
+                        <p className="text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
                     </div>
                     <div className="flex items-center mt-[12px]">
                         <p className="text-[13px]">Price:</p>
@@ -134,14 +134,15 @@ const Reviews = () => {
       ) : null}
 
       {show2 ? (
-        <div className="w-[100%] flex flex-col">
-          <div className="w-[100%] flex flex-col">
+        <div className="w-[100%] flex flex-col md:items-center md:mt-[20px] sm:items-center">
+          <div className="w-[90%] md:w-[85%] flex-col">
+            <div className="w-[100%] flex flex-col">
             <div className="w-[100%] flex justify-between mt-[30px]">
             <div className="flex items-center">
                 <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
                     <img src={img} alt="" className="h-[60px]"/>
                 </div>
-                <div className="flex flex-col ml-[15px]">
+                <div className="flex flex-col ml-[15px] sm:hidden">
                     <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
                     <div className="flex items-center mt-[12px]">
                         <p className="text-iconGray text-[12px]">Delivered on:</p>
@@ -155,7 +156,7 @@ const Reviews = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col items-end sm:hidden">
               <p className="text-primary text-[14px] font-[600] cursor-pointer">Edit review</p>
             </div>
         </div>
@@ -172,19 +173,26 @@ const Reviews = () => {
                     </div>
                 ))}
               </div>
+              <h3 className="text-[15px] font-[600] mt-[10px] hidden sm:flex">Tayo Shobowale</h3>
               <p className="text-[12px] text-iconGray mt-[10px]">What do you mean review?</p>
               <p className="text-[12px] w-[85%] text-iconGray">A review is a survey over a whole subject or division of it, or especially an article making a critical reconsideration and summary of something written: a review of the latest book on Chaucer.</p>
+          </div>
+          
+          <div className="flex-col hidden sm:flex mt-[15px]">
+              <p className="text-primary text-[14px] font-[600] cursor-pointer underline">Edit review</p>
+          </div>
           </div>
           
           <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[22px]"></div>
           
-          <div className="w-[100%] flex flex-col">
+          <div className="w-[90%] md:w-[85%] flex-col">
+            <div className="w-[100%] flex flex-col mt-[10px]">
             <div className="w-[100%] flex justify-between mt-[30px]">
             <div className="flex items-center">
                 <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
                     <img src={img} alt="" className="h-[60px]"/>
                 </div>
-                <div className="flex flex-col ml-[15px]">
+                <div className="flex flex-col ml-[15px] sm:hidden">
                     <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
                     <div className="flex items-center mt-[12px]">
                         <p className="text-iconGray text-[12px]">Delivered on:</p>
@@ -198,7 +206,7 @@ const Reviews = () => {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col items-end">
+            <div className="flex flex-col items-end sm:hidden">
               <p className="text-primary text-[14px] font-[600] cursor-pointer">Edit review</p>
             </div>
         </div>
@@ -215,8 +223,14 @@ const Reviews = () => {
                     </div>
                 ))}
               </div>
+              <h3 className="text-[15px] font-[600] mt-[10px] hidden sm:flex">Tayo Shobowale</h3>
               <p className="text-[12px] text-iconGray mt-[10px]">What do you mean review?</p>
               <p className="text-[12px] w-[85%] text-iconGray">A review is a survey over a whole subject or division of it, or especially an article making a critical reconsideration and summary of something written: a review of the latest book on Chaucer.</p>
+          </div>
+          
+          <div className="flex-col hidden sm:flex mt-[15px]">
+              <p className="text-primary text-[14px] font-[600] cursor-pointer underline">Edit review</p>
+          </div>
           </div>
           
           <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[22px]"></div>
@@ -226,9 +240,9 @@ const Reviews = () => {
       ) : null}
 
       {review ? (
-        <div className="w-[90%] flex flex-col p-[15px] sm:p-0">
-          <div className="w-[100%] flex items-center">
-            <div onClick={Pendingpage} className="text-primary text-[20px] cursor-pointer"><IoIosArrowBack /></div>
+        <div className="w-[90%] md:w-[100%] flex flex-col md:items-center p-[15px] md:p-0 sm:p-0">
+          <div onClick={Pendingpage} className="w-[100%] md:w-[85%] flex items-center md:mt-[10px]">
+            <div className="text-primary text-[20px] md:ml-[-4px] sm:ml-[-4px] cursor-pointer"><IoIosArrowBack /></div>
             <h3 className="text-primary ml-[12px] text-[15px] font-[500] sm:font-[600]">Rate and Review</h3>
           </div>
 
@@ -238,7 +252,7 @@ const Reviews = () => {
         </div>
       ) : null}
       
-      <div className="w-[90%]">
+      <div className="w-[90%] md:w-[85%]">
         <Recomended />
       </div>
       </div>

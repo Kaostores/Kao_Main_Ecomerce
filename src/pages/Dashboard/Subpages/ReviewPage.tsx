@@ -10,7 +10,7 @@ const ReviewPage = () => {
         setSelectedStars(selectedStarsCount);
     };
   return (
-    <div className="w-[100%] flex flex-col mt-[22px] pb-[20px]">
+    <div className="w-[100%] md:w-[85%] flex flex-col mt-[22px] pb-[20px]">
         <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
             <img src={img} alt="" className="h-[60px]"/>
         </div>
