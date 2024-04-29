@@ -9,7 +9,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FcGoogle } from "react-icons/fc";
-
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -20,12 +19,30 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Cookies from "universal-cookie";
+import { useDispatch } from "react-redux";
+import { updateUserDetails } from "@/services/reducers";
+import { useState } from "react";
+import { Register } from "@/utils/ApiCalls";
+import ShowToast from "../reuse/ShowToast";
+import LoadingButton from "../reuse/LoadingButton";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const formSchema = z.object({
-	Email: z.string().min(2, {
+	firstname: z.string().min(2, {
+		message: "firstname is required",
+	}),
+	lastname: z.string().min(2, {
+		message: "lastname is required",
+	}),
+	email: z.string().min(2, {
 		message: "email is required",
 	}),
-	Password: z.string().min(2, {
+	phone: z.string().min(2, {
+		message: "number is required",
+	}),
+	password: z.string().min(2, {
 		message: "password is required",
 	}),
 });
@@ -35,19 +52,55 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			Email: "",
-			Password: "",
+			firstname: "",
+			lastname: "",
+			email: "",
+			phone: "",
+			password: "",
 		},
 	});
 
 	console.log(open);
 
 	//  Define a submit handler.
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
-	}
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+  setLoad(true);
+  try {
+	  const response: any = await Register(values);
+	  
+	  console.log(response)
+
+    if (response?.status === 201) {
+    //   ShowToast(true, "Registration successful");
+	toast.success('Registration Successfull');
+      cookies.set("Kao_cookie_user", response?.data?.token, {
+        expires: expiryDate, 
+		path: "/"
+      });
+      dispatch(updateUserDetails(response?.data.data));
+	  	// alert("Registration successful"); 
+    } else if (response?.status === 500) {
+    //   ShowToast(false, "Account already exists");
+	toast.info('Account already exists')
+    }
+
+    setLoad(false);
+  } catch (error) {
+    // ShowToast(false, "An error occurred. Please try again.");
+	toast.error('An error occurred. Please try again.')
+    setLoad(false);
+  }
+}
+
+
+	const cookies = new Cookies();
+	const dispatch = useDispatch();
+	const expiryDate = new Date();
+
+	// const navigate = useNavigate();
+	expiryDate.setDate(expiryDate.getDate() + 7); // set date for cookie to expire
+
+	const [load, setLoad] = useState(false)
 
 	return (
 		<Dialog
@@ -62,7 +115,41 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 						<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
 							<FormField
 								control={form.control}
-								name='Email'
+								name='firstname'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>First Name</FormLabel>
+										<FormControl>
+											<Input placeholder='input your first name' {...field} />
+										</FormControl>
+										<FormMessage
+											style={{
+												color: "red",
+											}}
+										/>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name='lastname'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Last Name</FormLabel>
+										<FormControl>
+											<Input placeholder='input your last name' {...field} />
+										</FormControl>
+										<FormMessage
+											style={{
+												color: "red",
+											}}
+										/>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name='email'
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Email</FormLabel>
@@ -79,7 +166,24 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 							/>
 							<FormField
 								control={form.control}
-								name='Password'
+								name='phone'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Phone Number</FormLabel>
+										<FormControl>
+											<Input placeholder='input your phonenumber' {...field} />
+										</FormControl>
+										<FormMessage
+											style={{
+												color: "red",
+											}}
+										/>
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name='password'
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Password</FormLabel>
@@ -95,12 +199,18 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 								)}
 							/>
 							<div className=' flex justify-center'>
-								<Button
+								{load ? (
+									<LoadingButton w={"100%"} />
+								) : (
+									<>
+										<Button
 									variant='secondary'
 									className='w-full bg-secondary text-white'
 									type='submit'>
 									Submit
 								</Button>
+									</>
+								)}
 							</div>
 						</form>
 					</Form>

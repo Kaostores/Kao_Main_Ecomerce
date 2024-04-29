@@ -1,21 +1,22 @@
 import Hero from "@/components/Hero";
-import HomeSectionAtm from "@/components/HomeSectionAtm";
 import AdvertComp from "@/components/commons/AdvertComp";
 import BrandsComp from "@/components/commons/BrandsComp";
 import CardComp from "@/components/commons/CardComp";
 import CategoriesCard from "@/components/commons/CategoriesCard";
-import React from "react";
+import { useViewAllProductsQuery } from "@/services/apiSlice";
 
 const Home = () => {
+
+	const {data, isLoading} = useViewAllProductsQuery({})
+
 	return (
 		<div>
 			<Hero />
 			<h3 className='mt-7 font-bold mb-3'>Recommended For You</h3>
 			<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:overflow-x-auto md:grid-cols-2 '>
-				<CardComp deal={true} />
-				<CardComp />
-				<CardComp />
-				<CardComp deal={true} />
+				{data?.data.slice(0, 4).map((props: any) => (
+					<CardComp deal={true} {...props} />
+				))} 
 			</div>
 
 			<h3 className='mt-7 font-bold mb-3'>Categories</h3>

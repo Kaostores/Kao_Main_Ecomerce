@@ -10,6 +10,13 @@ import { GoChevronRight } from "react-icons/go";
 import { GoChevronDown } from "react-icons/go";
 import CardComp from "@/components/commons/CardComp";
 import BrandsComp from "@/components/commons/BrandsComp";
+import { useParams } from "react-router-dom";
+import { useViewAProductQuery } from "@/services/apiSlice";
+import { useSelector } from "react-redux";
+import { UseAppDispach } from "@/services/store";
+import { addToCart } from "@/services/reducers";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductDetails = () => {
 	const [show, setShow] = useState<boolean>(true);
@@ -18,6 +25,10 @@ const ProductDetails = () => {
 	const [showContent, setContent] = useState<boolean>(false);
 	const [showLove, setShowLove] = useState<boolean>(true);
 
+	const dispatch = UseAppDispach()
+	const globalstate = useSelector((state: any) => state.persistedReducer.cart)
+	console.log("global", globalstate)
+	
 	const togContent = () => {
 		setContent(!showContent);
 	};
@@ -39,6 +50,17 @@ const ProductDetails = () => {
 	const loveBtn = () => {
 		setShowLove(!showLove);
 	};
+
+	const { id } = useParams();
+	const { data, isLoading } = useViewAProductQuery(id);
+	const handleAddToCart = () => {
+		if (!isLoading && data) {
+        console.log("Product data to add:", data.data);
+        dispatch(addToCart(data.data));  // data.data must include _id and necessary product fields
+    }
+		toast.success("Added to Cart successfully");
+    };
+	console.log("getting a data", data)
 	return (
 		<div className='w-[100%] min-h-[100%] flex xl:justify-center items-center '>
 			<div className='w-[100%]  flex flex-col my-[10px]'>
@@ -113,14 +135,14 @@ const ProductDetails = () => {
 						<div className=''>
 							<div className='flex flex-col'>
 								<div className='text-[25px] sm:text-[20px] font-semibold'>
-									Rolex Yatch-Master II
+									{data?.data?.name}
 								</div>
 								<div className='text-[13px] my-[10px]'>
-									Brand Apple | Similar Product from Apple | 79797997979
+									{data?.data.description}
 								</div>
 							</div>
 							<div className='text-[20px] font-semibold my-[20px]'>
-								#1,600,500
+								N{data?.data.price}
 							</div>
 							<div className='flex flex-col'>
 								<div className='flex items-center'>
@@ -141,7 +163,29 @@ const ProductDetails = () => {
 									<div className='text-[13px]'>Call us for Bulk Purchase</div>
 									<div className='text-[13px] text-primary'>0905729875</div>
 								</div>
-								<div className='xl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px]'>
+								<div className="w-[100%] h-[100%] flex flex-col mt-[20px]">
+									<h2>Variants Available</h2>
+									<div className="w-[100%] flex items-center">
+
+									</div>
+								</div>
+								<div onClick={() => {
+									if (data?.data?.variants && data.data.variants.length > 0) {
+											dispatch(
+												addToCart({
+													productName: data?.data?.title,
+													variant: data?.data?.variants[1]
+												})
+											);
+										} else {
+											dispatch(
+												addToCart({
+													productName: data?.data?.title,
+													variant: null // or any other default value for the variant
+												})
+											);
+										}
+								}} className='xl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'>
 									<div>Add to cart</div>
 								</div>
 								<div className='flex items-center mb-[20px]'>

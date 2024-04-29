@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,12 +22,19 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { LogIn } from "@/utils/ApiCalls"
+import ShowToast from "../reuse/ShowToast";
+import LoadingButton from "../reuse/LoadingButton";
+import Cookies from "universal-cookie";
+import { useDispatch } from "react-redux";
+import { updateUserDetails } from "@/services/reducers";
+import { useState } from "react";
 
 const formSchema = z.object({
-	Email: z.string().min(2, {
+	email: z.string().min(2, {
 		message: "email is required",
 	}),
-	Password: z.string().min(2, {
+	password: z.string().min(2, {
 		message: "password is required",
 	}),
 });
@@ -35,17 +44,49 @@ const Auth = ({ open, onClose, onOpenRegister }: any) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			Email: "",
-			Password: "",
+			email: "",
+			password: "",
 		},
 	});
 
 	//  Define a submit handler.
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
-	}
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+  setLoad(true);
+  try {
+	  const response: any = await LogIn(values);
+	  
+	  console.log(values)
+
+    if (response?.status === 201) {
+    //   ShowToast(true, "LogIn successful");
+	toast.success('Login Successfull');
+      cookies.set("Kao_cookie_user", response?.data?.token, {
+        expires: expiryDate, 
+		path: "/"
+      });
+      dispatch(updateUserDetails(response?.data.data));
+    //   window.location.href = "/dashboard";
+	// alert("Login Succesful"); 
+    } else if (response?.status === 500) {
+      ShowToast(false, "Details dose not match");
+    }
+
+    setLoad(false);
+  } catch (error) {
+    // ShowToast(false, "An error occurred. Please try again.");
+	toast.info('An error occurred. Please try again.')
+    setLoad(false);
+  }
+}
+
+	const cookies = new Cookies();
+	const dispatch = useDispatch();
+	const expiryDate = new Date();
+
+	// const navigate = useNavigate();
+	expiryDate.setDate(expiryDate.getDate() + 7); // set date for cookie to expire
+
+	const [load, setLoad] = useState(false)
 
 	return (
 		<Dialog
@@ -60,7 +101,7 @@ const Auth = ({ open, onClose, onOpenRegister }: any) => {
 						<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
 							<FormField
 								control={form.control}
-								name='Email'
+								name='email'
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Email</FormLabel>
@@ -75,14 +116,37 @@ const Auth = ({ open, onClose, onOpenRegister }: any) => {
 									</FormItem>
 								)}
 							/>
+							<FormField
+								control={form.control}
+								name='password'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Password</FormLabel>
+										<FormControl>
+											<Input placeholder='input your password' {...field} />
+										</FormControl>
+										<FormMessage
+											style={{
+												color: "red",
+											}}
+										/>
+									</FormItem>
+								)}
+							/>
 
 							<div className=' flex justify-center'>
-								<Button
+								{load ? (
+									<LoadingButton w={"450px"} />
+								) : (
+									<>
+										<Button
 									variant='secondary'
 									className='w-full bg-secondary text-white'
 									type='submit'>
 									Submit
 								</Button>
+									</>
+								)}
 							</div>
 						</form>
 					</Form>
