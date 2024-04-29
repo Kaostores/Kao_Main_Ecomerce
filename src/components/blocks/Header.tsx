@@ -9,8 +9,20 @@ import MegaMenu from "../commons/MegaMenu";
 import Register from "../Auth/Register";
 import Login from "../Auth/Login";
 import { Link, useNavigate } from "react-router-dom";
+import ShowToast from "../reuse/ShowToast";
+import { useAppSelector } from "@/services/store";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
+
+	const User = useAppSelector((state) => state.persistedReducer.currentUser);
+	const dispatch = useDispatch()
+
+	const readCartQuantity = useAppSelector((state: any) => state.persistedReducer.totalQuantity)
+
+	const show = () => {
+		ShowToast(true, "true")
+	}
 	const [showMegaMenu, setShowMegaMenu] = useState(false);
 	const navigate = useNavigate()
 	const [open, setOpen] = useState({
@@ -53,7 +65,7 @@ const Header = () => {
 						<AiOutlineMenu />
 					</div>
 					<Link to='/'>
-						<img src={pic} className='w-[70px]' />
+						<img onClick={show} src={pic} className='w-[70px]' />
 					</Link>
 				</div>
 
@@ -78,22 +90,42 @@ const Header = () => {
 						</div>
 
 						<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
-							0
+							{readCartQuantity}
 						</span>
 					</div>
 				</Link>
 
-				<div
-					onClick={() => {
-						onOpenRegister();
-						console.log(open);
-					}}
-					className='flex items-center cursor-pointer sm:hidden'>
-					<div className='text-primary'>
-						<FaRegUser />
-					</div>
-					<div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
-				</div>
+				{User ? (
+    <>
+        <div className='flex items-center cursor-pointer sm:hidden'>
+            <div className='text-primary'>
+                <FaRegUser />
+            </div>
+            <Link to="/dashboard">
+                <div className='text-[14px] ml-2 sm:hidden'>
+                    <div className="flex items-start">
+                        <h2 className="mr-[8px]">{User.firstname}</h2>
+                        <h2>{User.lastname}</h2>
+                    </div>
+                </div>
+            </Link>
+        </div>
+    </>
+) : (
+    <>
+        <div
+            onClick={() => {
+                onOpenRegister();
+                console.log(open);
+            }}
+            className='flex items-center cursor-pointer sm:hidden'>
+            <div className='text-primary'>
+                <FaRegUser />
+            </div>
+            <div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
+        </div>
+    </>
+)}
 
 				<div className='hidden sm:flex gap-3 items-center'>
 					<div onClick={onOpenRegister} className='text-primary -mt-2'>

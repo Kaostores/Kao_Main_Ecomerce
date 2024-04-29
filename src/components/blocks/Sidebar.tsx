@@ -6,11 +6,31 @@ import { FaRegStar, FaRegBell } from "react-icons/fa";
 import { RiCouponLine } from "react-icons/ri";
 import { MdOutlineSupportAgent } from "react-icons/md";
 import { GrLogout } from "react-icons/gr";
+import { logoutUser } from "@/services/reducers";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Sidebar = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const active = location?.pathname;
+	const active = location?.pathname;
+
+	const dispatch = useDispatch()
+
+	const handleLogout = () => {
+    dispatch(logoutUser());
+    toast.success("You have logged out successfully", {
+        autoClose: 3000,
+        closeButton: true,
+        onClose: () => {
+            navigate("/") 
+        }
+    });
+};
+
+	
+
   return (
     <div className="w-[25%] md:w-[30%] h-[90vh] bg-[#F4F4F4] rounded-[8px] flex-col overflow-hidden relative md:hidden sm:hidden">
         <div
@@ -145,7 +165,7 @@ const Sidebar = () => {
 			<div className='text-[20px] text-[#DA0000]  font-bold'>
 				<GrLogout />
 			</div>
-			<div className='font-medium  text-[15px] ml-[20px] text-[#DA0000]'>Logout</div>
+			<div onClick={handleLogout} className='font-medium cursor-pointer  text-[15px] ml-[20px] text-[#DA0000]'>Logout</div>
 		</div>
     </div>
   )

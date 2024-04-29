@@ -6,12 +6,13 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import StarRating from "../StarRating";
 import { Link } from "react-router-dom";
 
-const CardComp = ({ deal }: any) => {
-	const [ratingValue, setRatingValue] = useState(5);
+const CardComp = ({ deal, isLoading, ...props }: any) => {
+	console.log(props)
+	// const [ratingValue, setRatingValue] = useState(5);
 
 	return (
-		<div className='h-[270px]   pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
-			<div className='h-[170px] relative w-[100%] '>
+		<div className='h-[300px]   pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
+			<div  className='h-[170px] relative w-[100%] '>
 				<img
 					className='w-[100%] h-[100%] object-contain pt-10 rounded-sm'
 					src={pic1}
@@ -40,10 +41,11 @@ const CardComp = ({ deal }: any) => {
 					</div>
 				</div>
 			</div>
+			<h2 className="ml-[10px] text-[16px] font-[600] mt-[15px]">{props.name}</h2>
 			<div className='p-2'>
-				<Link to = '/product-details'>
-					<div className='text-[12px]'>
-						Twin Watches- Handmade Selly Oak Wood
+				<Link to = {`/product-details/${props.id}`}>
+					<div className='text-[12px] mb-[10px]'>
+						{props.description}
 					</div>
 				</Link>
 				<div className='flex justify-between overflow-hidden '>
@@ -55,7 +57,7 @@ const CardComp = ({ deal }: any) => {
 					<div className='text-right'>
 						<div className='flex font-bold'>
 							<div className='text-[10px] mt-2 mr-2'>NGN </div>
-							20,000
+							{props.price}
 						</div>
 						<div className='line-through text-[12px] text-cardBrown font-bold'>
 							35,000
