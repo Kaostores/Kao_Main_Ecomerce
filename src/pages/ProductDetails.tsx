@@ -14,9 +14,10 @@ import { useParams } from "react-router-dom";
 import { useViewAProductQuery } from "@/services/apiSlice";
 import { useSelector } from "react-redux";
 import { UseAppDispach } from "@/services/store";
-import { addToCart } from "@/services/reducers";
+import { addToCart, removeFromCart } from "@/services/reducers";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { IoMdClose } from "react-icons/io";
 
 const ProductDetails = () => {
 	const [show, setShow] = useState<boolean>(true);
@@ -24,10 +25,34 @@ const ProductDetails = () => {
 	const [show3, setShow3] = useState<boolean>(false);
 	const [showContent, setContent] = useState<boolean>(false);
 	const [showLove, setShowLove] = useState<boolean>(true);
+	const [showVariant, setShowVariant] = useState(false)
+	const [quantity, setQuantity] = useState(0); 
 
 	const dispatch = UseAppDispach()
 	const globalstate = useSelector((state: any) => state.persistedReducer.cart)
 	console.log("global", globalstate)
+
+	const findQuantity = (variantId: any) => {
+    const item = state.cart.find((item: any) => item.variant.id === variantId);
+    return item ? item.quantity : 0;
+  };
+
+  const handleIncrement = (variant: any) => {
+    dispatch(addToCart({
+      id: variant.id,
+      productName: data?.data?.name,
+      variant,
+      quantity: 1 // This will be handled in the reducer
+    }));
+    toast.success("Added to Cart successfully");
+  };
+	
+	const handleDecrement = (variant: any) => {
+        if (quantity > 1) {
+            setQuantity(prev => prev - 1);
+            dispatch(removeFromCart(variant.id));
+        }
+    };
 	
 	const togContent = () => {
 		setContent(!showContent);
@@ -51,15 +76,18 @@ const ProductDetails = () => {
 		setShowLove(!showLove);
 	};
 
+	const openVariant = () => {
+		setShowVariant(true)
+	}
+	const closeVariant = () => {
+		setShowVariant(false)
+	}
+
+
 	const { id } = useParams();
 	const { data, isLoading } = useViewAProductQuery(id);
-	const handleAddToCart = () => {
-		if (!isLoading && data) {
-        console.log("Product data to add:", data.data);
-        dispatch(addToCart(data.data));  // data.data must include _id and necessary product fields
-    }
-		toast.success("Added to Cart successfully");
-    };
+
+
 	console.log("getting a data", data)
 	return (
 		<div className='w-[100%] min-h-[100%] flex xl:justify-center items-center '>
@@ -164,16 +192,69 @@ const ProductDetails = () => {
 									<div className='text-[13px] text-primary'>0905729875</div>
 								</div>
 								<div className="w-[100%] h-[100%] flex flex-col mt-[20px]">
-									<h2>Variants Available</h2>
-									<div className="w-[100%] flex items-center">
+									{data?.data?.variants && data.data.variants.length > 0 && (
+										<div className="w-[100%] h-[100%] flex flex-col mt-[20px]">
+											<h2>Variants Available</h2>
+											<div className="w-[100%] flex items-center mt-[10px]">
+												{data.data.variants.map((variant: any) => (
+													<div key={variant.id} onClick={openVariant} className="w-[40px] h-[40px] flex justify-center items-center border border-[#c6c6c7] rounded-sm mr-[8px] cursor-pointer">
+														<h3>V</h3>
+													</div>
+												))}
+											</div>
+										</div>
+									)}
 
+
+									{showVariant ? (
+										<div className="w-[100%] h-[100%] flex justify-center items-center bg-[rgba(0,0,0,0.5)] fixed left-0 top-0">
+											<div className="w-[43%] p-[18px] bg-white rounded-md flex flex-col">
+												<div className="w-[100%] flex items-center justify-between">
+													<h2 className="text-[19px] font-[500]">Please select a variation</h2>
+													<div onClick={closeVariant} className="text-[25px] cursor-pointer"><IoMdClose /></div>
+												</div>
+
+												{data?.data?.variants?.map((variant: any) => (
+													<div className="w-[100%] flex flex-col">
+														<div key={variant.id} className="w-[100%] flex items-center justify-between mt-[25px] mb-[15px]">
+													<div className="flex flex-col">
+																<div className="text-[18px]">{variant.title}</div>
+														<div className="text-[14px] mt-[1px]">₦ {variant.price}</div>
+													</div>
+
+													<div onClick={handleDecrement} className="flex items-center">
+														<div className="w-[30px] h-[30px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer">
+															-
+														</div>
+														<div className="w-[30px] h-[30px] rounded-sm flex justify-center items-center mr-[10px]">
+															{findQuantity(variant.id)}
+														</div>
+														<div onClick={() => handleIncrement(variant)} className="w-[30px] h-[30px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer">
+															+
+														</div>
+													</div>
+
+										            </div>
+													</div>
+												))}
+											<div className="w-[100%] h-[1px] bg-[#d6d6d6] mt-[20px]"></div>
+											<div className="w-[100%] flex items-center mt-[15px] justify-between">
+												<button className="w-[48%] h-[50px] border border-[#DE801C] rounded-sm flex justify-center items-center cursor-pointer">
+													<h3 className="text-[#DE801C] text-[16px]">CONTINUE SHOPPING</h3>
+												</button>
+												<button className="w-[48%] h-[50px] bg-[#DE801C] rounded-sm flex justify-center items-center cursor-pointer">
+													<h3 className="text-[#fff] text-[16px]">VIEW CART AND CHECKOUT</h3>
+												</button>
+											</div>
+										</div>
 									</div>
+									) : null}
 								</div>
 								<div onClick={() => {
 									if (data?.data?.variants && data.data.variants.length > 0) {
 											dispatch(
 												addToCart({
-													productName: data?.data?.title,
+													productName: data?.data?.variants.title,
 													variant: data?.data?.variants[1]
 												})
 											);
