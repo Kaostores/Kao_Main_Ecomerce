@@ -32,20 +32,18 @@ export const Reducers = createSlice({
 			state.cart = [];
 			state.totalQuantity = 0;
 		},
-		addToCart: (state, { payload }: PayloadAction<any>) => {
-			const check = state.cart.find((item) => item.id === payload.id)
-
-			if (check) {
-				check.cartQuantity = (check.cartQuantity || 1) + 1;
-			} else {
-				state.cart.push({
-					productName: payload.name,
-					variant: {...payload.variant, quantity: 1}
-				})
-			}
-			state.cartQuantity += 1
-            state.totalPrice += payload.price
-       },
+		addToCart: (state, action: PayloadAction<any>) => {
+      const existingItem = state.cart.find(item => item.id === action.payload.id);
+      if (existingItem) {
+        existingItem.cartQuantity += 1;
+        state.totalPrice += action.payload.variant.price;
+        state.totalQuantity += 1;
+      } else {
+        state.cart.push({ ...action.payload, cartQuantity: 1 });
+        state.totalPrice += action.payload.variant.price;
+        state.totalQuantity += 1;
+      }
+    },
 		removeFromCart: (state, { payload }: PayloadAction<string>) => {
       const check = state.cart.findIndex((item) => item.variant.id === payload);
 
@@ -61,6 +59,7 @@ export const Reducers = createSlice({
 					state.totalPrice -= item.variant.price * (item.variant.quantity || 0);
 		  }
       }
+	state.totalQuantity -= 1;
 		},
 		remove: (state, { payload }: PayloadAction<any>) => {
       state.cart = state.cart.filter((el) => el.id !== payload.id);
