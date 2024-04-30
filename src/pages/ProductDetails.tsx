@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsHeartFill } from "react-icons/bs";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { CgFacebook } from "react-icons/cg";
@@ -25,35 +25,43 @@ const ProductDetails = () => {
 	const [show3, setShow3] = useState<boolean>(false);
 	const [showContent, setContent] = useState<boolean>(false);
 	const [showLove, setShowLove] = useState<boolean>(true);
-	const [showVariant, setShowVariant] = useState(false)
-	const [quantity, setQuantity] = useState(0); 
+	const [showVariant, setShowVariant] = useState(false);
+	const [quantity, setQuantity] = useState(0);
+	const [selectedImage, setSelectedImage] = useState(null);
+	const { id } = useParams();
+	const { data, isLoading } = useViewAProductQuery(id);
+	const [selectedId, setSelectedId] = useState('');
 
-	const dispatch = UseAppDispach()
-	const globalstate = useSelector((state: any) => state.persistedReducer.cart)
-	console.log("global", globalstate)
+	const dispatch = UseAppDispach();
+	const globalstate = useSelector((state: any) => state.persistedReducer.cart);
+	console.log("global", globalstate);
 
 	const findQuantity = (variantId: any) => {
-    const item = state.cart.find((item: any) => item.variant.id === variantId);
-    return item ? item.quantity : 0;
-  };
+		const item = globalstate.find((item: any) => item.variant.id === variantId);
 
-  const handleIncrement = (variant: any) => {
-    dispatch(addToCart({
-      id: variant.id,
-      productName: data?.data?.name,
-      variant,
-      quantity: 1 // This will be handled in the reducer
-    }));
-    toast.success("Added to Cart successfully");
-  };
-	
+		console.log(item);
+		return item ? item.cartQuantity : 0;
+	};
+
+	const handleIncrement = (variant: any) => {
+		dispatch(
+			addToCart({
+				id: variant.id,
+				productName: data?.data?.name,
+				variant,
+				quantity: 1, // This will be handled in the reducer
+			}),
+		);
+		toast.success("Added to Cart successfully");
+	};
+
 	const handleDecrement = (variant: any) => {
-        if (quantity > 1) {
-            setQuantity(prev => prev - 1);
-            dispatch(removeFromCart(variant.id));
-        }
-    };
-	
+		if (quantity > 1) {
+			setQuantity((prev) => prev - 1);
+			dispatch(removeFromCart(variant.id));
+		}
+	};
+
 	const togContent = () => {
 		setContent(!showContent);
 	};
@@ -77,18 +85,20 @@ const ProductDetails = () => {
 	};
 
 	const openVariant = () => {
-		setShowVariant(true)
-	}
+		setShowVariant(true);
+	};
 	const closeVariant = () => {
-		setShowVariant(false)
-	}
+		setShowVariant(false);
+	};
 
+	
+	
 
-	const { id } = useParams();
-	const { data, isLoading } = useViewAProductQuery(id);
+	
 
+	console.log("dfghyjdkhghj", selectedId);
 
-	console.log("getting a data", data)
+	useEffect(() => {}, [selectedId, data]);
 	return (
 		<div className='w-[100%] min-h-[100%] flex xl:justify-center items-center '>
 			<div className='w-[100%]  flex flex-col my-[10px]'>
@@ -107,52 +117,42 @@ const ProductDetails = () => {
 					</div>
 					<div>Watch</div>
 				</div>
-				<div className='w-[100%] xl:h-[500px] flex justify-between items-start sm:flex-col'>
-					<div className='xl:w-[600px] sm:w-[100%] flex justify-between items-center sm:flex-col-reverse'>
+				<div className=' xl:min-h-[500px] flex  items-start sm:flex-col'>
+					<div className='w-[500px]    flex  gap-20  sm:flex-col-reverse'>
 						<div className=' xl:flex-col sm:flex sm:w-[100%] sm:justify-start'>
-							<div
-								className={`xl:w-[100px] xl:h-[100px] lg:w-[100px] lg:h-[100px] md:w-[80px] md:h-[80px] sm:w-[60px] sm:h-[60px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center ${
-									show ? "border-[2px] border-[#0000ff]" : null
-								}`}
-								onClick={tog}>
-								<img
-									src={im2}
-									alt=''
-									className='xl:w-[50px] md:w-[50px] lg:w-[50px] sm:w-[30px]'
-								/>
-							</div>
-							<div
-								className={`xl:w-[100px] xl:h-[100px] md:w-[80px] lg:w-[100px] lg:h-[100px] md:h-[80px] sm:w-[60px] sm:h-[60px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center ${
-									show2 ? "border-[2px] border-[#0000ff]" : null
-								}`}
-								onClick={tog2}>
-								<img
-									src={im2}
-									alt=''
-									className='xl:w-[50px] md:w-[50px] lg:w-[50px] sm:w-[30px]'
-								/>
-							</div>
-							<div
-								className={`xl:w-[100px] xl:h-[100px] md:w-[80px] lg:w-[100px] lg:h-[100px] md:h-[80px]  sm:w-[60px] sm:h-[60px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center ${
-									show3 ? "border-[2px] border-[#0000ff]" : null
-								}`}
-								onClick={tog3}>
-								<img
-									src={im2}
-									alt=''
-									className='xl:w-[50px] md:w-[50px] lg:w-[50px] sm:w-[30px]'
-								/>
-							</div>
+							{data?.data?.media?.map((props: any) => (
+								<div
+									className={`xl:w-[100px] xl:h-[100px] md:w-[80px] lg:w-[100px] lg:h-[100px] md:h-[80px]  sm:w-[60px] sm:h-[60px] overflow-hidden mb-[10px] cursor-pointer flex justify-center  items-center ${
+										selectedId === props?.id
+											? "border-[2px] border-[#0000ff]"
+											: null
+									}`}
+									onClick={() => {
+										setSelectedImage(props);
+										setSelectedId(props?.id);
+										// console.log("this is it", props);
+									}}>
+									<img
+										src={props?.link}
+										alt=''
+										className='xl:w-[50px] md:w-[50px] lg:w-[50px] sm:w-[30px]'
+									/>
+								</div>
+							))}
 						</div>
 						<div>
 							<img
-								src={im2}
+								src={
+									selectedImage !== null
+										? selectedImage?.link
+										: data?.data?.media[0]?.link
+								}
 								alt=''
 								className='xl:w-[300px] md:w-[250px] lg:w-[220px] sm:w-[170px] sm:mb-[20px]'
 							/>
 						</div>
 					</div>
-					<div className='flex justify-center'>
+					<div className='flex-1 flex  justify-center'>
 						<div
 							className={`mr-[50px] xl:w-[35px] xl:h-[35px] lg:w-[35px] lg:h-[35px] md:w-[30px] md:h-[30px] bg-[#b1b0b098] rounded-[50%] xl:flex md:flex lg:flex justify-center items-center text-[18px] md:text-[15px] cursor-pointer sm:hidden ${
 								showLove ? "text-white" : "text-[red]"
@@ -160,7 +160,7 @@ const ProductDetails = () => {
 							onClick={loveBtn}>
 							<BsHeartFill />
 						</div>
-						<div className=''>
+						<div className='flex-1'>
 							<div className='flex flex-col'>
 								<div className='text-[25px] sm:text-[20px] font-semibold'>
 									{data?.data?.name}
@@ -191,13 +191,16 @@ const ProductDetails = () => {
 									<div className='text-[13px]'>Call us for Bulk Purchase</div>
 									<div className='text-[13px] text-primary'>0905729875</div>
 								</div>
-								<div className="w-[100%] h-[100%] flex flex-col mt-[20px]">
+								<div className='w-[100%] h-[100%] flex flex-col mt-[20px]'>
 									{data?.data?.variants && data.data.variants.length > 0 && (
-										<div className="w-[100%] h-[100%] flex flex-col mt-[20px]">
+										<div className='w-[100%] h-[100%] flex flex-col mt-[20px]'>
 											<h2>Variants Available</h2>
-											<div className="w-[100%] flex items-center mt-[10px]">
+											<div className='w-[100%] flex items-center mt-[10px]'>
 												{data.data.variants.map((variant: any) => (
-													<div key={variant.id} onClick={openVariant} className="w-[40px] h-[40px] flex justify-center items-center border border-[#c6c6c7] rounded-sm mr-[8px] cursor-pointer">
+													<div
+														key={variant.id}
+														onClick={openVariant}
+														className='w-[40px] h-[40px] flex justify-center items-center border border-[#c6c6c7] rounded-sm mr-[8px] cursor-pointer'>
 														<h3>V</h3>
 													</div>
 												))}
@@ -205,68 +208,88 @@ const ProductDetails = () => {
 										</div>
 									)}
 
-
 									{showVariant ? (
-										<div className="w-[100%] h-[100%] flex justify-center items-center bg-[rgba(0,0,0,0.5)] fixed left-0 top-0">
-											<div className="w-[43%] p-[18px] bg-white rounded-md flex flex-col">
-												<div className="w-[100%] flex items-center justify-between">
-													<h2 className="text-[19px] font-[500]">Please select a variation</h2>
-													<div onClick={closeVariant} className="text-[25px] cursor-pointer"><IoMdClose /></div>
+										<div className='w-[100%] h-[100%] flex justify-center items-center bg-[rgba(0,0,0,0.5)] fixed left-0 top-0'>
+											<div className='w-[43%] p-[18px] bg-white rounded-md flex flex-col'>
+												<div className='w-[100%] flex items-center justify-between'>
+													<h2 className='text-[19px] font-[500]'>
+														Please select a variation
+													</h2>
+													<div
+														onClick={closeVariant}
+														className='text-[25px] cursor-pointer'>
+														<IoMdClose />
+													</div>
 												</div>
 
 												{data?.data?.variants?.map((variant: any) => (
-													<div className="w-[100%] flex flex-col">
-														<div key={variant.id} className="w-[100%] flex items-center justify-between mt-[25px] mb-[15px]">
-													<div className="flex flex-col">
-																<div className="text-[18px]">{variant.title}</div>
-														<div className="text-[14px] mt-[1px]">₦ {variant.price}</div>
-													</div>
+													<div className='w-[100%] flex flex-col'>
+														<div
+															key={variant.id}
+															className='w-[100%] flex items-center justify-between mt-[25px] mb-[15px]'>
+															<div className='flex flex-col'>
+																<div className='text-[18px]'>
+																	{variant.title}
+																</div>
+																<div className='text-[14px] mt-[1px]'>
+																	₦ {variant.price}
+																</div>
+															</div>
 
-													<div onClick={handleDecrement} className="flex items-center">
-														<div className="w-[30px] h-[30px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer">
-															-
+															<div
+																onClick={handleDecrement}
+																className='flex items-center'>
+																<div className='w-[30px] h-[30px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
+																	-
+																</div>
+																<div className='w-[30px] h-[30px] rounded-sm flex justify-center items-center mr-[10px]'>
+																	{findQuantity(variant.id)}
+																</div>
+																<div
+																	onClick={() => handleIncrement(variant)}
+																	className='w-[30px] h-[30px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
+																	+
+																</div>
+															</div>
 														</div>
-														<div className="w-[30px] h-[30px] rounded-sm flex justify-center items-center mr-[10px]">
-															{findQuantity(variant.id)}
-														</div>
-														<div onClick={() => handleIncrement(variant)} className="w-[30px] h-[30px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer">
-															+
-														</div>
-													</div>
-
-										            </div>
 													</div>
 												))}
-											<div className="w-[100%] h-[1px] bg-[#d6d6d6] mt-[20px]"></div>
-											<div className="w-[100%] flex items-center mt-[15px] justify-between">
-												<button className="w-[48%] h-[50px] border border-[#DE801C] rounded-sm flex justify-center items-center cursor-pointer">
-													<h3 className="text-[#DE801C] text-[16px]">CONTINUE SHOPPING</h3>
-												</button>
-												<button className="w-[48%] h-[50px] bg-[#DE801C] rounded-sm flex justify-center items-center cursor-pointer">
-													<h3 className="text-[#fff] text-[16px]">VIEW CART AND CHECKOUT</h3>
-												</button>
+												<div className='w-[100%] h-[1px] bg-[#d6d6d6] mt-[20px]'></div>
+												<div className='w-[100%] flex items-center mt-[15px] justify-between'>
+													<button className='w-[48%] h-[50px] border border-[#DE801C] rounded-sm flex justify-center items-center cursor-pointer'>
+														<h3 className='text-[#DE801C] text-[16px]'>
+															CONTINUE SHOPPING
+														</h3>
+													</button>
+													<button className='w-[48%] h-[50px] bg-[#DE801C] rounded-sm flex justify-center items-center cursor-pointer'>
+														<h3 className='text-[#fff] text-[16px]'>
+															VIEW CART AND CHECKOUT
+														</h3>
+													</button>
+												</div>
 											</div>
 										</div>
-									</div>
 									) : null}
 								</div>
-								<div onClick={() => {
-									if (data?.data?.variants && data.data.variants.length > 0) {
+								<div
+									onClick={() => {
+										if (data?.data?.variants && data.data.variants.length > 0) {
 											dispatch(
 												addToCart({
 													productName: data?.data?.variants.title,
-													variant: data?.data?.variants[1]
-												})
+													variant: data?.data?.variants[1],
+												}),
 											);
 										} else {
 											dispatch(
 												addToCart({
 													productName: data?.data?.title,
-													variant: null // or any other default value for the variant
-												})
+													variant: null, // or any other default value for the variant
+												}),
 											);
 										}
-								}} className='xl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'>
+									}}
+									className='xl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'>
 									<div>Add to cart</div>
 								</div>
 								<div className='flex items-center mb-[20px]'>
