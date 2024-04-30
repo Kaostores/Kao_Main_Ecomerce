@@ -11,8 +11,8 @@ const CardComp = ({ deal, isLoading, ...props }: any) => {
 	// const [ratingValue, setRatingValue] = useState(5);
 
 	return (
-		<div className='h-[300px]   pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
-			<div  className='h-[170px] relative w-[100%] '>
+		<div className='h-[270px]   pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
+			<div className='h-[170px] relative w-[100%] '>
 				<img
 					className='w-[100%] h-[100%] object-contain pt-10 rounded-sm'
 					src={pic1}
@@ -41,13 +41,12 @@ const CardComp = ({ deal, isLoading, ...props }: any) => {
 					</div>
 				</div>
 			</div>
-			<h2 className="ml-[10px] text-[16px] font-[600] mt-[15px]">{props.name}</h2>
+			<Link to={`/product-details/${props.id}`}>
+				<h2 className='ml-[10px] text-nowrap  text-[16px] font-[600] mt-[15px] overflow-hidden whitespace-nowrap truncate '>
+					{props.name} 
+				</h2>
+			</Link>
 			<div className='p-2'>
-				<Link to = {`/product-details/${props.id}`}>
-					<div className='text-[12px] mb-[10px]'>
-						{props.description}
-					</div>
-				</Link>
 				<div className='flex justify-between overflow-hidden '>
 					<div className='flex text-[10px] '>
 						(12)
