@@ -30,6 +30,8 @@ const UserForm: React.FC<Iprops> = ({ togleBtn }) => {
 		console.log("Form Data Submitted:", formData);
         try {
             const data = await createAddress(formData);
+
+			console.log('data address', data);
             dispatch(addAddress(formData));  // Save to Redux store
             togleBtn(); // Close form or show success message
         } catch (error) {

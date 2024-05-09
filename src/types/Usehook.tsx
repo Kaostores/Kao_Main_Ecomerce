@@ -244,83 +244,89 @@ interface AddressType {
 interface FlutterWavePaymentProps {
   amount: number;
   cartItems: CartItem[];
+  addressId : any
 }
 
-export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({ amount }) => {
-  const [createOrder] = useCreateOrderMutation();
-  const { user, cartItems, addressId } = useSelector((state: RootState) => ({
-    user: state.persistedReducer.currentUser,
-    cartItems: state.persistedReducer.cart,
-    addressId: state.persistedReducer.addresses,
-  }));
+export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
+	amount,
+	addressId,
+}) => {
+	const [createOrder] = useCreateOrderMutation();
+	const { user, cartItems } = useSelector((state: RootState) => ({
+		user: state.persistedReducer.currentUser,
+		cartItems: state.persistedReducer.cart,
+	}));
 
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-  const config = {
-    public_key: "FLWPUBK_TEST-0822da2514e8dd6f0d0441f20d18337a-X",
-    tx_ref: `KAO-${Date.now()}`,
-    amount,
-    currency: "NGN",
-    payment_options: "card,mobilemoney,ussd",
-    customer: {
-      email: user?.email ?? '',
-      phone_number: user?.phone ?? '',
-      name: user?.name ?? '',
-    },
-    customizations: {
-      title: "Payment",
-      description: "Payment for items in cart",
-      logo: "https://example.com/path/to/logo.png",
-    },
-    callback: (response: any) => {
-  console.log("Flutterwave payment response:", response);
-  // Check the correct response field for successful payment
-  if (response.status === 'successful' || response.charge_response_code === "00") {
-    const orderData = {
-      items: cartItems.map((cart) => ({
-        variant: cart.variant.id,
-        quantity: cart.quantity,
-        coupon: cart.coupon || ""
-      })),
-      address: addressId,
-      notes: "Order created after successful payment",
-      tx_ref: response.transaction_id,
-    };
+	const config = {
+		public_key: "FLWPUBK_TEST-0822da2514e8dd6f0d0441f20d18337a-X",
+		tx_ref: `KAO-${Date.now()}`,
+		amount,
+		currency: "NGN",
+		payment_options: "card,mobilemoney,ussd",
+		customer: {
+			email: user?.email ?? "",
+			phone_number: user?.phone ?? "",
+			name: user?.name ?? "",
+		},
+		customizations: {
+			title: "Payment",
+			description: "Payment for items in cart",
+			logo: "https://example.com/path/to/logo.png",
+		},
+		callback: (response: any) => {
+			console.log("Flutterwave payment response:", response);
+			// Check the correct response field for successful payment
+			if (
+				response.status === "successful" ||
+				response.charge_response_code === "00"
+			) {
+				const orderData = {
+					items: cartItems.map((cart) => ({
+						variant: cart.variant.id,
+						quantity: cart.quantity,
+						coupon: cart.coupon || "",
+					})),
+					address: addressId,
+					notes: "Order created after successful payment",
+					tx_ref: response.transaction_id,
+				};
 
-    createOrder(orderData).unwrap()
-      .then(orderResponse => {
-        console.log('Order created successfully:', orderResponse);
-        ShowToast(true, "Order created successfully!");
-        dispatch(clearCart());
-      })
-      .catch(error => {
-        console.error('Failed to create order:', error);
-        ShowToast(false, "Failed to create order");
-      });
-  } else {
-    console.error('Payment was not successful:', response);
-    ShowToast(false, "Payment failed");
-  }
-  closePaymentModal();
-},
+				createOrder(orderData)
+					.unwrap()
+					.then((orderResponse) => {
+						console.log("Order created successfully:", orderResponse);
+						ShowToast(true, "Order created successfully!");
+						dispatch(clearCart());
+					})
+					.catch((error) => {
+						console.error("Failed to create order:", error);
+						ShowToast(false, "Failed to create order");
+					});
+			} else {
+				console.error("Payment was not successful:", response);
+				ShowToast(false, "Payment failed");
+			}
+			closePaymentModal();
+		},
 
-    onClose: () => {
-      console.log('Payment widget closed');
-      ShowToast(false, "Transaction terminated");
-    }
-  };
+		onClose: () => {
+			console.log("Payment widget closed");
+			ShowToast(false, "Transaction terminated");
+		},
+	};
 
-  return (
-    <div className='w-full mt-2'>
-      <FlutterWaveButton
-        className='w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white py-[10px] rounded-sm bg-secondary mt-[20px] sm:hidden'
-        text="Checkout"
-        {...config}
-        disabled={amount < 100}
-      >
-        {/* <img src={flutterwaveIcon} className='w-12' alt="FlutterWave Icon" /> */}
-      </FlutterWaveButton>
-      {amount < 100 && <p>Amount should be at least 100.</p>}
-    </div>
-  );
+	return (
+		<div className='w-full mt-2'>
+			<FlutterWaveButton
+				className='w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white py-[10px] rounded-sm bg-secondary mt-[20px] sm:hidden'
+				text='Checkout'
+				{...config}
+				disabled={amount < 100}>
+				{/* <img src={flutterwaveIcon} className='w-12' alt="FlutterWave Icon" /> */}
+			</FlutterWaveButton>
+			{amount < 100 && <p>Amount should be at least 100.</p>}
+		</div>
+	);
 };

@@ -9,24 +9,33 @@ import UserForm from "@/components/props/AddressForm";
 import { useAppSelector } from "@/services/store";
 import { useNavigate } from "react-router-dom";
 import { FlutterWavePayment } from "@/types/Usehook";
+import { useViewAllAddressQuery } from "@/services/apiSlice";
 
 const Checkout = () => {
 	const [showAddress, setShowAddress] = useState(true);
 	const [showDet, setShowDet] = useState(true);
 	const [showCheckOut, setShowCheckout] = useState(false);
 
-	const navigate = useNavigate()
+	const { data: addressData } = useViewAllAddressQuery({});
 
-	const cartItems = useAppSelector(state => state.persistedReducer.cart);
-	const addresses = useAppSelector(state => state.persistedReducer.addresses);
-	console.log("addresses", addresses)
-	const totalPrice = useAppSelector((state) => state.persistedReducer.totalPrice);
-	
+	console.log("all addresss", addressData);
+
+	const navigate = useNavigate();
+
+	const cartItems = useAppSelector((state) => state.persistedReducer.cart);
+	const addresses = useAppSelector((state) => state.persistedReducer.addresses);
+	console.log("addresses", addresses);
+	const totalPrice = useAppSelector(
+		(state) => state.persistedReducer.totalPrice,
+	);
+
+	const [selectedAddressId, setSelectedAddressId] = useState("");
+
 	const [showAllItems, setShowAllItems] = useState(false);
 
 	const toggleItemsVisibility = () => {
-    setShowAllItems(!showAllItems);
-  };
+		setShowAllItems(!showAllItems);
+	};
 
 	const togleBtn = () => {
 		setShowAddress(!showAddress);
@@ -110,20 +119,29 @@ const Checkout = () => {
 									</div>
 								</div>
 							</div>
-							<div className='flex flex-col mb-[10px]'>
-								<div className='font-semibold mb-[5px]'>
-									{addresses.fullname}
-								</div>
-								{addresses ? (
-								<div className='text-[13px] text-[#535353]'>
-									{`${addresses.address}, ${addresses.city}, ${addresses.state}`}
-								</div>
+
+							{addressData?.data?.length >= 1 ? (
+								<>
+									{addressData?.data?.map((props: any) => (
+										<div
+											onClick={() => {
+												setSelectedAddressId(props?.id);
+												console.log("seleeee", selectedAddressId);
+											}}
+											className='flex cursor-pointer  flex-col mb-[10px]'>
+											<div className='font-semibold mb-[5px]'>
+												{props.fullname}
+											</div>
+											<div className='text-[13px] text-[#535353]'>
+												{`${props.address}, ${props.city}, ${props.state}`}
+											</div>
+										</div>
+									))}
+								</>
 							) : (
-								<div className='text-[13px] text-[#535353]'>
-									No address set.
-								</div>
+								<div>No Address found</div>
 							)}
-							</div>
+
 							{showDet ? null : (
 								<div className='flex justify-between'>
 									<div
@@ -158,7 +176,9 @@ const Checkout = () => {
 									<div className='xl:text-[14px] sm:text-[10px]  text-primary'>
 										<HiPencil />
 									</div>
-									<div onClick={()=>navigate(-1)} className='ml-[5px] text-primary font-semibold text-[15px] sm:hidden cursor-pointer'>
+									<div
+										onClick={() => navigate(-1)}
+										className='ml-[5px] text-primary font-semibold text-[15px] sm:hidden cursor-pointer'>
 										Modify items
 									</div>
 									<div className='ml-[5px] text-primary font-semibold text-[13px] xl:hidden md:hidden lg:hidden'>
@@ -166,53 +186,61 @@ const Checkout = () => {
 									</div>
 								</div>
 							</div>
-							{cartItems.slice(0, showAllItems ? cartItems.length : 1).map((item: any) => (
-								<div key={item.variant ? `${item.id}-${item.variant.id}` : `${item.id}-default`} className='flex h-[100px] md:w-[300px] mb-[15px]'>
-								<div className='xl:w-[100px] xl:h-[100px] lg:w-[100px] lg:h-[100px] md:w-[80px] md:h-[80px] sm:w-[90px] sm:h-[100px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff]'>
-									<img
-										src={im2}
-										alt=''
-										className='xl:w-[50px] md:w-[30px] lg:w-[50px] sm:w-[50px]'
-									/>
-								</div>
-								<div className='flex flex-col md:h-[80px]'>
-									<div className='xl:text-[20px] sm:text-[14px] md:text-[14px] font-semibold mb-[5px]'>
-										{item.name} - {item.variant?.title || 'No Variant'}
-									</div>
-									<div className='xl:text-[13px] md:text-[10px] sm:text-[9px]'>
-										Brand <span className='text-primary font-bold'>Apple</span>{" "}
-										| Similar Product From Apple | 709388838
-									</div>
-									<div className="mt-[12px] text-[16px] font-[500]">
-										QTY: {item.cartQuantity}
-									</div>
-									<div className='xl:hidden sm:flex items-center  md:hidden lg:hidden'>
-										<div className='text-[10px]'>
-											<FaNairaSign />
+							{cartItems
+								.slice(0, showAllItems ? cartItems.length : 1)
+								.map((item: any) => (
+									<div
+										key={
+											item.variant
+												? `${item.id}-${item.variant.id}`
+												: `${item.id}-default`
+										}
+										className='flex h-[100px] md:w-[300px] mb-[15px]'>
+										<div className='xl:w-[100px] xl:h-[100px] lg:w-[100px] lg:h-[100px] md:w-[80px] md:h-[80px] sm:w-[90px] sm:h-[100px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff]'>
+											<img
+												src={im2}
+												alt=''
+												className='xl:w-[50px] md:w-[30px] lg:w-[50px] sm:w-[50px]'
+											/>
 										</div>
-										<div className='font-semibold text-[13px]'>18,000</div>
-									</div>
-									<div>
-										<div className='w-[100px] sm:flex xl:hidden lg:hidden md:hidden justify-between items-center bg-[#0000ff57] pl-2 pr-2 rounded-sm'>
-											<div className='w-[14px] h-[14px] rounded-[50%] text-[13px] bg-primary text-white flex justify-center items-center'>
-												-
+										<div className='flex flex-col md:h-[80px]'>
+											<div className='xl:text-[20px] sm:text-[14px] md:text-[14px] font-semibold mb-[5px]'>
+												{item.name} - {item.variant?.title || "No Variant"}
 											</div>
-											<div>1</div>
-											<div className='w-[14px] h-[14px] rounded-[50%] text-[13px] bg-primary text-white flex justify-center items-center'>
-												+
+											<div className='xl:text-[13px] md:text-[10px] sm:text-[9px]'>
+												Brand{" "}
+												<span className='text-primary font-bold'>Apple</span> |
+												Similar Product From Apple | 709388838
+											</div>
+											<div className='mt-[12px] text-[16px] font-[500]'>
+												QTY: {item.cartQuantity}
+											</div>
+											<div className='xl:hidden sm:flex items-center  md:hidden lg:hidden'>
+												<div className='text-[10px]'>
+													<FaNairaSign />
+												</div>
+												<div className='font-semibold text-[13px]'>18,000</div>
+											</div>
+											<div>
+												<div className='w-[100px] sm:flex xl:hidden lg:hidden md:hidden justify-between items-center bg-[#0000ff57] pl-2 pr-2 rounded-sm'>
+													<div className='w-[14px] h-[14px] rounded-[50%] text-[13px] bg-primary text-white flex justify-center items-center'>
+														-
+													</div>
+													<div>1</div>
+													<div className='w-[14px] h-[14px] rounded-[50%] text-[13px] bg-primary text-white flex justify-center items-center'>
+														+
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							</div>
-							))}
-							<div className="w-[100%] flex justify-center items-center">
+								))}
+							<div className='w-[100%] flex justify-center items-center'>
 								{cartItems.length > 1 && (
-									<button 
-									onClick={toggleItemsVisibility}
-									className='w-[110px] mt-[10px] h-[35px] text-[15px] rounded-sm cursor-pointer bg-secondary text-white'
-									>
-									{showAllItems ? 'See Less' : 'See More'}
+									<button
+										onClick={toggleItemsVisibility}
+										className='w-[110px] mt-[10px] h-[35px] text-[15px] rounded-sm cursor-pointer bg-secondary text-white'>
+										{showAllItems ? "See Less" : "See More"}
 									</button>
 								)}
 							</div>
@@ -375,7 +403,11 @@ const Checkout = () => {
 								</div>
 							</div>
 						</div>
-						<FlutterWavePayment amount={totalPrice} cartItems={cartItems} addressId={addresses.id} />
+						<FlutterWavePayment
+							amount={totalPrice}
+							cartItems={cartItems}
+							addressId={selectedAddressId}
+						/>
 					</div>
 				</div>
 			</div>
