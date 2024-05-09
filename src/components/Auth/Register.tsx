@@ -24,7 +24,6 @@ import { useDispatch } from "react-redux";
 import { updateUserDetails } from "@/services/reducers";
 import { useState } from "react";
 import { Register } from "@/utils/ApiCalls";
-import ShowToast from "../reuse/ShowToast";
 import LoadingButton from "../reuse/LoadingButton";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

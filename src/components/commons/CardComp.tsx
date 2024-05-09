@@ -1,21 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import pic1 from "@/assets/pngegg (84) 1.png";
 import { BsStars } from "react-icons/bs";
 import pic2 from "@/assets/noto_fire.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import StarRating from "../StarRating";
 import { Link } from "react-router-dom";
+import pic3 from "../../assets/lenovo.png"
+
 
 const CardComp = ({ deal, isLoading, ...props }: any) => {
 	console.log(props)
 	// const [ratingValue, setRatingValue] = useState(5);
+	console.log(props.media); 
 
 	return (
 		<div className='h-[270px]   pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
 			<div className='h-[170px] relative w-[100%] '>
 				<img
 					className='w-[100%] h-[100%] object-contain pt-10 rounded-sm'
-					src={pic1}
+					src={props?.media?.length > 0 && props.media[0].link ? props.media[0].link : pic3}
 				/>
 				<div className='absolute top-2 pl-3 pr-3 flex justify-between w-full'>
 					<div className='h-[25px] w-[25px] bg-white rounded-[50%]'></div>

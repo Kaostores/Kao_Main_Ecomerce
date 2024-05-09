@@ -9,58 +9,78 @@ interface UserDetails {
 	password?: string;
 }
 
+export interface AddressType {
+  fullname: string;
+  phone: string;
+  address: string; 
+  state?: string;
+  city?: string;
+}
+
 const initialState = {
 	currentUser: {} as UserDetails | any,
 	cart: [] as Array<any>,
 	totalPrice: 0,
 	totalQuantity: 0,
 	cartQuantity: 0,
+	addresses: {} as AddressType
 }
+
+
+
 
 export const Reducers = createSlice({
 	name: "Koa-ecomerce",
 	initialState,
 	reducers: {
-		updateUserDetails:(state, {payload}:PayloadAction<UserDetails>) => {
-			state.currentUser = payload;
-		},
+		updateUserDetails: (state, action: PayloadAction<UserDetails>) => {
+      		state.currentUser = action.payload;
+    	},
 
 		logoutUser: (state) => {
 			state.currentUser = null
 		},
+		addAddress: (state, action: PayloadAction<AddressType>) => {
+			state.addresses = action.payload;
+        },
 		clearCart: (state) => {
 			state.cart = [];
 			state.totalQuantity = 0;
+			state.totalPrice = 0;
 		},
 		addToCart: (state, action: PayloadAction<any>) => {
-      const existingItem = state.cart.find(item => item.id === action.payload.id);
-      if (existingItem) {
-        existingItem.cartQuantity += 1;
-        state.totalPrice += action.payload.variant.price;
-        state.totalQuantity += 1;
-      } else {
-        state.cart.push({ ...action.payload, cartQuantity: 1 });
-        state.totalPrice += action.payload.variant.price;
-        state.totalQuantity += 1;
-      }
-    },
-		removeFromCart: (state, { payload }: PayloadAction<string>) => {
-      const check = state.cart.findIndex((item) => item.variant.id === payload);
+		const itemToAdd = action.payload;
+		const existingItem = state.cart.find(item => item.id === itemToAdd.id && item.variant.id === itemToAdd.variant.id);
 
-      if (check !== -1) {
-		  const item = state.cart[check]
-		  if (item.variant.quantity && item.variant.quantity > 1) {
-			  item.variant.quantity -= 1;
-			  state.cartQuantity -= 1;
-			  state.totalPrice -= item.variant.price;
-		  } else {
-			  state.cart.splice(check, 1);
-					state.cartQuantity -= item.variant.quantity || 0;
-					state.totalPrice -= item.variant.price * (item.variant.quantity || 0);
-		  }
-      }
-	state.totalQuantity -= 1;
+		if (existingItem) {
+			existingItem.cartQuantity += 1;
+		} else {
+			state.cart.push({ ...itemToAdd, cartQuantity: 1 });
+		}
+
+		state.totalPrice += itemToAdd.variant ? itemToAdd.variant.price : itemToAdd.price;
+		state.totalQuantity += 1;
 		},
+
+		removeFromCart: (state, { payload }: PayloadAction<string>) => {
+  const index = state.cart.findIndex((item) => item.variant ? item.variant.id === payload : item.id === payload);
+
+  if (index !== -1) {
+    const item = state.cart[index];
+    if (item.cartQuantity > 1) {
+      item.cartQuantity -= 1;  // Decrement the quantity
+      const amountToDeduct = item.variant ? item.variant.price : item.price;
+      state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct);  // Ensure totalPrice does not go negative
+      state.totalQuantity -= 1;  // Decrement the total item count
+    } else {
+      const amountToDeduct = (item.variant ? item.variant.price : item.price) * item.cartQuantity;
+      state.cart.splice(index, 1); // Remove the item from the cart
+      state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct); // Ensure totalPrice does not go negative
+      state.totalQuantity -= item.cartQuantity;  // Adjust the total item count
+    }
+  }
+},
+
 		remove: (state, { payload }: PayloadAction<any>) => {
       state.cart = state.cart.filter((el) => el.id !== payload.id);
     },
@@ -74,6 +94,7 @@ export const {
 	clearCart,
 	removeFromCart,
 	remove,
+	addAddress,
 } = Reducers.actions;
 
 export default Reducers.reducer;

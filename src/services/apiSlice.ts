@@ -14,7 +14,7 @@ export const api = createApi({
 			return headers;
 		},
 	}),
-	tagTypes: ["stores", "products", "product"],
+	tagTypes: ["stores", "products", "product", "Orders"],
 	endpoints: (builder) => ({
 
 		viewAllProducts: builder.query({
@@ -26,11 +26,28 @@ export const api = createApi({
 			query: (id: any) => `/customer/products/${id}`,
 			providesTags: ["product"],
 		}),
-	}),
-});
+
+		createOrder: builder.mutation({
+			query: (orderData) => ({
+				url: '/customer/orders/create',
+				method: 'POST',
+				body: orderData,
+			}),
+			invalidatesTags: ['Orders'],
+		}),
+
+		fetchOrders: builder.query({
+			query: () => '/customer/orders',
+			providesTags: ['Orders'],
+		})
+		}),
+	})
+
 
 export const {
 	useViewAllProductsQuery,
 	useViewAProductQuery,
+	useCreateOrderMutation,
+	useFetchOrdersQuery,
 } = api;
 

@@ -2,13 +2,39 @@ import { MdModeEditOutline } from "react-icons/md";
 import { IoIosArrowBack } from "react-icons/io";
 import Recomended from "./Subpages/Recomended";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { UseAppDispach, useAppSelector } from "@/services/store";
+import { getUserDetails } from "@/utils/ApiCalls";
+import { updateUserDetails } from '@/services/reducers';
 
 const Account = () => {
   const [show, setShow] = useState(true)
   const [editAccount, setEditAccount] = useState(false)
   const [changePassword, setChangePassword] = useState(false)
   const Navigate = useNavigate()
+
+  const dispatch = UseAppDispach();
+  const user = useAppSelector(state => state.persistedReducer.currentUser);
+
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const userData = await getUserDetails();
+  //       console.log("userdata", userData)
+  //       if (userData) { // Ensure userData is not null or undefined
+  //         dispatch(updateUserDetails(userData));
+  //       }
+  //     } catch (error: any) {
+  //       console.error('Failed to fetch user data:', error);
+  //       if (error.response && error.response.status === 401) {
+  //         // Handle authorization error or token expiration
+  //         // Navigate('/login'); // Redirect to login or handle session refresh
+  //       }
+  //     }
+  //   };
+
+  //   fetchUserData();
+  // }, [dispatch]);
 
   const Toggle = () => {
     setShow(true)
@@ -50,19 +76,19 @@ const Account = () => {
             <p className="text-[#606060] text-[13px]">Name</p>
             <div className="flex items-center sm:hidden"><div className="text-primary"><MdModeEditOutline /></div><h3 onClick={Toggle2} className= "text-primary text-[13px] font-[500] ml-[5px] cursor-pointer">Edit Account</h3></div>
           </div>
-          <h3 className="mt-[10px] font-[500]">Temiloluwa Morafa</h3>
+          <h3 className="mt-[10px] font-[500]">hghghghgh</h3>
         </div>
         <div className="w-[100%] md:w-[85%] sm:w-[90%] flex flex-col mt-[20px]">
           <div className="w-[100%] flex items-center justify-between">
             <p className="text-[#606060] text-[13px]">Email</p>
           </div>
-          <h3 className="mt-[10px] font-[500]">temiloluwamorafa@gmail.com</h3>
+          <h3 className="mt-[10px] font-[500]">ghghghghghgh</h3>
         </div>
         <div className="w-[100%] md:w-[85%] sm:w-[90%] flex flex-col mt-[20px]">
           <div className="w-[100%] flex items-center justify-between">
             <p className="text-[#606060] text-[13px]">Phone number</p>
           </div>
-          <h3 className="mt-[10px] font-[500]">+234 812 8738 389</h3>
+          <h3 className="mt-[10px] font-[500]">jgjgjgjgjgjg</h3>
         </div>
       </div>
 
