@@ -1,5 +1,5 @@
 import { GoChevronRight } from "react-icons/go";
-import im2 from "../../src/assets/watch2.png";
+import im2 from "../../src/assets/adidas.png";
 import { HiTrash } from "react-icons/hi2";
 import { FaNairaSign } from "react-icons/fa6";
 // import Product from "@/props/Product";
@@ -9,25 +9,44 @@ import BrandsComp from "@/components/commons/BrandsComp";
 import { useNavigate } from "react-router-dom";
 import { UseAppDispach, useAppSelector } from "@/services/store";
 import { addToCart, clearCart, remove, removeFromCart } from "@/services/reducers";
+import { useEffect, useReducer } from "react";
+import EmpyCart from "./EmpyCart";
 
-const Cart = () => {
+interface CartProps {
+    onOpenLogin: () => void; // Assuming no arguments and returns void
+    onClose: () => void;    // Assuming no arguments and returns void
+}
 
-	const dispatch = UseAppDispach()
-	const readCart = useAppSelector((state) => state.persistedReducer.cart)
-	console.log('cart', readCart)
+const Cart: React.FC<CartProps> = ({ onOpenLogin, onClose }) => {
+
+	const currentUser = useAppSelector((state) => state.persistedReducer.currentUser);
+	const dispatch = UseAppDispach();
+    const cart = useAppSelector((state) => state.persistedReducer.cart);
+	const totalQuantity = useAppSelector((state) => state.persistedReducer.totalQuantity);
+	const totalPrice = useAppSelector((state) => state.persistedReducer.totalPrice);
+	const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+	useEffect(() => {
+    forceUpdate(); // This will force the component to re-render on any state change
+}, [totalPrice]);
 
 	const readCartQuantity = useAppSelector((state: any) => state.persistedReducer.totalQuantity)
-
-	const TotalPrice = (item: any) => item.reduce(
-		(allItems: number, oneItem: any) => allItems + oneItem.cartQuantity * oneItem.price, 0)
 	
 	const readFromMyCart = useAppSelector((state: any) => state.persistedReducer.cart)
 
-	const totalTotal = TotalPrice(readFromMyCart)
+	const isAuthenticated = currentUser && Object.keys(currentUser || {}).length !== 0;
 
-	const totalQuantity = readCart.reduce(
-		(total: number, product) => total + product.cartQuantity, 0
-	)
+	 const handleCheckout = () => {
+    console.log("handleCheckout called");
+    if (!isAuthenticated) {
+        console.log("User is not authenticated, opening login...");
+        onOpenLogin();
+    } else {
+        navigate('/cart/checkout');
+    }
+};
+
+
 
 	const navigate = useNavigate()
 	return (
@@ -42,7 +61,10 @@ const Cart = () => {
 					</div>
 					<div className='font-bold text-primary'>Cart</div>
 				</div>
-				<div className='flex justify-between md:h-[250px] sm:flex-col'>
+				{cart.length === 0 ? (
+					<EmpyCart />
+				) : (
+						<div className='flex justify-between md:h-[250px] sm:flex-col'>
 					<div className='flex flex-col'>
 						<div className='text-[20px] font-semibold mb-[20px]'>
 							My Cart({readCartQuantity})
@@ -50,19 +72,19 @@ const Cart = () => {
 
 								{/* {readCart.map((product: any) => ( */}
 									<div  className='flex w-[100%] justify-between flex-col'>
-									{readCart.map((product: any) => (
+									{cart.map((product: any) => (
 										<div className="w-[100%] flex flex-col h-[100%] sm:hidden">
-											<div key={product.id} className='flex h-[100px] sm:hidden md:w-[300px] mb-[30px]'>
+											<div key={product.variant ? `${product.id}-${product.variant.id}` : `${product.id}-default`} className='flex h-[100px] sm:hidden md:w-[300px] mb-[30px]'>
 										<div className='xl:w-[100px] xl:h-[100px] lg:w-[100px] lg:h-[100px] md:w-[80px] md:h-[80px] sm:w-[60px] sm:h-[60px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff]'>
 											<img
-												src={im2}
+												src={product?.media?.length > 0 && product.media[0].link ? product.media[0].link : im2}
 												alt=''
 												className='xl:w-[50px] md:w-[30px] lg:w-[50px] sm:w-[30px]'
 											/>
 										</div>
 										<div className='flex flex-col justify-between md:h-[80px]'>
 											<div className='xl:text-[20px] md:text-[14px] font-semibold'>
-												{product.name}
+												{product.name} - {product.variant?.title || 'No Variant'}
 											</div>
 											<div className='xl:text-[13px] md:text-[10px]'>
 												Brand <span className='text-primary font-bold'>Apple</span>{" "}
@@ -80,18 +102,18 @@ const Cart = () => {
 											<div className='text-[9px]'>
 												<FaNairaSign />
 											</div>
-											<div className='font-semibold text-[18px]'>{product.price * product.cartQuantity}</div>
+											<div className='font-semibold text-[18px]'>{product.variant ? product.variant.price * product.cartQuantity : product.price * product.cartQuantity}</div>
 										</div>
 										<div className='xl:w-[200px] pl-2 pr-2 rounded-md lg:w-[150px] md:w-[150px] flex justify-between items-center bg-ascentGray '>
-											<div onClick={() => {
-												dispatch(removeFromCart(product.id))
-											}} className='w-[20px] h-[20px] rounded-[50%] bg-primary text-white flex justify-center items-center cursor-pointer'>
+											<div onClick={() => dispatch(removeFromCart(product.variant ? product.variant.id : product.id))}
+											 className='w-[20px] h-[20px] rounded-[50%] bg-primary text-white flex justify-center items-center cursor-pointer'>
 												-
 											</div>
 											<div>{product.cartQuantity}</div>
-											<div onClick={() => {
-												dispatch(addToCart(product.id))
-											}} className='w-[20px] h-[20px] rounded-[50%] bg-primary text-white flex justify-center items-center cursor-pointer'>
+											<div onClick={() => dispatch(addToCart({
+											...product,
+											variant: product.variant || null
+											}))} className='w-[20px] h-[20px] rounded-[50%] bg-primary text-white flex justify-center items-center cursor-pointer'>
 												+
 											</div>
 										</div>
@@ -199,19 +221,17 @@ const Cart = () => {
 													<FaNairaSign />
 												</div>
 												<div className='text-[20px] font-semibold'>
-													1,600,700
+													{totalPrice}
 												</div>
 											</div>
 										</div>
 										<div className='text-[13px] font-semibold my-[5px]'>
-											Delivery for not added
+											Delivery fee not added
 										</div>
 									</div>
 
 									<Button
-										onClick={() => {
-											navigate("/cart/checkout");
-										}}
+										onClick={handleCheckout}
 										variant='secondary'
 										className='w-full mt-4 bg-[#de801c] text-white'
 										type='submit'>
@@ -222,6 +242,7 @@ const Cart = () => {
 						</div>
 					</div>
 				</div>
+				)}
 				<div className='xl:flex flex-col mb-20 sm:hidden'>
 					<h3 className='mt-[80px] font-bold mb-3'>Saved items</h3>
 					<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>

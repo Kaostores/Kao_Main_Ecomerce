@@ -16,7 +16,36 @@ export const LogIn = async (data: any) => {
     } catch (err) {
         return err
     }
+};
+
+export const getUserDetails = async () => {
+    try {
+        const response = await Instance.get("/customer/userdata");
+        // Ensure only the data part is returned
+        return response.data;
+    } catch (err: any) {
+        console.error("Error fetching user details:", err.response ? err.response.data : err.message);
+        throw err;
+    }
+};
+
+export const createAddress = async (data: any) => {
+    try {
+        const response = await Instance.post("/customer/profile/address/create", data);
+        // Return only the data part that is serializable
+        return {
+            fullname: response.data.fullname,
+            phone: response.data.phone,
+            address: response.data.address,
+            city: response.data.city,
+            state: response.data.state
+        };
+    } catch (err: any) {
+        console.error("Error creating address:", err.response ? err.response.data : err.message);
+        throw err;  // Throw error to be handled by the calling function
+    }
 }
+
 
 export const getAllProducts = async () => {
     try {

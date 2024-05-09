@@ -5,7 +5,6 @@ import { CgFacebook } from "react-icons/cg";
 import { BiCheck } from "react-icons/bi";
 import { BsTwitterX } from "react-icons/bs";
 import { FaWhatsapp } from "react-icons/fa";
-import im2 from "@/assets/watch2.png";
 import { GoChevronRight } from "react-icons/go";
 import { GoChevronDown } from "react-icons/go";
 import CardComp from "@/components/commons/CardComp";
@@ -37,11 +36,13 @@ const ProductDetails = () => {
 	console.log("global", globalstate);
 
 	const findQuantity = (variantId: any) => {
-		const item = globalstate.find((item: any) => item.variant.id === variantId);
+    // First, ensure the global state and the items array are not null.
+    if (!globalstate || !variantId) return 0;
 
-		console.log(item);
-		return item ? item.cartQuantity : 0;
-	};
+    const item = globalstate.find((item: any) => item?.variant?.id === variantId);
+    console.log(item);
+    return item ? item.cartQuantity : 0;
+};
 
 	const handleIncrement = (variant: any) => {
 		dispatch(
@@ -55,12 +56,19 @@ const ProductDetails = () => {
 		toast.success("Added to Cart successfully");
 	};
 
-	const handleDecrement = (variant: any) => {
-		if (quantity > 1) {
-			setQuantity((prev) => prev - 1);
-			dispatch(removeFromCart(variant.id));
-		}
-	};
+	const handleDecrement = (variantId: any) => {
+    // Get the current quantity of the variant from Redux state
+    const quantity = findQuantity(variantId);
+    // Only dispatch removeFromCart if quantity is greater than 1
+    if (quantity > 1) {
+        dispatch(removeFromCart(variantId));
+    } else if (quantity === 1) {
+        // If quantity is exactly 1, you may want to ask users if they want to remove the item completely
+        if (window.confirm("Do you want to remove this item from the cart?")) {
+            dispatch(removeFromCart(variantId));
+        }
+    }
+};
 
 	const togContent = () => {
 		setContent(!showContent);
@@ -237,7 +245,7 @@ const ProductDetails = () => {
 															</div>
 
 															<div
-																onClick={handleDecrement}
+																onClick={() => handleDecrement(variant)}
 																className='flex items-center'>
 																<div className='w-[30px] h-[30px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
 																	-
@@ -272,26 +280,28 @@ const ProductDetails = () => {
 									) : null}
 								</div>
 								<div
-									onClick={() => {
-										if (data?.data?.variants && data.data.variants.length > 0) {
-											dispatch(
-												addToCart({
-													productName: data?.data?.variants.title,
-													variant: data?.data?.variants[1],
-												}),
-											);
-										} else {
-											dispatch(
-												addToCart({
-													productName: data?.data?.title,
-													variant: null, // or any other default value for the variant
-												}),
-											);
-										}
-									}}
-									className='xl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'>
-									<div>Add to cart</div>
-								</div>
+								onClick={() => {
+									if (data?.data?.variants?.length > 0) {
+										setShowVariant(true); // Show variant selection popup if variants exist
+									} else {
+										// If no variants, directly add the product to the cart
+										dispatch(addToCart({
+											id: data?.data?.id,
+											name: data?.data?.name,
+											variant: null, // No variants, so set to null
+											price: data?.data?.price,
+											image: data?.data?.mainImage, // Use the main image of the product
+											cartQuantity: 1 // Setting initial cart quantity
+										}));
+										toast.success("Added to Cart successfully"); // Show success message
+									}
+								}}
+								className='xl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'
+							>
+								<div>Add to cart</div>
+							</div>
+
+
 								<div className='flex items-center mb-[20px]'>
 									<div className='text-[25px] text-primary mr-[20px]'>
 										<CiDeliveryTruck />

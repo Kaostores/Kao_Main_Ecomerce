@@ -6,11 +6,28 @@ import { HiPencil } from "react-icons/hi2";
 import { RiCoupon2Line } from "react-icons/ri";
 import { GoCheckCircleFill } from "react-icons/go";
 import UserForm from "@/components/props/AddressForm";
+import { useAppSelector } from "@/services/store";
+import { useNavigate } from "react-router-dom";
+import { FlutterWavePayment } from "@/types/Usehook";
 
 const Checkout = () => {
 	const [showAddress, setShowAddress] = useState(true);
 	const [showDet, setShowDet] = useState(true);
 	const [showCheckOut, setShowCheckout] = useState(false);
+
+	const navigate = useNavigate()
+
+	const cartItems = useAppSelector(state => state.persistedReducer.cart);
+	const addresses = useAppSelector(state => state.persistedReducer.addresses);
+	console.log("addresses", addresses)
+	const totalPrice = useAppSelector((state) => state.persistedReducer.totalPrice);
+	
+	const [showAllItems, setShowAllItems] = useState(false);
+
+	const toggleItemsVisibility = () => {
+    setShowAllItems(!showAllItems);
+  };
+
 	const togleBtn = () => {
 		setShowAddress(!showAddress);
 	};
@@ -94,10 +111,18 @@ const Checkout = () => {
 								</div>
 							</div>
 							<div className='flex flex-col mb-[10px]'>
-								<div className='font-semibold mb-[5px]'>Temiloluwa Johnson</div>
-								<div className='text-[13px] text-[#535353]'>
-									No 2 asafa raod ikeja, lagos.
+								<div className='font-semibold mb-[5px]'>
+									{addresses.fullname}
 								</div>
+								{addresses ? (
+								<div className='text-[13px] text-[#535353]'>
+									{`${addresses.address}, ${addresses.city}, ${addresses.state}`}
+								</div>
+							) : (
+								<div className='text-[13px] text-[#535353]'>
+									No address set.
+								</div>
+							)}
 							</div>
 							{showDet ? null : (
 								<div className='flex justify-between'>
@@ -133,7 +158,7 @@ const Checkout = () => {
 									<div className='xl:text-[14px] sm:text-[10px]  text-primary'>
 										<HiPencil />
 									</div>
-									<div className='ml-[5px] text-primary font-semibold text-[15px] sm:hidden'>
+									<div onClick={()=>navigate(-1)} className='ml-[5px] text-primary font-semibold text-[15px] sm:hidden cursor-pointer'>
 										Modify items
 									</div>
 									<div className='ml-[5px] text-primary font-semibold text-[13px] xl:hidden md:hidden lg:hidden'>
@@ -141,7 +166,8 @@ const Checkout = () => {
 									</div>
 								</div>
 							</div>
-							<div className='flex h-[100px] md:w-[300px]'>
+							{cartItems.slice(0, showAllItems ? cartItems.length : 1).map((item: any) => (
+								<div key={item.variant ? `${item.id}-${item.variant.id}` : `${item.id}-default`} className='flex h-[100px] md:w-[300px] mb-[15px]'>
 								<div className='xl:w-[100px] xl:h-[100px] lg:w-[100px] lg:h-[100px] md:w-[80px] md:h-[80px] sm:w-[90px] sm:h-[100px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff]'>
 									<img
 										src={im2}
@@ -151,11 +177,14 @@ const Checkout = () => {
 								</div>
 								<div className='flex flex-col md:h-[80px]'>
 									<div className='xl:text-[20px] sm:text-[14px] md:text-[14px] font-semibold mb-[5px]'>
-										Rolex Yatch-Master II
+										{item.name} - {item.variant?.title || 'No Variant'}
 									</div>
 									<div className='xl:text-[13px] md:text-[10px] sm:text-[9px]'>
 										Brand <span className='text-primary font-bold'>Apple</span>{" "}
 										| Similar Product From Apple | 709388838
+									</div>
+									<div className="mt-[12px] text-[16px] font-[500]">
+										QTY: {item.cartQuantity}
 									</div>
 									<div className='xl:hidden sm:flex items-center  md:hidden lg:hidden'>
 										<div className='text-[10px]'>
@@ -175,6 +204,17 @@ const Checkout = () => {
 										</div>
 									</div>
 								</div>
+							</div>
+							))}
+							<div className="w-[100%] flex justify-center items-center">
+								{cartItems.length > 1 && (
+									<button 
+									onClick={toggleItemsVisibility}
+									className='w-[110px] mt-[10px] h-[35px] text-[15px] rounded-sm cursor-pointer bg-secondary text-white'
+									>
+									{showAllItems ? 'See Less' : 'See More'}
+									</button>
+								)}
 							</div>
 						</div>
 						<div
@@ -298,7 +338,7 @@ const Checkout = () => {
 									<div className='text-[9px]'>
 										<FaNairaSign />
 									</div>
-									<div className='text-[14px] font-semibold'>1,600,700</div>
+									<div className='text-[14px] font-semibold'>{totalPrice}</div>
 								</div>
 							</div>
 							<div className='xl:w-[320px] md:w-[220px] sm:w-[100%] flex justify-between mb-[15px]'>
@@ -307,7 +347,7 @@ const Checkout = () => {
 									<div className='text-[9px]'>
 										<FaNairaSign />
 									</div>
-									<div className='text-[14px] font-semibold'>3,000</div>
+									<div className='text-[14px] font-semibold'>0.00</div>
 								</div>
 							</div>
 							<div className='xl:w-[320px] md:w-[220px] sm:w-[100%] flex justify-between mb-[15px]'>
@@ -316,7 +356,7 @@ const Checkout = () => {
 									<div className='text-[9px]'>
 										<FaNairaSign />
 									</div>
-									<div className='text-[14px] font-semibold'>1,603,000</div>
+									<div className='text-[14px] font-semibold'>{totalPrice}</div>
 								</div>
 							</div>
 							<div className='w-[320px] md:w-[220px] xl:flex lg:flex md:flex justify-between sm:hidden'>
@@ -335,9 +375,7 @@ const Checkout = () => {
 								</div>
 							</div>
 						</div>
-						<div className='w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white py-[10px] rounded-sm bg-secondary mt-[20px] sm:hidden'>
-							<div>Checkout</div>
-						</div>
+						<FlutterWavePayment amount={totalPrice} cartItems={cartItems} addressId={addresses.id} />
 					</div>
 				</div>
 			</div>
