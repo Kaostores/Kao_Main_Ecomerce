@@ -46,13 +46,22 @@ export const api = createApi({
 		}),
 
 		updateAddress: builder.mutation({
-            query: ({addressId, addressData}) => ({
-                url: `/customer/profile/address/${addressId}/update`,
-                method: 'PATCH',
-                body: addressData,
-            }),
-            invalidatesTags: ['Addresses'],
-        }),
+			query: (body) => ({
+				url: `/customer/profile/address/${body.addressId}/update`,
+				method: "PATCH",
+				body,
+			}),
+			invalidatesTags: ["Addresses"],
+		}),
+
+		createNewAddress: builder.mutation({
+			query: (body) => ({
+				url: "/customer/profile/address/create",
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["Addresses"],
+		}),
 	}),
 });
 
@@ -63,4 +72,5 @@ export const {
 	useFetchOrdersQuery,
 	useViewAllAddressQuery,
 	useUpdateAddressMutation,
+	useCreateNewAddressMutation
 } = api;

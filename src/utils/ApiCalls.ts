@@ -32,23 +32,6 @@ export const getUserDetails = async () => {
 	}
 };
 
-export const createAddress = async (data: any) => {
-	try {
-		const response = await Instance.post(
-			"/customer/profile/address/create",
-			data,
-		);
-
-		return response.data;
-	} catch (err: any) {
-		console.error(
-			"Error creating address:",
-			err.response ? err.response.data : err.message,
-		);
-		throw err; // Throw error to be handled by the calling function
-	}
-};
-
 export const getAllProducts = async () => {
 	try {
 		const response = await Instance.get("/customer/home");
