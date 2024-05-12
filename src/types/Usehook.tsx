@@ -23,9 +23,9 @@
 // export const FlutterWavePayment: React.FC<IProps> = ({ amount }) => {
 //   const storeid = localStorage.getItem("selectedStore") || ''; // Fallback if not present
 //   const dispatch = useDispatch();
-  // const readUser = useSelector(
-  //   (state: RootState) => state.persistedReducer.currentUser,
-  // );
+// const readUser = useSelector(
+//   (state: RootState) => state.persistedReducer.currentUser,
+// );
 
 //   const [addFund] = useFundWalletMutation();
 //   const config = {
@@ -95,7 +95,6 @@
 //     </div>
 //   );
 // };
-
 
 // import React from "react";
 // import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
@@ -209,42 +208,42 @@ import { FlutterWaveButton, closePaymentModal } from "flutterwave-react-v3";
 import { useSelector } from "react-redux";
 import { useCreateOrderMutation } from "@/services/apiSlice";
 import ShowToast from "@/components/reuse/ShowToast";
-import { useDispatch } from 'react-redux';
-import { clearCart } from '@/services/reducers';
+import { useDispatch } from "react-redux";
+import { clearCart } from "@/services/reducers";
 
 interface RootState {
-  persistedReducer: {
-    currentUser: {
-      email?: string;
-      phone?: string;
-      name?: string;
-    };
-    cart: CartItem[];
-     addresses: AddressType;
-  };
+	persistedReducer: {
+		currentUser: {
+			email?: string;
+			phone?: string;
+			name?: string;
+		};
+		cart: CartItem[];
+		addresses: AddressType;
+	};
 }
 
 interface CartItem {
-  variant: {
-    id: string;
-    price: number;
-  };
-  quantity: number;
-  coupon?: string;
+	variant: {
+		id: string;
+		price: number;
+	};
+	quantity: number;
+	coupon?: string;
 }
 
 interface AddressType {
-  fullname: string;
-  phone: string;
-  address: string;
-  state?: string;
-  city?: string;
+	fullname: string;
+	phone: string;
+	address: string;
+	state?: string;
+	city?: string;
 }
 
 interface FlutterWavePaymentProps {
-  amount: number;
-  cartItems: CartItem[];
-  addressId : any
+	amount: number;
+	cartItems: CartItem[];
+	addressId: any;
 }
 
 export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
@@ -258,6 +257,8 @@ export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
 	}));
 
 	const dispatch = useDispatch();
+
+	console.log("this are cat itemdfghjhgfs", cartItems);
 
 	const config = {
 		public_key: "FLWPUBK_TEST-0822da2514e8dd6f0d0441f20d18337a-X",
@@ -288,6 +289,7 @@ export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
 						quantity: cart.quantity,
 						coupon: cart.coupon || "",
 					})),
+
 					address: addressId,
 					notes: "Order created after successful payment",
 					tx_ref: response.transaction_id,

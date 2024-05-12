@@ -21,7 +21,7 @@ module.exports = {
 		extend: {
 			backgroundImage: {
 				bb: "url('./src/assets/Ic.png')",
-				frame: "url('./src/assets/frame.png')"
+				frame: "url('./src/assets/frame.png')",
 			},
 			screens: {
 				sm: { min: "300px", max: "767px" },
@@ -64,6 +64,16 @@ module.exports = {
 				"accordion-up": {
 					from: { height: "var(--radix-accordion-content-height)" },
 					to: { height: "0" },
+				},
+				slideIn: {
+					from: {
+						transform: "translateX(calc(100% + var(--viewport-padding)))",
+					},
+					to: { transform: "translateX(0)" },
+				},
+				swipeOut: {
+					from: { transform: "translateX(var(--radix-toast-swipe-end-x))" },
+					to: { transform: "translateX(calc(100% + var(--viewport-padding)))" },
 				},
 			},
 			animation: {

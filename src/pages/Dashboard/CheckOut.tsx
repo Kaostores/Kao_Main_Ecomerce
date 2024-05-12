@@ -9,8 +9,12 @@ import UserForm from "@/components/props/AddressForm";
 import { useAppSelector, UseAppDispach } from "@/services/store";
 import { useNavigate } from "react-router-dom";
 import { FlutterWavePayment } from "@/types/Usehook";
-import { useViewAllAddressQuery, useUpdateAddressMutation } from "@/services/apiSlice";
+import {
+	useViewAllAddressQuery,
+	useUpdateAddressMutation,
+} from "@/services/apiSlice";
 import { MdModeEdit } from "react-icons/md";
+import { IoMdArrowBack } from "react-icons/io";
 
 const Checkout = () => {
 	const [showAddress, setShowAddress] = useState(true);
@@ -19,9 +23,11 @@ const Checkout = () => {
 
 	const { data: addressData } = useViewAllAddressQuery({});
 	const [selectedAddressId, setSelectedAddressId] = useState("");
-	const [editAddressId, setEditAddressId] = useState("")
+	const [editAddressId, setEditAddressId] = useState("");
 	const [editMode, setEditMode] = useState(false);
 	const [addressFormData, setAddressFormData] = useState(null);
+	const [actionType, setActionType] = useState("");
+	const [addrData, setAddrData] = useState<any>();
 
 	console.log("all addresss", addressData);
 
@@ -30,13 +36,15 @@ const Checkout = () => {
 	const [updateAddress] = useUpdateAddressMutation();
 
 	const handleEditAddress = (addressId: any) => {
-        const addressToEdit = addressData?.data.find((address: any) => address.id === addressId);
+		const addressToEdit = addressData?.data.find(
+			(address: any) => address.id === addressId,
+		);
 		setEditAddressId(addressId);
 		setAddressFormData(addressToEdit); // Set the address details to the form data
 		toggleBtn();
 	};
-	
-	 const handleAddressSave = async (formData: any) => {
+
+	const handleAddressSave = async (formData: any) => {
 		try {
 			await updateAddress({ addressId: editAddressId, addressData: formData });
 			setEditAddressId("");
@@ -47,10 +55,9 @@ const Checkout = () => {
 		}
 	};
 
-    const toggleBtn = () => {
-        setShowAddress(!showAddress);
-    };
-
+	const toggleBtn = () => {
+		setShowAddress(!showAddress);
+	};
 
 	const cartItems = useAppSelector((state) => state.persistedReducer.cart);
 	const addresses = useAppSelector((state) => state.persistedReducer.addresses);
@@ -59,12 +66,11 @@ const Checkout = () => {
 		(state) => state.persistedReducer.totalPrice,
 	);
 
-	
 	const handleAddressSelect = (id: any) => {
-        setSelectedAddressId(id);
+		setSelectedAddressId(id);
 	};
 
-	console.log("selected address", selectedAddressId)
+	// console.log("selected address", selectedAddressId);
 
 	const [showAllItems, setShowAllItems] = useState(false);
 
@@ -136,40 +142,50 @@ const Checkout = () => {
 									</div>
 								</div>
 								<div
-										className='flex items-center mb-[10px] cursor-pointer'
-										onClick={togleBtn}>
-										<div className='font-semibold mr-[5px] text-primary'>+</div>
-										<div className='text-[13px] text-primary'>Add address</div>
-									</div>
+									className='flex items-center mb-[10px] cursor-pointer'
+									onClick={() => {
+										setActionType("new");
+										togleBtn();
+									}}>
+									<div className='font-semibold mr-[5px] text-primary'>+</div>
+									<div className='text-[13px] text-primary'>Add address</div>
+								</div>
 							</div>
 
 							{addressData?.data?.length >= 1 ? (
 								<>
 									{addressData?.data?.map((address: any) => (
-										<div key={address.id} className='flex cursor-pointer mb-[10px] justify-between'>
-											<div className="flex">
+										<div
+											key={address.id}
+											className='flex cursor-pointer mb-[10px] justify-between'>
+											<div className='flex'>
 												<div>
 													<input
-														type="radio"
+														type='radio'
 														value={address.id}
 														checked={selectedAddressId === address.id}
 														onChange={() => handleAddressSelect(address.id)}
 													/>
 												</div>
-												<div className="flex flex-col ml-[15px]">
-												<div className='font-semibold mb-[5px] '>
-												{address.fullname}
-											</div>
-											<div className='text-[13px] text-[#535353]'>
-												{`${address.address}, ${address.city}, ${address.state}`}
-											</div>
-											</div>
+												<div className='flex flex-col ml-[15px]'>
+													<div className='font-semibold mb-[5px] '>
+														{address.fullname}
+													</div>
+													<div className='text-[13px] text-[#535353]'>
+														{`${address.address}, ${address.city}, ${address.state}`}
+													</div>
+												</div>
 											</div>
 											<div
-										onClick={() => handleEditAddress(address.id)}
-										className='ml-[5px] text-primary font-semibold text-[16px]'>
-										<MdModeEdit />
-									</div>
+												// onClick={() => handleEditAddress(address.id)}
+												onClick={() => {
+													setActionType("edit");
+													setAddrData(address);
+													toggleBtn();
+												}}
+												className='ml-[5px] text-primary font-semibold text-[16px]'>
+												<MdModeEdit />
+											</div>
 										</div>
 									))}
 								</>
@@ -383,9 +399,13 @@ const Checkout = () => {
 					</div>
 				) : (
 					<div>
-						<UserForm togleBtn={toggleBtn} 
+						<UserForm
+							togleBtn={toggleBtn}
 							initialFormData={addressFormData} // Pass the address form data
-							onSave={handleAddressSave} />
+							onSave={handleAddressSave}
+							addrData={addrData}
+							actionType={actionType}
+						/>
 					</div>
 				)}
 				<div

@@ -1,16 +1,13 @@
-import { toast } from "../ui/use-toast";
+import { toast } from "react-toastify";
 
 const ShowToast = (isSuccess: boolean, value: string) => {
 	if (isSuccess) {
-		toast({
-			title: "Successful",
-			description: value,
-		});
+		toast.success(value, {});
 	} else {
-		toast({
-			variant: "destructive",
-			title: "Uh oh! Something went wrong.",
-			description: value,
+		toast.error(value, {
+			// variant: "destructive",
+			// title: "Uh oh! Something went wrong.",
+			// description: value,
 		});
 	}
 };
