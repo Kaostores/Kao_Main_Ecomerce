@@ -14,7 +14,7 @@ export const api = createApi({
 			return headers;
 		},
 	}),
-	tagTypes: ["stores", "products", "product", "Orders"],
+	tagTypes: ["stores", "products", "product", "Orders", "Addresses"],
 	endpoints: (builder) => ({
 		viewAllProducts: builder.query({
 			query: () => `/customer/home`,
@@ -39,10 +39,20 @@ export const api = createApi({
 			query: () => "/customer/orders",
 			providesTags: ["Orders"],
 		}),
+
 		ViewAllAddress: builder.query({
 			query: () => "/customer/profile/address",
-			// providesTags: ["Orders"],
+			providesTags: ["Addresses"],
 		}),
+
+		updateAddress: builder.mutation({
+            query: ({addressId, addressData}) => ({
+                url: `/customer/profile/address/${addressId}/update`,
+                method: 'PATCH',
+                body: addressData,
+            }),
+            invalidatesTags: ['Addresses'],
+        }),
 	}),
 });
 
@@ -52,4 +62,5 @@ export const {
 	useCreateOrderMutation,
 	useFetchOrdersQuery,
 	useViewAllAddressQuery,
+	useUpdateAddressMutation,
 } = api;

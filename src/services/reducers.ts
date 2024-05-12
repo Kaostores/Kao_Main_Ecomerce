@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface UserDetails {
+	
 	firstname?: string;
 	lastname?: string;
 	email?: string;
@@ -10,6 +11,7 @@ interface UserDetails {
 }
 
 export interface AddressType {
+	id?: string;
   fullname: string;
   phone: string;
   address: string; 
