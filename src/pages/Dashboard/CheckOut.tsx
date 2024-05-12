@@ -6,10 +6,11 @@ import { HiPencil } from "react-icons/hi2";
 import { RiCoupon2Line } from "react-icons/ri";
 import { GoCheckCircleFill } from "react-icons/go";
 import UserForm from "@/components/props/AddressForm";
-import { useAppSelector } from "@/services/store";
+import { useAppSelector, UseAppDispach } from "@/services/store";
 import { useNavigate } from "react-router-dom";
 import { FlutterWavePayment } from "@/types/Usehook";
-import { useViewAllAddressQuery } from "@/services/apiSlice";
+import { useViewAllAddressQuery, useUpdateAddressMutation } from "@/services/apiSlice";
+import { MdModeEdit } from "react-icons/md";
 
 const Checkout = () => {
 	const [showAddress, setShowAddress] = useState(true);
@@ -17,10 +18,39 @@ const Checkout = () => {
 	const [showCheckOut, setShowCheckout] = useState(false);
 
 	const { data: addressData } = useViewAllAddressQuery({});
+	const [selectedAddressId, setSelectedAddressId] = useState("");
+	const [editAddressId, setEditAddressId] = useState("")
+	const [editMode, setEditMode] = useState(false);
+	const [addressFormData, setAddressFormData] = useState(null);
 
 	console.log("all addresss", addressData);
 
 	const navigate = useNavigate();
+	const dispatch = UseAppDispach();
+	const [updateAddress] = useUpdateAddressMutation();
+
+	const handleEditAddress = (addressId: any) => {
+        const addressToEdit = addressData?.data.find((address: any) => address.id === addressId);
+		setEditAddressId(addressId);
+		setAddressFormData(addressToEdit); // Set the address details to the form data
+		toggleBtn();
+	};
+	
+	 const handleAddressSave = async (formData: any) => {
+		try {
+			await updateAddress({ addressId: editAddressId, addressData: formData });
+			setEditAddressId("");
+			setAddressFormData(null); // Reset the address form data
+			setShowAddress(true); // Show the address section again
+		} catch (error) {
+			console.error("Error updating address:", error);
+		}
+	};
+
+    const toggleBtn = () => {
+        setShowAddress(!showAddress);
+    };
+
 
 	const cartItems = useAppSelector((state) => state.persistedReducer.cart);
 	const addresses = useAppSelector((state) => state.persistedReducer.addresses);
@@ -29,7 +59,12 @@ const Checkout = () => {
 		(state) => state.persistedReducer.totalPrice,
 	);
 
-	const [selectedAddressId, setSelectedAddressId] = useState("");
+	
+	const handleAddressSelect = (id: any) => {
+        setSelectedAddressId(id);
+	};
+
+	console.log("selected address", selectedAddressId)
 
 	const [showAllItems, setShowAllItems] = useState(false);
 
@@ -101,40 +136,40 @@ const Checkout = () => {
 									</div>
 								</div>
 								<div
-									className={`flex justify-center items-center ${
-										showDet === true ? "flex" : "hidden"
-									}`}>
-									<div className='xl:text-[14px] sm:text-[10px]  text-primary'>
-										<HiPencil />
+										className='flex items-center mb-[10px] cursor-pointer'
+										onClick={togleBtn}>
+										<div className='font-semibold mr-[5px] text-primary'>+</div>
+										<div className='text-[13px] text-primary'>Add address</div>
 									</div>
-									<div
-										className='ml-[5px] text-primary font-semibold text-[15px] sm:hidden cursor-pointer '
-										onClick={togleDet}>
-										Edit
-									</div>
-									<div
-										onClick={togleDet}
-										className='ml-[5px] text-primary font-semibold text-[13px] xl:hidden md:hidden lg:hidden'>
-										Edit
-									</div>
-								</div>
 							</div>
 
 							{addressData?.data?.length >= 1 ? (
 								<>
-									{addressData?.data?.map((props: any) => (
-										<div
-											onClick={() => {
-												setSelectedAddressId(props?.id);
-												console.log("seleeee", selectedAddressId);
-											}}
-											className='flex cursor-pointer  flex-col mb-[10px]'>
-											<div className='font-semibold mb-[5px]'>
-												{props.fullname}
+									{addressData?.data?.map((address: any) => (
+										<div key={address.id} className='flex cursor-pointer mb-[10px] justify-between'>
+											<div className="flex">
+												<div>
+													<input
+														type="radio"
+														value={address.id}
+														checked={selectedAddressId === address.id}
+														onChange={() => handleAddressSelect(address.id)}
+													/>
+												</div>
+												<div className="flex flex-col ml-[15px]">
+												<div className='font-semibold mb-[5px] '>
+												{address.fullname}
 											</div>
 											<div className='text-[13px] text-[#535353]'>
-												{`${props.address}, ${props.city}, ${props.state}`}
+												{`${address.address}, ${address.city}, ${address.state}`}
 											</div>
+											</div>
+											</div>
+											<div
+										onClick={() => handleEditAddress(address.id)}
+										className='ml-[5px] text-primary font-semibold text-[16px]'>
+										<MdModeEdit />
+									</div>
 										</div>
 									))}
 								</>
@@ -144,12 +179,12 @@ const Checkout = () => {
 
 							{showDet ? null : (
 								<div className='flex justify-between'>
-									<div
+									{/* <div
 										className='flex items-center mb-[10px] cursor-pointer'
 										onClick={togleBtn}>
 										<div className='font-semibold mr-[5px] text-primary'>+</div>
 										<div className='text-[13px] text-primary'>Add address</div>
-									</div>
+									</div> */}
 									<div
 										className='xl:w-[300px] lg:w-[300px] sm:w-[200px] md:w-[200px] flex justify-center items-center md:text-[13px] lg:text-[14px ] xl:text-[16px] sm:text-[12px] text-white py-[10px] bg-secondary mt-[20px] cursor-pointer'
 										onClick={togleDet}>
@@ -348,7 +383,9 @@ const Checkout = () => {
 					</div>
 				) : (
 					<div>
-						<UserForm togleBtn={togleBtn} />
+						<UserForm togleBtn={toggleBtn} 
+							initialFormData={addressFormData} // Pass the address form data
+							onSave={handleAddressSave} />
 					</div>
 				)}
 				<div

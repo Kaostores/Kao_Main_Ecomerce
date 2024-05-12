@@ -3,13 +3,16 @@ import { createAddress } from "@/utils/ApiCalls";
 import { AddressType, addAddress } from "@/services/reducers";
 import { UseAppDispach } from "@/services/store";
 import { useState } from "react";
+import { useViewAllAddressQuery, useUpdateAddressMutation } from "@/services/apiSlice";
 
 type Iprops = {
-	togleBtn: any;
+    togleBtn: any;
+    initialFormData?: any;
+    onSave: (formData: any) => Promise<void>;
 };
 
 
-const UserForm: React.FC<Iprops> = ({ togleBtn }) => {
+const UserForm: React.FC<Iprops> = ({ togleBtn, initialFormData}) => {
 
 	const [formData, setFormData] = useState<AddressType>({
         fullname: '',
@@ -23,21 +26,28 @@ const UserForm: React.FC<Iprops> = ({ togleBtn }) => {
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
-	};
+    };
+    
+    const updateAddressMutation = useUpdateAddressMutation();
 	
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		console.log("Form Data Submitted:", formData);
+        event.preventDefault();
         try {
-            const data = await createAddress(formData);
-
-			console.log('data address', data);
-            dispatch(addAddress(formData));  // Save to Redux store
-            togleBtn(); // Close form or show success message
+            if (initialFormData) {
+                await updateAddressMutation.mutateAsync({
+                    addressId: initialFormData.id,
+                    addressData: formData,
+                });
+            } else {
+                const data = await createAddress(formData);
+                dispatch(addAddress(data));
+            }
+            togleBtn();
         } catch (error) {
-            return error
+            console.error("Error updating/adding address:", error);
         }
     };
+
 
 	return (
 		<form onSubmit={handleSubmit} className='xl:w-[400px] md:w-[350px] sm:w-[290px] mx-auto'>
