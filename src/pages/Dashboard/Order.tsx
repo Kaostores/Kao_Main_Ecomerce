@@ -89,13 +89,14 @@ const Order = () => {
         <div className="w-[100%] flex justify-center">
           <div className="w-[100%] sm:w-[90%] md:w-[85%] flex mt-[30px]">
           <div className="w-[100%] flex flex-col">
-        <div className="w-[100%] flex justify-between">
+        {orders.data?.items?.map((order: any) => {
+          <div key={order.id} className="w-[100%] flex justify-between">
             <div className="flex items-center sm:w-[100%]">
                 <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
                     <img src={img} alt="" className="h-[60px]"/>
                 </div>
                 <div className="flex flex-col ml-[15px] sm:flex-1">
-                    <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
+                    <h3 className="text-[15px] font-[600]">{order.items.variant.title}</h3>
                     <div className="flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap">
                         <p className="text-iconGray text-[13px]">Brand:</p>
                         <p className="text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
@@ -112,58 +113,10 @@ const Order = () => {
             </div>
             <h4 onClick={TrackView} className="text-primary text-[14px] cursor-pointer font-[600] sm:hidden">Track delivery</h4>
         </div>
+        })}
         
         <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[22px] md:hidden sm:hidden"></div>
         
-        <div className="w-[100%] flex justify-between mt-[20px] md:mt-[40px] m:mt-[30px]">
-            <div className="flex items-center sm:w-[100%]">
-                <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
-                    <img src={img} alt="" className="h-[60px]"/>
-                </div>
-                <div className="flex flex-col ml-[15px] sm:flex-1">
-                    <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
-                    <div className="flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap">
-                        <p className="text-iconGray text-[13px]">Brand:</p>
-                        <p className="text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
-                    </div>
-                    <div className="flex items-center mt-[12px]">
-                        <p className="text-[13px]">Price:</p>
-                        <span className="flex items-center text-[13px] font-[600] ml-[4px]">NGN</span>
-                        <div className="w-[100%] flex items-center sm:justify-between">
-                          <h3 className="text-[15px] ml-[3px] font-[600]">20,000</h3>
-                          <h4 onClick={TrackView} className="text-primary text-[14px] hidden cursor-pointer font-[600] sm:flex">Track delivery</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <h4 onClick={TrackView} className="text-primary text-[14px] cursor-pointer font-[600] sm:hidden">Track delivery</h4>
-        </div>
-        
-        <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[22px] md:hidden sm:hidden"></div>
-        
-        <div className="w-[100%] flex justify-between mt-[20px] md:mt-[40px] m:mt-[30px]">
-            <div className="flex items-center sm:w-[100%]">
-                <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">
-                    <img src={img} alt="" className="h-[60px]"/>
-                </div>
-                <div className="flex flex-col ml-[15px] sm:flex-1">
-                    <h3 className="text-[15px] font-[600]">Rolex Yacht-Master II</h3>
-                    <div className="flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap">
-                        <p className="text-iconGray text-[13px]">Brand:</p>
-                        <p className="text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]"><span className="text-primary">Apple</span>  | Similar Product From Apple | 793979398</p>
-                    </div>
-                    <div className="flex items-center mt-[12px]">
-                        <p className="text-[13px]">Price:</p>
-                        <span className="flex items-center text-[13px] font-[600] ml-[4px]">NGN</span>
-                        <div className="w-[100%] flex items-center sm:justify-between">
-                          <h3 className="text-[15px] ml-[3px] font-[600]">20,000</h3>
-                          <h4 onClick={TrackView} className="text-primary text-[14px] hidden cursor-pointer font-[600] sm:flex">Track delivery</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <h4 onClick={TrackView} className="text-primary text-[14px] cursor-pointer font-[600] sm:hidden">Track delivery</h4>
-        </div>
     </div>
       </div>
         </div>
