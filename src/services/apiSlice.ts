@@ -40,6 +40,11 @@ export const api = createApi({
 			providesTags: ["Orders"],
 		}),
 
+		fetchOrderById: builder.query({
+			query: (orderId: any) => `/customer/orders/${orderId}`,
+			providesTags: ["Orders"],
+        }),
+
 		ViewAllAddress: builder.query({
 			query: () => "/customer/profile/address",
 			providesTags: ["Addresses"],
@@ -62,6 +67,14 @@ export const api = createApi({
 			}),
 			invalidatesTags: ["Addresses"],
 		}),
+
+		getUserData: builder.query({
+			query: () => "/customer/userdata",
+		}),
+
+		fetchAddressById: builder.query({
+			query: (addressId) => `/customer/profile/address/${addressId}`,
+		}),
 	}),
 });
 
@@ -72,5 +85,8 @@ export const {
 	useFetchOrdersQuery,
 	useViewAllAddressQuery,
 	useUpdateAddressMutation,
-	useCreateNewAddressMutation
+	useCreateNewAddressMutation,
+	useGetUserDataQuery,
+	useFetchAddressByIdQuery,
+	useFetchOrderByIdQuery,
 } = api;

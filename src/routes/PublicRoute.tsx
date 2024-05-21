@@ -14,8 +14,14 @@ import Checkout from "@/pages/Dashboard/CheckOut";
 import HelpandSupport from "@/pages/HelpandSupport";
 import Contact from "@/pages/Contact";
 import SearchPage from "@/pages/Search";
+import OrderDetails from "@/pages/Dashboard/Subpages/OrderDetails";
 
-const PublicRoute = () => {
+type PublicRouteProps = {
+    openLoginDialog: () => void;
+    openRegisterDialog: () => void;
+};
+
+const PublicRoute = ({openLoginDialog, openRegisterDialog}: PublicRouteProps) => {
 	return [
 		{
 			path: "/",
@@ -49,7 +55,7 @@ const PublicRoute = () => {
 					children: [
 						{
 							index: true,
-							element: <Cart />,
+							element: <Cart openLoginDialog={openLoginDialog} openRegisterDialog={openRegisterDialog}/>,
 						},
 
 						{
@@ -75,6 +81,10 @@ const PublicRoute = () => {
 				{
 					path: "order",
 					element: <Order />,
+				},
+				{
+					path: "orderdetails/:id",
+					element: <OrderDetails />
 				},
 				{
 					path: "reviews",

@@ -47,7 +47,6 @@ const formSchema = z.object({
 });
 
 const Auth = ({ open, onClose, onOpenLogin }: any) => {
-	// Define your form.
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -59,53 +58,39 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 		},
 	});
 
-	console.log(open);
-
-	//  Define a submit handler.
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-  setLoad(true);
-  try {
-	  const response: any = await Register(values);
-	  
-	  console.log(response)
+		setLoad(true);
+		try {
+			const response: any = await Register(values);
 
-    if (response?.status === 201) {
-    //   ShowToast(true, "Registration successful");
-	toast.success('Registration Successfull');
-      cookies.set("Kao_cookie_user", response?.data?.token, {
-        expires: expiryDate, 
-		path: "/"
-      });
-      dispatch(updateUserDetails(response?.data.data));
-	  	// alert("Registration successful"); 
-    } else if (response?.status === 500) {
-    //   ShowToast(false, "Account already exists");
-	toast.info('Account already exists')
-    }
-
-    setLoad(false);
-  } catch (error) {
-    // ShowToast(false, "An error occurred. Please try again.");
-	toast.error('An error occurred. Please try again.')
-    setLoad(false);
-  }
-}
-
+			if (response?.status === 201) {
+				toast.success('Registration Successful');
+				cookies.set("Kao_cookie_user", response?.data?.token, {
+					expires: expiryDate,
+					path: "/"
+				});
+				dispatch(updateUserDetails(response?.data.data));
+			} else if (response?.status === 500) {
+				toast.info('Account already exists')
+			}
+			setLoad(false);
+		} catch (error) {
+			toast.error('An error occurred. Please try again.')
+			setLoad(false);
+		}
+	}
 
 	const cookies = new Cookies();
 	const dispatch = useDispatch();
 	const expiryDate = new Date();
-
-	// const navigate = useNavigate();
-	expiryDate.setDate(expiryDate.getDate() + 7); // set date for cookie to expire
-
-	const [load, setLoad] = useState(false)
+	expiryDate.setDate(expiryDate.getDate() + 7);
+	const [load, setLoad] = useState(false);
 
 	return (
 		<Dialog
 			open={open?.type === "register" ? open?.state : false}
-			onOpenChange={() => onClose()}>
-			<DialogContent className='overflow-y-scroll   '>
+			onOpenChange={onClose}>
+			<DialogContent className='overflow-y-scroll'>
 				<DialogHeader>
 					<DialogTitle className='mb-3'>Register</DialogTitle>
 				</DialogHeader>
@@ -121,11 +106,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 										<FormControl>
 											<Input placeholder='input your first name' {...field} />
 										</FormControl>
-										<FormMessage
-											style={{
-												color: "red",
-											}}
-										/>
+										<FormMessage style={{ color: "red" }} />
 									</FormItem>
 								)}
 							/>
@@ -138,11 +119,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 										<FormControl>
 											<Input placeholder='input your last name' {...field} />
 										</FormControl>
-										<FormMessage
-											style={{
-												color: "red",
-											}}
-										/>
+										<FormMessage style={{ color: "red" }} />
 									</FormItem>
 								)}
 							/>
@@ -155,11 +132,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 										<FormControl>
 											<Input placeholder='input your email' {...field} />
 										</FormControl>
-										<FormMessage
-											style={{
-												color: "red",
-											}}
-										/>
+										<FormMessage style={{ color: "red" }} />
 									</FormItem>
 								)}
 							/>
@@ -170,13 +143,9 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 									<FormItem>
 										<FormLabel>Phone Number</FormLabel>
 										<FormControl>
-											<Input placeholder='input your phonenumber' {...field} />
+											<Input placeholder='input your phone number' {...field} />
 										</FormControl>
-										<FormMessage
-											style={{
-												color: "red",
-											}}
-										/>
+										<FormMessage style={{ color: "red" }} />
 									</FormItem>
 								)}
 							/>
@@ -189,26 +158,20 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 										<FormControl>
 											<Input placeholder='input your password' {...field} />
 										</FormControl>
-										<FormMessage
-											style={{
-												color: "red",
-											}}
-										/>
+										<FormMessage style={{ color: "red" }} />
 									</FormItem>
 								)}
 							/>
-							<div className=' flex justify-center'>
+							<div className='flex justify-center'>
 								{load ? (
 									<LoadingButton w={"100%"} />
 								) : (
-									<>
-										<Button
-									variant='secondary'
-									className='w-full bg-secondary text-white'
-									type='submit'>
-									Submit
-								</Button>
-									</>
+									<Button
+										variant='secondary'
+										className='w-full bg-secondary text-white'
+										type='submit'>
+										Submit
+									</Button>
 								)}
 							</div>
 						</form>
@@ -226,11 +189,8 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 						<div className='font-bold'>Or Continue with</div>
 						<div className='flex-1 h-[1px] bg-black'></div>
 					</div>
-					<div className=' flex justify-center'>
-						<Button
-							variant='outline'
-							className='w-full border-border'
-							type='submit'>
+					<div className='flex justify-center'>
+						<Button variant='outline' className='w-full border-border' type='submit'>
 							<span className='text-lg mr-2 '>
 								<FcGoogle />
 							</span>
@@ -238,8 +198,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 						</Button>
 					</div>
 				</DialogDescription>
-
-				<DialogDescription className='text-[13px] text-left  '>
+				<DialogDescription className='text-[13px] text-left'>
 					By continuing, you confirm that you are an adult. By creating an
 					account, you agree to the Kao.com Free Membership Agreement and
 					Privacy Policy

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaNairaSign } from "react-icons/fa6";
 import im2 from "@/assets/watch2.png";
 import { HiShieldCheck } from "react-icons/hi";
@@ -6,7 +6,7 @@ import { HiPencil } from "react-icons/hi2";
 import { RiCoupon2Line } from "react-icons/ri";
 import { GoCheckCircleFill } from "react-icons/go";
 import UserForm from "@/components/props/AddressForm";
-import { useAppSelector, UseAppDispach } from "@/services/store";
+import { useAppSelector } from "@/services/store";
 import { useNavigate } from "react-router-dom";
 import { FlutterWavePayment } from "@/types/Usehook";
 import {
@@ -14,7 +14,6 @@ import {
 	useUpdateAddressMutation,
 } from "@/services/apiSlice";
 import { MdModeEdit } from "react-icons/md";
-import { IoMdArrowBack } from "react-icons/io";
 
 const Checkout = () => {
 	const [showAddress, setShowAddress] = useState(true);
@@ -24,32 +23,52 @@ const Checkout = () => {
 	const { data: addressData } = useViewAllAddressQuery({});
 	const [selectedAddressId, setSelectedAddressId] = useState("");
 	const [editAddressId, setEditAddressId] = useState("");
-	const [editMode, setEditMode] = useState(false);
 	const [addressFormData, setAddressFormData] = useState(null);
 	const [actionType, setActionType] = useState("");
 	const [addrData, setAddrData] = useState<any>();
+	const [isEditing, setIsEditing] = useState(false);
+	const [showAllAddresses, setShowAllAddresses] = useState(false);
+	const [showModal, setShowModal] = useState(false)
+
+	const ToggleModal = () => {
+		setShowModal(!showModal)
+	}
+	const CancleleModal = () => {
+		setShowModal(false)
+	}
+
+	useEffect(() => {
+		let timer: any;
+		if (showModal) {
+			timer = setTimeout(() => {
+				setShowModal(false);
+			}, 10000); // 10 seconds
+		}
+		return () => clearTimeout(timer);
+	}, [showModal]);
+
+	useEffect(() => {
+		if (addressData?.data?.length > 0) {
+			setSelectedAddressId(addressData.data[0].id); // Set the first address as default
+		}
+	}, [addressData]);
+
+	const toggleAddressesVisibility = () => {
+        setShowAllAddresses(!showAllAddresses);
+    };
 
 	console.log("all addresss", addressData);
 
 	const navigate = useNavigate();
-	const dispatch = UseAppDispach();
 	const [updateAddress] = useUpdateAddressMutation();
-
-	const handleEditAddress = (addressId: any) => {
-		const addressToEdit = addressData?.data.find(
-			(address: any) => address.id === addressId,
-		);
-		setEditAddressId(addressId);
-		setAddressFormData(addressToEdit); // Set the address details to the form data
-		toggleBtn();
-	};
 
 	const handleAddressSave = async (formData: any) => {
 		try {
 			await updateAddress({ addressId: editAddressId, addressData: formData });
 			setEditAddressId("");
-			setAddressFormData(null); // Reset the address form data
-			setShowAddress(true); // Show the address section again
+			setAddressFormData(null); 
+			setShowAddress(true); 
+			setIsEditing(true);
 		} catch (error) {
 			console.error("Error updating address:", error);
 		}
@@ -57,6 +76,7 @@ const Checkout = () => {
 
 	const toggleBtn = () => {
 		setShowAddress(!showAddress);
+		setIsEditing(false);
 	};
 
 	const cartItems = useAppSelector((state) => state.persistedReducer.cart);
@@ -146,6 +166,7 @@ const Checkout = () => {
 									onClick={() => {
 										setActionType("new");
 										togleBtn();
+										setIsEditing(true);
 									}}>
 									<div className='font-semibold mr-[5px] text-primary'>+</div>
 									<div className='text-[13px] text-primary'>Add address</div>
@@ -154,7 +175,7 @@ const Checkout = () => {
 
 							{addressData?.data?.length >= 1 ? (
 								<>
-									{addressData?.data?.map((address: any) => (
+									{addressData?.data?.slice(0, showAllAddresses ? addressData?.data?.length : 1).map((address: any) => (
 										<div
 											key={address.id}
 											className='flex cursor-pointer mb-[10px] justify-between'>
@@ -182,12 +203,22 @@ const Checkout = () => {
 													setActionType("edit");
 													setAddrData(address);
 													toggleBtn();
+													setIsEditing(true);
 												}}
 												className='ml-[5px] text-primary font-semibold text-[16px]'>
 												<MdModeEdit />
 											</div>
 										</div>
 									))}
+									 <div className='w-[100%] flex justify-center items-center'>
+											{addressData?.data?.length > 1 && (
+											<button
+												onClick={toggleAddressesVisibility}
+												className='w-[110px] mt-[10px] h-[35px] text-[15px] rounded-sm cursor-pointer bg-secondary text-white'>
+												{showAllAddresses ? "See Less" : "See More"}
+											</button>
+										)}
+									</div>
 								</>
 							) : (
 								<div>No Address found</div>
@@ -266,14 +297,14 @@ const Checkout = () => {
 											<div className='mt-[12px] text-[16px] font-[500]'>
 												QTY: {item.cartQuantity}
 											</div>
-											<div className='xl:hidden sm:flex items-center  md:hidden lg:hidden'>
+											<div className='xl:hidden sm:hidden items-center  md:hidden lg:hidden'>
 												<div className='text-[10px]'>
 													<FaNairaSign />
 												</div>
 												<div className='font-semibold text-[13px]'>18,000</div>
 											</div>
 											<div>
-												<div className='w-[100px] sm:flex xl:hidden lg:hidden md:hidden justify-between items-center bg-[#0000ff57] pl-2 pr-2 rounded-sm'>
+												<div className='w-[100px] sm:hidden xl:hidden lg:hidden md:hidden justify-between items-center bg-[#0000ff57] pl-2 pr-2 rounded-sm'>
 													<div className='w-[14px] h-[14px] rounded-[50%] text-[13px] bg-primary text-white flex justify-center items-center'>
 														-
 													</div>
@@ -460,14 +491,33 @@ const Checkout = () => {
 								</div>
 							</div>
 						</div>
-						<FlutterWavePayment
-							amount={totalPrice}
-							cartItems={cartItems}
-							addressId={selectedAddressId}
-						/>
+						<button onClick={ToggleModal} className="w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white py-[10px] rounded-sm mt-[30px] bg-secondary cursor-pointer">
+							Checkout
+						</button>
 					</div>
 				</div>
 			</div>
+
+			{showModal ? (
+				<div className="w-[100%] h-[100vh] bg-[rgba(0,0,0,0.5)] fixed top-0 left-0 flex justify-center items-center">
+					<div className="w-[35%] p-[20px] pt-[40px] pb-[40px] bg-white rounded-md flex justify-center items-center flex-col">
+						<h1 className="text-[17px] font-[500]">Are you sure you want to CheckOut❓</h1>
+
+						<div className="w-[100%] flex items-center justify-between mt-[20px]">
+							<button onClick={CancleleModal} className="w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white py-[10px] mt-[28px] mr-[40px] rounded-sm bg-secondary cursor-pointer">
+								No
+							</button>
+
+							<FlutterWavePayment
+							amount={totalPrice}
+							cartItems={cartItems}
+							addressId={selectedAddressId}
+							disabled={isEditing} 
+						/>
+						</div>
+					</div>
+			</div>
+			) : null}
 		</div>
 	);
 };

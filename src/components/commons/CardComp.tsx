@@ -9,15 +9,13 @@ import pic3 from "../../assets/lenovo.png"
 
 
 const CardComp = ({ deal, isLoading, ...props }: any) => {
-	console.log(props)
-	// const [ratingValue, setRatingValue] = useState(5);
-	console.log(props.media); 
+
 
 	return (
-		<div className='h-[270px]   pb-3 sm:w-[250px]  flex-shrink-0  bg-ascentBlue rounded-sm'>
-			<div className='h-[170px] relative w-[100%] '>
+		<div className='h-[370px]  sm:w-[100%]  pb-3  flex-shrink-0  bg-ascentBlue rounded-sm'>
+			<div className='h-[270px] relative w-[100%]'>
 				<img
-					className='w-[100%] h-[100%] object-contain pt-10 rounded-sm'
+					className='w-[100%] h-[100%] object-cover pt-10 rounded-sm'
 					src={props?.media?.length > 0 && props.media[0].link ? props.media[0].link : pic3}
 				/>
 				<div className='absolute top-2 pl-3 pr-3 flex justify-between w-full'>
@@ -39,7 +37,7 @@ const CardComp = ({ deal, isLoading, ...props }: any) => {
 						</div>
 					)}
 
-					<div className='absolute bg-white border-border shadow h-[30px] w-[30px] rounded-[50%] flex justify-center items-center top-32 right-2'>
+					<div className='absolute bg-white border-border shadow h-[30px] w-[30px] rounded-[50%] flex justify-center items-center top-[200px] right-2'>
 						<MdOutlineShoppingCart />
 					</div>
 				</div>

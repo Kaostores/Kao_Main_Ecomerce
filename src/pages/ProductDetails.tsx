@@ -10,7 +10,7 @@ import { GoChevronDown } from "react-icons/go";
 import CardComp from "@/components/commons/CardComp";
 import BrandsComp from "@/components/commons/BrandsComp";
 import { useParams } from "react-router-dom";
-import { useViewAProductQuery } from "@/services/apiSlice";
+import { useViewAProductQuery, useViewAllProductsQuery } from "@/services/apiSlice";
 import { useSelector } from "react-redux";
 import { UseAppDispach } from "@/services/store";
 import { addToCart, removeFromCart } from "@/services/reducers";
@@ -28,12 +28,13 @@ const ProductDetails = () => {
 	const [quantity, setQuantity] = useState(0);
 	const [selectedImage, setSelectedImage] = useState(null);
 	const { id } = useParams();
-	const { data, isLoading } = useViewAProductQuery(id);
+	const { data: productData, isLoading: isProductLoading } = useViewAProductQuery(id);
+	const { data: allProductsData, isLoading: isAllProductsLoading } = useViewAllProductsQuery({});
 	const [selectedId, setSelectedId] = useState('');
+	const [imageLoading, setImageLoading] = useState(true);
 
 	const dispatch = UseAppDispach();
 	const globalstate = useSelector((state: any) => state.persistedReducer.cart);
-	console.log("global", globalstate);
 
 	const findQuantity = (variantId: any) => {
     // First, ensure the global state and the items array are not null.
@@ -48,7 +49,7 @@ const ProductDetails = () => {
 		dispatch(
 			addToCart({
 				id: variant.id,
-				productName: data?.data?.name,
+				productName: productData?.data?.name,
 				variant,
 				quantity: 1, // This will be handled in the reducer
 			}),
@@ -106,9 +107,10 @@ const ProductDetails = () => {
 
 	console.log("dfghyjdkhghj", selectedId);
 
-	useEffect(() => {}, [selectedId, data]);
+
+	useEffect(() => {}, [selectedId, productData]);
 	return (
-		<div className='w-[100%] min-h-[100%] flex xl:justify-center items-center '>
+		<div className='w-[100%] min-h-[100%] flex xl:justify-center items-center'>
 			<div className='w-[100%]  flex flex-col my-[10px]'>
 				<div className='flex  items-center mb-[10px]'>
 					<div className='flex justify-center items-center'>
@@ -125,10 +127,10 @@ const ProductDetails = () => {
 					</div>
 					<div>Watch</div>
 				</div>
-				<div className=' xl:min-h-[500px] flex  items-start sm:flex-col'>
-					<div className='w-[500px]    flex  gap-20  sm:flex-col-reverse'>
-						<div className=' xl:flex-col sm:flex sm:w-[100%] sm:justify-start'>
-							{data?.data?.media?.map((props: any) => (
+				<div className=' xl:min-h-[500px] flex  items-start sm:flex-col sm:overflow-hidden'>
+					<div className='w-[500px] sm:justify-start flex  gap-20  sm:flex-col-reverse'>
+						<div className=' xl:flex-col sm:flex sm:w-[100%]'>
+							{productData?.data?.media?.map((props: any) => (
 								<div
 									className={`xl:w-[100px] xl:h-[100px] md:w-[80px] lg:w-[100px] lg:h-[100px] md:h-[80px]  sm:w-[60px] sm:h-[60px] overflow-hidden mb-[10px] cursor-pointer flex justify-center  items-center ${
 										selectedId === props?.id
@@ -138,6 +140,7 @@ const ProductDetails = () => {
 									onClick={() => {
 										setSelectedImage(props);
 										setSelectedId(props?.id);
+										setImageLoading(true);
 										// console.log("this is it", props);
 									}}>
 									<img
@@ -149,14 +152,20 @@ const ProductDetails = () => {
 							))}
 						</div>
 						<div>
+							{imageLoading && (
+								<div className='w-[300px] h-[300px] xl:w-[300px] xl:h-[300px] md:w-[250px] md:h-[250px] lg:w-[220px] lg:h-[220px] sm:w-[100%] sm:h-[170px] sm:mb-[20px] bg-gray-200 animate-pulse' />
+							)}
 							<img
 								src={
 									selectedImage !== null
 										? selectedImage?.link
-										: data?.data?.media[0]?.link
+										: productData?.data?.media[0]?.link
 								}
 								alt=''
-								className='xl:w-[300px] md:w-[250px] lg:w-[220px] sm:w-[170px] sm:mb-[20px]'
+								onLoad={() => setImageLoading(false)}
+								className={`xl:w-[300px] md:w-[250px] lg:w-[220px] sm:w-[170px] sm:mb-[20px] ${
+									imageLoading ? 'hidden' : 'block'
+								}`}
 							/>
 						</div>
 					</div>
@@ -170,16 +179,30 @@ const ProductDetails = () => {
 						</div>
 						<div className='flex-1'>
 							<div className='flex flex-col'>
-								<div className='text-[25px] sm:text-[20px] font-semibold'>
-									{data?.data?.name}
+								{isProductLoading ? (
+								<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[20px] w-[500px] mb-[10px] rounded-full'></div>
+							) : (
+								<div className='text-[25px] sm:text-[20px] font-semibold'>{productData?.data?.name}</div>
+							)}
+								{isProductLoading ? (
+									<div className='flex flex-col w-[100%] my-[10px]'>
+										<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[500px] mb-[10px] rounded-full'></div>
+										<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[500px] mb-[10px] rounded-full'></div>
+										<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[500px] mb-[10px] rounded-full'></div>
+									</div>
+								) : (
+									<div className='text-[13px] my-[10px]'>
+									{productData?.data.description}
 								</div>
-								<div className='text-[13px] my-[10px]'>
-									{data?.data.description}
-								</div>
+								)}
 							</div>
-							<div className='text-[20px] font-semibold my-[20px]'>
-								N{data?.data.price}
+							{isProductLoading ? (
+								<div className="text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full my-[20px]"></div>
+							) : (
+								<div className='text-[20px] font-semibold my-[20px]'>
+								N{productData?.data.price}
 							</div>
+							)}
 							<div className='flex flex-col'>
 								<div className='flex items-center'>
 									<div className='mr-[10px] text-[14px]'>Quantity</div>
@@ -195,26 +218,72 @@ const ProductDetails = () => {
 										</div>
 									</div>
 								</div>
-								<div className='px-[10px] py-[5px] bg-[#8686863a] rounded-[5px] my-[10px] w-[200px]'>
-									<div className='text-[13px]'>Call us for Bulk Purchase</div>
-									<div className='text-[13px] text-primary'>0905729875</div>
-								</div>
-								<div className='w-[100%] h-[100%] flex flex-col mt-[20px]'>
-									{data?.data?.variants && data.data.variants.length > 0 && (
-										<div className='w-[100%] h-[100%] flex flex-col mt-[20px]'>
-											<h2>Variants Available</h2>
-											<div className='w-[100%] flex items-center mt-[10px]'>
-												{data.data.variants.map((variant: any) => (
+
+									{isProductLoading ? (
+										<div className="text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full mt-[5px]"></div>
+									) : (
+										<>
+											{productData?.data?.variants && productData.data.variants.some((variant: any) => variant.color) && (
+								<div className="mt-[15px] flex flex-col mb-[10px]">
+									<div className="flex items-center">
+										<p className="text-[14px]">Color</p>
+									</div>
+
+										<div className="flex items-center mt-[5px]">
+											{productData.data.variants.map((variant: any) => (
+												variant.color && (
 													<div
-														key={variant.id}
 														onClick={openVariant}
-														className='w-[40px] h-[40px] flex justify-center items-center border border-[#c6c6c7] rounded-sm mr-[8px] cursor-pointer'>
-														<h3>V</h3>
+														key={variant.id}
+														className="w-[48px] h-[28px] rounded-sm mr-[5px] border border-[#E0E0E0] p-[3px] cursor-pointer"
+													>
+														<div
+															className="w-[100%] h-[100%] rounded-sm"
+															style={{ backgroundColor: variant.color }}
+														></div>
 													</div>
-												))}
-											</div>
+												)
+											))}
 										</div>
+								</div>
 									)}
+										</>
+									)}
+
+
+								{isProductLoading ? (
+									<div className="text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full mt-[5px]"></div>
+								) : (
+									<>
+										{productData?.data?.variants && productData.data.variants.some((variant: any) => variant.size) && (
+									<div className="mt-[15px] flex flex-col">
+										<div className="flex items-center">
+											<p className="text-[14px]">Size</p>
+										</div>
+										<div className="flex items-center mt-[5px]">
+											{productData.data.variants.map((variant: any) => (
+												variant.size && (
+													<div
+														onClick={openVariant}
+														key={variant.id}
+														className="w-[48px] h-[28px] rounded-sm mr-[5px] border border-[#E0E0E0] p-[3px] cursor-pointer"
+													>
+														<div className="w-[100%] h-[100%] flex justify-center items-center rounded-sm">
+															{variant.size}
+														</div>
+													</div>
+												)
+											))}
+										</div>
+									</div>
+								)}
+									</>
+								)}
+
+								{isProductLoading ? (
+									<div className="text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full mt-[5px]"></div>
+								) : (
+									<div className='w-[100%] h-[100%] flex flex-col mt-[5px]'>
 
 									{showVariant ? (
 										<div className='w-[100%] h-[100%] flex justify-center items-center bg-[rgba(0,0,0,0.5)] fixed left-0 top-0'>
@@ -230,7 +299,7 @@ const ProductDetails = () => {
 													</div>
 												</div>
 
-												{data?.data?.variants?.map((variant: any) => (
+												{productData?.data?.variants?.map((variant: any) => (
 													<div className='w-[100%] flex flex-col'>
 														<div
 															key={variant.id}
@@ -279,18 +348,26 @@ const ProductDetails = () => {
 										</div>
 									) : null}
 								</div>
+								)}
+
+								<div className='px-[10px] py-[5px] bg-[#8686863a] rounded-[5px] my-[10px] w-[200px]'>
+									<div className='text-[13px]'>Call us for Bulk Purchase</div>
+									<div className='text-[13px] text-primary'>0905729875</div>
+								</div>
+								
+
 								<div
 								onClick={() => {
-									if (data?.data?.variants?.length > 0) {
+									if (productData?.data?.variants?.length > 0) {
 										setShowVariant(true); // Show variant selection popup if variants exist
 									} else {
 										// If no variants, directly add the product to the cart
 										dispatch(addToCart({
-											id: data?.data?.id,
-											name: data?.data?.name,
+											id: productData?.data?.id,
+											name: productData?.data?.name,
 											variant: null, // No variants, so set to null
-											price: data?.data?.price,
-											image: data?.data?.mainImage, // Use the main image of the product
+											price: productData?.data?.price,
+											image: productData?.data?.mainImage, // Use the main image of the product
 											cartQuantity: 1 // Setting initial cart quantity
 										}));
 										toast.success("Added to Cart successfully"); // Show success message
@@ -401,11 +478,78 @@ const ProductDetails = () => {
 
 				<div className='xl:flex flex-col mb-20 sm:hidden'>
 					<h3 className='mt-7 font-bold mb-3'>Similar Product</h3>
-					<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
-						<CardComp deal={true} />
-						<CardComp />
-						<CardComp />
-						<CardComp deal={true} />
+					<div className="w-[100%]">
+						{isAllProductsLoading && !allProductsData ? (
+						<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
+							<div
+										role='status'
+										className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+										<div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+										<div className='w-full'>
+											<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+										</div>
+										<span className='sr-only'>Loading...</span>
+							</div>
+							<div
+										role='status'
+										className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+										<div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+										<div className='w-full'>
+											<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+										</div>
+										<span className='sr-only'>Loading...</span>
+							</div>
+							<div
+										role='status'
+										className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+										<div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+										<div className='w-full'>
+											<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+										</div>
+										<span className='sr-only'>Loading...</span>
+							</div>
+							<div
+										role='status'
+										className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+										<div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+										<div className='w-full'>
+											<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+										</div>
+										<span className='sr-only'>Loading...</span>
+							</div>
+						</div>
+						) : (
+							<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
+								{allProductsData?.data.slice(0, 4).map((props: any) => (
+											<CardComp
+												key={props.id}
+												deal={true}
+												isLoading={isAllProductsLoading}
+												{...props}
+											/>
+										))}
+							</div>	
+					)}
 					</div>
 				</div>
 
