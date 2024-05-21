@@ -138,7 +138,7 @@ const Header = () => {
 							</div>
 
 							<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
-								0
+								{readCartQuantity}
 							</span>
 						</div>
 					</Link>
@@ -164,11 +164,21 @@ const Header = () => {
 						className='text-lightGray cursor-pointer'>
 						Computer and Accessories
 					</div>
-					<div className='text-lightGray'>Phones and Tablets</div>
-					<div className='text-lightGray'>Electronics</div>
-					<div className='text-lightGray'>Baby kits</div>
-					<div className='text-lightGray'>Gaming</div>
-					<div className='text-lightGray'>Groceries</div>
+					<div onClick={() => {
+							navigate("/search");
+						}} className='text-lightGray cursor-pointer'>Phones and Tablets</div>
+					<div onClick={() => {
+							navigate("/search");
+						}} className='text-lightGray cursor-pointer'>Electronics</div>
+					<div onClick={() => {
+							navigate("/search");
+						}} className='text-lightGray cursor-pointer'>Baby kits</div>
+					<div onClick={() => {
+							navigate("/search");
+						}} className='text-lightGray cursor-pointer'>Gaming</div>
+					<div onClick={() => {
+							navigate("/search");
+						}} className='text-lightGray cursor-pointer'>Groceries</div>
 				</div>
 			</div>
 		</div>

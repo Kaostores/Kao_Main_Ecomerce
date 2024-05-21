@@ -11,19 +11,22 @@ import { UseAppDispach, useAppSelector } from "@/services/store";
 import { addToCart, clearCart, remove, removeFromCart } from "@/services/reducers";
 import { useEffect, useReducer } from "react";
 import EmpyCart from "./EmpyCart";
+import { useViewAllProductsQuery } from "@/services/apiSlice";
 
-interface CartProps {
-    onOpenLogin: () => void; // Assuming no arguments and returns void
-    onClose: () => void;    // Assuming no arguments and returns void
-}
 
-const Cart: React.FC<CartProps> = ({ onOpenLogin, onClose }) => {
+type CartProps = {
+    openLoginDialog: () => void;
+    openRegisterDialog: () => void;
+};
+
+const Cart: React.FC<CartProps> = ({ openLoginDialog, openRegisterDialog }) => {
 
 	const currentUser = useAppSelector((state) => state.persistedReducer.currentUser);
 	const dispatch = UseAppDispach();
     const cart = useAppSelector((state) => state.persistedReducer.cart);
 	const totalQuantity = useAppSelector((state) => state.persistedReducer.totalQuantity);
 	const totalPrice = useAppSelector((state) => state.persistedReducer.totalPrice);
+	console.log("totalPricet", totalPrice)
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
 	useEffect(() => {
@@ -36,17 +39,17 @@ const Cart: React.FC<CartProps> = ({ onOpenLogin, onClose }) => {
 
 	const isAuthenticated = currentUser && Object.keys(currentUser || {}).length !== 0;
 
-	 const handleCheckout = () => {
-    console.log("handleCheckout called");
-    if (!isAuthenticated) {
-        console.log("User is not authenticated, opening login...");
-        onOpenLogin();
-    } else {
-        navigate('/cart/checkout');
-    }
-};
+	const handleCheckout = () => {
+		if (isAuthenticated) {
+			navigate("/cart/checkout");
+		} else {
+			openLoginDialog();
+		}
+	};
 
 
+
+	const {data, isLoading} = useViewAllProductsQuery({})
 
 	const navigate = useNavigate()
 	return (
@@ -123,17 +126,18 @@ const Cart: React.FC<CartProps> = ({ onOpenLogin, onClose }) => {
 									  ))}  
 							{/* for mobile start*/}
 							<div className='flex flex-col xl:hidden md:hidden lg:hidden'>
-								<div className='flex h-[100px]'>
+								{cart.map((product: any) => (
+									<div key={product.variant ? `${product.id}-${product.variant.id}` : `${product.id}-default`} className='flex h-[100px] mb-[18px]'>
 									<div className=' md:w-[80px] md:h-[80px] sm:w-[80px] sm:h-[100px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff]'>
 										<img
-											src={im2}
+											src={product?.media?.length > 0 && product.media[0].link ? product.media[0].link : im2}
 											alt=''
 											className=' md:w-[50px]  sm:w-[40px]'
 										/>
 									</div>
 									<div className='flex flex-col justify-between items-start'>
 										<div className=' font-semibold text-[14px]'>
-											Rolex Yatch-Master II
+											{product.name} - {product.variant?.title || 'No Variant'}
 										</div>
 										<div className='text-[9px]'>
 											Brand{" "}
@@ -148,17 +152,20 @@ const Cart: React.FC<CartProps> = ({ onOpenLogin, onClose }) => {
 															<FaNairaSign />
 														</div>
 														<div className='font-semibold text-[14px]'>
-															1,600,500
+															{product.variant ? product.variant.price * product.cartQuantity : product.price * product.cartQuantity}
 														</div>
 													</div>
 												</div>
 												<div>
 													<div className='w-[100px] pl-2 pr-2 rounded-md flex justify-between items-center bg-ascentGray '>
-														<div className='w-[14px] h-[14px] rounded-[50%] text-[13px] bg-primary text-white flex justify-center items-center'>
+														<div onClick={() => dispatch(removeFromCart(product.variant ? product.variant.id : product.id))} className='w-[14px] h-[14px] rounded-[50%] text-[13px] bg-primary text-white flex justify-center items-center'>
 															-
 														</div>
-														<div>1</div>
-														<div className='w-[14px] h-[14px] rounded-[50%] text-[13px] bg-primary text-white flex justify-center items-center'>
+														<div>{product.cartQuantity}</div>
+														<div onClick={() => dispatch(addToCart({
+															...product,
+															variant: product.variant || null
+															}))} className='w-[14px] h-[14px] rounded-[50%] text-[13px] bg-primary text-white flex justify-center items-center'>
 															+
 														</div>
 													</div>
@@ -175,10 +182,12 @@ const Cart: React.FC<CartProps> = ({ onOpenLogin, onClose }) => {
 										</div>
 									</div>
 								</div>
+								))}
+								
 								<div className='flex flex-col text-[14px]'>
 									<div className='w-[100%]  flex justify-between items-center text-primary py-[10px] px-[5px] bg-ascentGray rounded-md mt-[50px] mb-5 font-semibold'>
 										<div>Sub Total</div>
-										<div>NGN 12,000</div>
+										<div>{totalPrice}</div>
 									</div>
 									<Button
 										onClick={() => {
@@ -245,11 +254,78 @@ const Cart: React.FC<CartProps> = ({ onOpenLogin, onClose }) => {
 				)}
 				<div className='xl:flex flex-col mb-20 sm:hidden'>
 					<h3 className='mt-[80px] font-bold mb-3'>Saved items</h3>
-					<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
-						<CardComp deal={true} />
-						<CardComp />
-						<CardComp />
-						<CardComp deal={true} />
+					<div className="w-[100%]">
+						{isLoading && !data ? (
+						<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
+							<div
+										role='status'
+										className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+										<div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+										<div className='w-full'>
+											<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+										</div>
+										<span className='sr-only'>Loading...</span>
+							</div>
+							<div
+										role='status'
+										className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+										<div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+										<div className='w-full'>
+											<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+										</div>
+										<span className='sr-only'>Loading...</span>
+							</div>
+							<div
+										role='status'
+										className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+										<div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+										<div className='w-full'>
+											<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+										</div>
+										<span className='sr-only'>Loading...</span>
+							</div>
+							<div
+										role='status'
+										className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+										<div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+										<div className='w-full'>
+											<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+											<div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+										</div>
+										<span className='sr-only'>Loading...</span>
+							</div>
+						</div>
+						) : (
+							<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
+								{data?.data.slice(0, 4).map((props: any) => (
+											<CardComp
+												key={props.id}
+												deal={true}
+												isLoading={isLoading}
+												{...props}
+											/>
+										))}
+							</div>	
+					)}
 					</div>
 				</div>
 			</div>

@@ -22,7 +22,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LogIn } from "@/utils/ApiCalls"
+import { LogIn } from "@/utils/ApiCalls";
 import ShowToast from "../reuse/ShowToast";
 import LoadingButton from "../reuse/LoadingButton";
 import Cookies from "universal-cookie";
@@ -39,8 +39,7 @@ const formSchema = z.object({
 	}),
 });
 
-const Auth = ({ open, onClose, onOpenRegister }: any) => {
-	// Define your form.
+const Login = ({ open, onClose, onOpenRegister }: any) => {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -49,50 +48,39 @@ const Auth = ({ open, onClose, onOpenRegister }: any) => {
 		},
 	});
 
-	//  Define a submit handler.
 	async function onSubmit(values: z.infer<typeof formSchema>) {
-  setLoad(true);
-  try {
-	  const response: any = await LogIn(values);
-	  
-	  console.log(values)
+		setLoad(true);
+		try {
+			const response: any = await LogIn(values);
 
-    if (response?.status === 201) {
-    //   ShowToast(true, "LogIn successful");
-	toast.success('Login Successfull');
-      cookies.set("Kao_cookie_user", response?.data?.token, {
-        expires: expiryDate, 
-		path: "/"
-      });
-      dispatch(updateUserDetails(response?.data.data));
-    //   window.location.href = "/dashboard";
-	// alert("Login Succesful"); 
-    } else if (response?.status === 500) {
-      ShowToast(false, "Details dose not match");
-    }
-
-    setLoad(false);
-  } catch (error) {
-    // ShowToast(false, "An error occurred. Please try again.");
-	toast.info('An error occurred. Please try again.')
-    setLoad(false);
-  }
-}
+			if (response?.status === 201) {
+				toast.success('Login Successful');
+				cookies.set("Kao_cookie_user", response?.data?.token, {
+					expires: expiryDate,
+					path: "/"
+				});
+				dispatch(updateUserDetails(response?.data.data));
+			} else if (response?.status === 500) {
+				ShowToast(false, "Details do not match");
+			}
+			setLoad(false);
+		} catch (error) {
+			toast.info('An error occurred. Please try again.')
+			setLoad(false);
+		}
+	}
 
 	const cookies = new Cookies();
 	const dispatch = useDispatch();
 	const expiryDate = new Date();
-
-	// const navigate = useNavigate();
-	expiryDate.setDate(expiryDate.getDate() + 7); // set date for cookie to expire
-
-	const [load, setLoad] = useState(false)
+	expiryDate.setDate(expiryDate.getDate() + 7);
+	const [load, setLoad] = useState(false);
 
 	return (
 		<Dialog
 			open={open?.type === "login" ? open?.state : false}
-			onOpenChange={() => onClose()}>
-			<DialogContent className='overflow-y-scroll   '>
+			onOpenChange={onClose}>
+			<DialogContent className='overflow-y-scroll'>
 				<DialogHeader>
 					<DialogTitle className='mb-3'>Login</DialogTitle>
 				</DialogHeader>
@@ -108,11 +96,7 @@ const Auth = ({ open, onClose, onOpenRegister }: any) => {
 										<FormControl>
 											<Input placeholder='input your email' {...field} />
 										</FormControl>
-										<FormMessage
-											style={{
-												color: "red",
-											}}
-										/>
+										<FormMessage style={{ color: "red" }} />
 									</FormItem>
 								)}
 							/>
@@ -125,27 +109,20 @@ const Auth = ({ open, onClose, onOpenRegister }: any) => {
 										<FormControl>
 											<Input placeholder='input your password' {...field} />
 										</FormControl>
-										<FormMessage
-											style={{
-												color: "red",
-											}}
-										/>
+										<FormMessage style={{ color: "red" }} />
 									</FormItem>
 								)}
 							/>
-
-							<div className=' flex justify-center'>
+							<div className='flex justify-center'>
 								{load ? (
 									<LoadingButton w={"450px"} />
 								) : (
-									<>
-										<Button
-									variant='secondary'
-									className='w-full bg-secondary text-white'
-									type='submit'>
-									Submit
-								</Button>
-									</>
+									<Button
+										variant='secondary'
+										className='w-full bg-secondary text-white'
+										type='submit'>
+										Submit
+									</Button>
 								)}
 							</div>
 						</form>
@@ -163,11 +140,8 @@ const Auth = ({ open, onClose, onOpenRegister }: any) => {
 						<div className='font-bold'>Or Continue with</div>
 						<div className='flex-1 h-[1px] bg-black'></div>
 					</div>
-					<div className=' flex justify-center'>
-						<Button
-							variant='outline'
-							className='w-full border-border'
-							type='submit'>
+					<div className='flex justify-center'>
+						<Button variant='outline' className='w-full border-border' type='submit'>
 							<span className='text-lg mr-2 '>
 								<FcGoogle />
 							</span>
@@ -175,8 +149,7 @@ const Auth = ({ open, onClose, onOpenRegister }: any) => {
 						</Button>
 					</div>
 				</DialogDescription>
-
-				<DialogDescription className='text-[13px] text-left  '>
+				<DialogDescription className='text-[13px] text-left'>
 					By continuing, you confirm that you are an adult. By creating an
 					account, you agree to the Kao.com Free Membership Agreement and
 					Privacy Policy
@@ -186,4 +159,4 @@ const Auth = ({ open, onClose, onOpenRegister }: any) => {
 	);
 };
 
-export default Auth;
+export default Login;

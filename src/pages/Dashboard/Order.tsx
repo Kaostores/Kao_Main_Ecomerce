@@ -5,8 +5,12 @@ import img from "../../assets/watch.png";
 import TrackSteps from "./Subpages/TrackSteps";
 import OrderDetails from "./Subpages/OrderDetails";
 import Recomended from "./Subpages/Recomended";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useFetchOrdersQuery } from "@/services/apiSlice";
+import moment from "moment"
+import NoOngoingOrders from "./Subpages/NoOngoingOrders";
+import NoCompletedOrders from "./Subpages/NoCompletedOrders";
+import NoCancelledOrders from "./Subpages/NoCancelledOrders";
 
 const Order = () => {
 	const [show, setShow] = useState(true);
@@ -14,23 +18,28 @@ const Order = () => {
 	const [show3, setShow3] = useState(false);
 	const [view, setView] = useState(true);
 	const [track, setTrack] = useState(false);
-	const [details, setDetails] = useState(false);
+  const [details, setDetails] = useState(false);
+  const [orderStatus, setOrderStatus] = useState("");
+  const [orderDetail, setOrderDetail] = useState<any>()
 
-	const { data: orders, isLoading, error } = useFetchOrdersQuery({});
+	const { data: orders, isLoading } = useFetchOrdersQuery({});
 	console.log("getting orders", orders);
 
 	const Navigate = useNavigate();
 
-	const orderDetails = () => {
+  const orderDetails = () => {
 		setDetails(true);
 		setTrack(false);
 		setView(false);
 	};
-	const TrackView = () => {
+  const TrackView = (variant: any, order: any) => {
+    setOrderStatus(variant.orderStatus);
 		setTrack(true);
 		setView(false);
-		setDetails(false);
-	};
+    setDetails(false);
+    setOrderDetail(order)
+  };
+  console.log("Orderdetail", orderDetail)
 	const ToggleView = () => {
 		setView(true);
 		setTrack(false);
@@ -113,246 +122,277 @@ const Order = () => {
 						<div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[2px]'></div>
 
 						{show ? (
-							<div className='w-[100%] flex justify-center'>
-								<div className='w-[100%] sm:w-[90%] md:w-[85%] flex mt-[30px]'>
-									<div className='w-[100%] flex flex-col'>
-										{orders?.data?.map((order: any) => (
-											<div
-												key={order.id}
-												className='w-[100%] flex justify-between'>
-												<div className='flex items-center sm:w-[100%]'>
-													<div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
-														<img src={img} alt='' className='h-[60px]' />
-													</div>
-													<div className='flex flex-col ml-[15px] sm:flex-1'>
-														{order?.items?.map((el) => (
-															<h3 className='text-[15px] font-[600]'>
-																{el?.variant?.title}
-															</h3>
-														))}
-														<div className='flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap'>
-															<p className='text-iconGray text-[13px]'>
-																Brand:
-															</p>
-															<p className='text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]'>
-																<span className='text-primary'>Apple</span> |
-																Similar Product From Apple | 793979398
-															</p>
-														</div>
-														<div className='flex items-center mt-[12px]'>
-															<p className='text-[13px]'>Price:</p>
-															<span className='flex items-center text-[13px] font-[600] ml-[4px]'>
-																NGN
-															</span>
-															<div className='w-[100%] flex items-center sm:justify-between'>
-																<h3 className='text-[15px] ml-[3px] font-[600]'>
-																	20,000
-																</h3>
-																<h4
-																	onClick={TrackView}
-																	className='text-primary text-[14px] hidden cursor-pointer font-[600] sm:flex'>
-																	Track delivery
-																</h4>
-															</div>
-														</div>
-													</div>
-												</div>
-												<h4
-													onClick={TrackView}
-													className='text-primary text-[14px] cursor-pointer font-[600] sm:hidden'>
-													Track delivery
-												</h4>
-											</div>
-										))}
+              <div className='w-[100%] flex justify-center'>
+  <div className='w-[100%] sm:w-[90%] md:w-[85%] flex mt-[30px]'>
+    <div className='w-[100%] flex flex-col'>
+      {isLoading && !orders ? (
+        <div
+          role='status'
+          className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+          <div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+          <div className='w-full'>
+            <div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+            <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+            <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+            <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+            <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+            <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+          </div>
+          <span className='sr-only'>Loading...</span>
+        </div>
+      ) : (
+        <>
+          {!orders?.data?.some((order: any) => order.orderStatus === "pending") ? (
+            <NoOngoingOrders />
+          ) : (
+            orders?.data?.map((order: any) => {
+              if (order.orderStatus === "pending") {
+                return (
+                  <div key={order.id} className='w-[100%] flex flex-col'>
+                    {order?.items?.map((item: any) => (
+                      <div key={item.id} className='flex items-center sm:w-[100%] flex-col'>
+                        <div className='flex items-center w-full justify-between'>
+                          <NavLink to={`/dashboard/orderdetails/${order.id}`}>
+                            <div className='flex'>
+                            <div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
+                              <img src={img} alt='' className='h-[60px]' />
+                            </div>
 
-										<div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[22px] md:hidden sm:hidden'></div>
-									</div>
-								</div>
-							</div>
-						) : null}
+                            <div className='flex flex-col ml-[15px] sm:flex-1'>
+                              <h3 className='text-[15px] font-[600]'>
+                                {item?.variant?.title}
+                              </h3>
+
+                              <div className='flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap'>
+                                <p className='text-iconGray text-[13px]'>
+                                  Brand:
+                                </p>
+                                <p className='text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]'>
+                                  <span className='text-primary'>Apple</span> | Similar Product From Apple | 793979398
+                                </p>
+                              </div>
+
+                              <div className='flex items-center mt-[12px]'>
+                                <p className='text-[13px]'>Price:</p>
+                                <span className='flex items-center text-[13px] font-[600] ml-[4px]'>
+                                  NGN
+                                </span>
+                                <div className='w-[100%] flex items-center sm:justify-between'>
+                                  <h3 className='text-[15px] ml-[3px] font-[600]'>
+                                    {item?.variant?.price}
+                                  </h3>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          </NavLink>
+                          <h4 onClick={() => TrackView(item, order)} className='text-primary text-[14px] cursor-pointer font-[600] sm:hidden'>
+                            Track delivery
+                          </h4>
+                        </div>
+                        <div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[18px] mb-[18px] md:hidden sm:hidden'></div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              }
+              return null;
+            })
+          )}
+        </>
+      )}
+    </div>
+  </div>
+              </div>
+
+
+            ) : null}
+
 
 						{show2 ? (
-							<div className='w-[100%] flex justify-center'>
-								<div className='w-[100%] md:w-[85%] sm:w-[90%] flex mt-[30px] sm:mt-[15px]'>
-									<div className='w-[100%] flex'>
-										<div className='w-[100%] flex flex-col'>
-											<div className='w-[100%] flex justify-between mt-[20px]'>
-												<div className='flex items-center sm:w-[100%]'>
-													<div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
-														<img src={img} alt='' className='h-[60px]' />
-													</div>
-													<div className='flex flex-col ml-[15px] sm:flex-1'>
-														<h3 className='text-[15px] font-[600]'>
-															Rolex Yacht-Master II
-														</h3>
-														<div className='flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap'>
-															<p className='text-iconGray text-[13px]'>
-																Brand:
-															</p>
-															<p className='text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]'>
-																<span className='text-primary'>Apple</span> |
-																Similar Product From Apple | 793979398
-															</p>
-														</div>
-														<div className='flex items-center mt-[12px]'>
-															<p className='text-[13px]'>Price:</p>
-															<span className='flex items-center text-[13px] font-[600] ml-[4px]'>
-																NGN
-															</span>
-															<div className='w-[100%] flex items-center sm:justify-between'>
-																<h3 className='text-[15px] ml-[3px] font-[600]'>
-																	20,000
-																</h3>
-																<div
-																	onClick={orderDetails}
-																	className='flex-col items-end hidden sm:flex'>
-																	<p className='text-primary text-[13px]'>
-																		Delivered on
-																	</p>
-																	<div className='flex items-center text-[14px] text-primary font-[600] sm:text-[12px]'>
-																		<h3>02/02/2024</h3>{" "}
-																		<h3 className='ml-[5px]'>02:32</h3>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div
-													onClick={orderDetails}
-													className='flex flex-col items-end sm:hidden'>
-													<p className='text-primary text-[13px]'>
-														Delivered on
-													</p>
-													<div className='flex items-center text-[14px] text-primary font-[600]'>
-														<h3>02/02/2024</h3>{" "}
-														<h3 className='ml-[5px]'>02:32</h3>
-													</div>
-												</div>
-											</div>
+              <div className='w-[100%] flex justify-center'>
+                <div className='w-[100%] sm:w-[90%] md:w-[85%] flex mt-[30px]'>
+                  <div className='w-[100%] flex flex-col'>
+                    {isLoading && !orders ? (
+                      <div
+                        role='status'
+                        className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+                        <div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+                        <div className='w-full'>
+                          <div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+                          <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+                          <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+                          <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+                          <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+                          <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+                        </div>
+                        <span className='sr-only'>Loading...</span>
+                      </div>
+                    ) : (
+                      <>
+                        {!orders?.data?.some((order: any) => order.orderStatus === "delivered") ? (
+                          <NoCompletedOrders />
+                        ) : (
+                          orders?.data?.map((order: any) => {
+                            if (order.orderStatus === "delivered") {
+                              return (
+                                <div key={order.id} className='w-[100%] flex flex-col'>
+                                  {order?.items?.map((item: any) => (
+                                    <div key={item.id} className='flex items-center sm:w-[100%] flex-col'>
+                                      <div className='flex items-center w-full justify-between'>
+                                        <NavLink to={`/dashboard/orderdetails/${order.id}`}>
+                                          <div className='flex'>
+                                          <div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
+                                            <img src={img} alt='' className='h-[60px]' />
+                                          </div>
 
-											<div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[22px] md:hidden sm:hidden'></div>
+                                          <div className='flex flex-col ml-[15px] sm:flex-1'>
+                                            <h3 className='text-[15px] font-[600]'>
+                                              {item?.variant?.title}
+                                            </h3>
 
-											<div className='w-[100%] flex justify-between mt-[20px] md:mt-[40px] sm:mt-[30px]'>
-												<div className='flex items-center sm:w-[100%]'>
-													<div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
-														<img src={img} alt='' className='h-[60px]' />
-													</div>
-													<div className='flex flex-col ml-[15px] sm:flex-1'>
-														<h3 className='text-[15px] font-[600]'>
-															Rolex Yacht-Master II
-														</h3>
-														<div className='flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap'>
-															<p className='text-iconGray text-[13px]'>
-																Brand:
-															</p>
-															<p className='text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]'>
-																<span className='text-primary'>Apple</span> |
-																Similar Product From Apple | 793979398
-															</p>
-														</div>
-														<div className='flex items-center mt-[12px]'>
-															<p className='text-[13px]'>Price:</p>
-															<span className='flex items-center text-[13px] font-[600] ml-[4px]'>
-																NGN
-															</span>
-															<div className='w-[100%] flex items-center sm:justify-between'>
-																<h3 className='text-[15px] ml-[3px] font-[600]'>
-																	20,000
-																</h3>
-																<div
-																	onClick={orderDetails}
-																	className='flex-col items-end hidden sm:flex'>
-																	<p className='text-primary text-[13px]'>
-																		Delivered on
-																	</p>
-																	<div className='flex items-center text-[14px] text-primary font-[600] sm:text-[12px]'>
-																		<h3>02/02/2024</h3>{" "}
-																		<h3 className='ml-[5px]'>02:32</h3>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div className='flex flex-col items-end sm:hidden'>
-													<p className='text-primary text-[13px]'>
-														Delivered on
-													</p>
-													<div className='flex items-center text-[14px] text-primary font-[600]'>
-														<h3>02/02/2024</h3>{" "}
-														<h3 className='ml-[5px]'>02:32</h3>
-													</div>
-												</div>
-											</div>
+                                            <div className='flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap'>
+                                              <p className='text-iconGray text-[13px]'>
+                                                Brand:
+                                              </p>
+                                              <p className='text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]'>
+                                                <span className='text-primary'>Apple</span> | Similar Product From Apple | 793979398
+                                              </p>
+                                            </div>
 
-											<div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[22px] md:hidden sm:hidden'></div>
-
-											<div className='w-[100%] flex justify-between mt-[20px] md:mt-[40px] sm:mt-[40px]'>
-												<div className='flex items-center sm:w-[100%]'>
-													<div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
-														<img src={img} alt='' className='h-[60px]' />
-													</div>
-													<div className='flex flex-col ml-[15px] sm:flex-1'>
-														<h3 className='text-[15px] font-[600]'>
-															Rolex Yacht-Master II
-														</h3>
-														<div className='flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap'>
-															<p className='text-iconGray text-[13px]'>
-																Brand:
-															</p>
-															<p className='text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]'>
-																<span className='text-primary'>Apple</span> |
-																Similar Product From Apple | 793979398
-															</p>
-														</div>
-														<div className='flex items-center mt-[12px]'>
-															<p className='text-[13px]'>Price:</p>
-															<span className='flex items-center text-[13px] font-[600] ml-[4px]'>
-																NGN
-															</span>
-															<div className='w-[100%] flex items-center sm:justify-between'>
-																<h3 className='text-[15px] ml-[3px] font-[600]'>
-																	20,000
-																</h3>
-																<div
-																	onClick={orderDetails}
-																	className='flex-col items-end hidden sm:flex'>
-																	<p className='text-primary text-[13px]'>
-																		Delivered on
-																	</p>
-																	<div className='flex items-center text-[14px] text-primary font-[600] sm:text-[12px]'>
-																		<h3>02/02/2024</h3>{" "}
-																		<h3 className='ml-[5px]'>02:32</h3>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div className='flex flex-col items-end sm:hidden'>
-													<p className='text-primary text-[13px]'>
-														Delivered on
-													</p>
-													<div className='flex items-center text-[14px] text-primary font-[600]'>
-														<h3>02/02/2024</h3>{" "}
-														<h3 className='ml-[5px]'>02:32</h3>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						) : null}
+                                            <div className='flex items-center mt-[12px]'>
+                                              <p className='text-[13px]'>Price:</p>
+                                              <span className='flex items-center text-[13px] font-[600] ml-[4px]'>
+                                                NGN
+                                              </span>
+                                              <div className='w-[100%] flex items-center sm:justify-between'>
+                                                <h3 className='text-[15px] ml-[3px] font-[600]'>
+                                                  {item?.variant?.price}
+                                                </h3>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        </NavLink>
+                                          <div
+                                                className='flex-col items-end sm:flex'>
+                                                <p className='text-primary text-[13px]'>
+                                                Delivered on
+                                                </p>
+                                                <div className='flex items-center text-[14px] text-primary font-[600] sm:text-[12px]'>
+                                                  <h3>02/02/2024</h3>{" "}
+                                                  <h3 className='ml-[5px]'>02:32</h3>
+                                                </div>
+                                              </div>
+                                      </div>
+                                      <div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[18px] mb-[18px] md:hidden sm:hidden'></div>
+                                    </div>
+                                  ))}
+                                </div>
+                              );
+                            }
+                            return null;
+                          })
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+            
 						{show3 ? (
 							<div className='w-[100%] flex justify-center'>
-								<div className='w-[90%] flex'>
-									<CancelledOrders />
-								</div>
-							</div>
+                <div className='w-[100%] sm:w-[90%] md:w-[85%] flex mt-[30px]'>
+                  <div className='w-[100%] flex flex-col'>
+                    {isLoading && !orders ? (
+                      <div
+                        role='status'
+                        className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
+                        <div className='flex items-center justify-center w-full h-48 bg-gray-400 rounded sm:w-96 dark:bg-gray-900'></div>
+                        <div className='w-full'>
+                          <div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4'></div>
+                          <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5'></div>
+                          <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5'></div>
+                          <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5'></div>
+                          <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5'></div>
+                          <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]'></div>
+                        </div>
+                        <span className='sr-only'>Loading...</span>
+                      </div>
+                    ) : (
+                      <>
+                        {!orders?.data?.some((order: any) => order.orderStatus === "cancelled") ? (
+                          <NoCancelledOrders />
+                        ) : (
+                          orders?.data?.map((order: any) => {
+                            if (order.orderStatus === "cancelled") {
+                              return (
+                                <div key={order.id} className='w-[100%] flex flex-col'>
+                                  {order?.items?.map((item: any) => (
+                                    <div key={item.id} className='flex items-center sm:w-[100%] flex-col'>
+                                      <div className='flex items-center w-full justify-between'>
+                                        <div className='flex'>
+                                          <div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
+                                            <img src={img} alt='' className='h-[60px]' />
+                                          </div>
+
+                                          <div className='flex flex-col ml-[15px] sm:flex-1'>
+                                            <h3 className='text-[15px] font-[600]'>
+                                              {item?.variant?.title}
+                                            </h3>
+
+                                            <div className='flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap'>
+                                              <p className='text-iconGray text-[13px]'>
+                                                Brand:
+                                              </p>
+                                              <p className='text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]'>
+                                                <span className='text-primary'>Apple</span> | Similar Product From Apple | 793979398
+                                              </p>
+                                            </div>
+
+                                            <div className='flex items-center mt-[12px]'>
+                                              <p className='text-[13px]'>Price:</p>
+                                              <span className='flex items-center text-[13px] font-[600] ml-[4px]'>
+                                                NGN
+                                              </span>
+                                              <div className='w-[100%] flex items-center sm:justify-between'>
+                                                <h3 className='text-[15px] ml-[3px] font-[600]'>
+                                                  {item?.variant?.price}
+                                                </h3>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div
+                                                onClick={orderDetails}
+                                                className='flex-col items-end hidden sm:flex'>
+                                                <p className='text-primary text-[13px]'>
+                                                Delivered on
+                                                </p>
+                                                <div className='flex items-center text-[14px] text-primary font-[600] sm:text-[12px]'>
+                                                  <h3>02/02/2024</h3>{" "}
+                                                  <h3 className='ml-[5px]'>02:32</h3>
+                                                </div>
+                                              </div>
+                                      </div>
+                                      <div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[18px] mb-[18px] md:hidden sm:hidden'></div>
+                                    </div>
+                                  ))}
+                                </div>
+                              );
+                            }
+                            return null;
+                          })
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
 						) : null}
-					</div>
+          </div>
+          
 					<div className='w-[90%] md:w-[85%]'>
 						<Recomended />
 					</div>
@@ -375,13 +415,13 @@ const Order = () => {
 					<div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[4px] sm:mt-[10px]'></div>
 
 					<div className='flex w-[100%] md:w-[85%] sm:w-[90%] justify-start mt-[30px]'>
-						<TrackSteps />
+						<TrackSteps currentStep={orderStatus}/>
 						<div className='flex flex-col md:ml-[15px] sm:ml-[15px]'>
 							<div className='flex flex-col mb-[35px]'>
 								<h3 className='text-[14px] text-primary font-[500]'>
 									Order placed
 								</h3>
-								<p className='text-[11px] text-iconGray'>25th of March 2024</p>
+								<p className='text-[11px] text-iconGray'>{moment(orderDetail.createdAt).calendar()}</p>
 							</div>
 							<div className='flex flex-col mb-[37px]'>
 								<h3 className='text-[14px] text-primary font-[500]'>
@@ -410,7 +450,7 @@ const Order = () => {
 			) : null}
 
 			{details ? (
-				<div className='w-[100%] flex flex-col md:items-center sm:items-center'>
+				<div className='w-[100%] md:items-center sm:items-center flex flex-col p-[15px] md:p-0 sm:p-0 bg-[#F4F4F4] md:bg-white sm:bg-white ml-[15px] md:ml-0 sm:ml-0 rounded-[8px]'>
 					<div className='w-[100%] flex flex-col md:items-center sm:items-center p-[15px] md:p-0 sm:p-0'>
 						<div
 							onClick={ToggleView}
