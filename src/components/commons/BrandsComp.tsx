@@ -1,4 +1,4 @@
-import React from "react";
+
 import pic from "@/assets/cate.svg";
 
 const BrandsComp = () => {

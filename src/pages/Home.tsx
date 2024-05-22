@@ -10,12 +10,12 @@ const Home = () => {
 	const {data, isLoading} = useViewAllProductsQuery({})
 
 	return (
-		<div>
+		<div className="overflow-hidden">
 			<Hero />
 			<h3 className='mt-7 font-bold mb-3'>Recommended For You</h3>
 			<div className="w-[100%]">
 						{isLoading && !data ? (
-						<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
+						<div className='grid grid-cols-3 gap-4  sm:justify-center sm:flex sm:items-center sm:grid-cols-1 md:grid-cols-2 sm:flex-col flex-1 '>
 							<div
 										role='status'
 										className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
@@ -74,7 +74,7 @@ const Home = () => {
 							</div>
 						</div>
 						) : (
-							<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
+							<div className='grid grid-cols-3 gap-4  sm:justify-center sm:flex sm:items-center sm:grid-cols-1 md:grid-cols-2 sm:flex-col flex-1'>
 								{data?.data.slice(0, 4).map((props: any) => (
 											<CardComp
 												key={props.id}
@@ -110,7 +110,7 @@ const Home = () => {
 			<h3 className='mt-7 font-bold mb-3'>Hot Sales</h3>
 			<div className="w-[100%]">
 						{isLoading && !data ? (
-						<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
+						<div className='grid grid-cols-3 gap-4  sm:justify-center sm:flex sm:items-center sm:grid-cols-1 md:grid-cols-2 sm:flex-col flex-1 '>
 							<div
 										role='status'
 										className='space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center'>
@@ -225,7 +225,7 @@ const Home = () => {
 							</div>
 						</div>
 						) : (
-							<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
+							<div className='grid grid-cols-3 gap-4  sm:justify-center sm:flex sm:items-center sm:grid-cols-1 md:grid-cols-2 sm:flex-col flex-1 '>
 								{data?.data.slice(0, 8).map((props: any) => (
 											<CardComp
 												key={props.id}

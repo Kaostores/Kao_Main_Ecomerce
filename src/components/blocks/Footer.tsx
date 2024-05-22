@@ -1,4 +1,3 @@
-import React from "react";
 import pic1 from "@/assets/icons/iconoir_send-mail.svg";
 import pic2 from "@/assets/icons/bi_phone.svg";
 import pic3 from '@/assets/icons/ion_logo-google-playstore.svg'

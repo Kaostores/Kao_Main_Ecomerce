@@ -8,14 +8,14 @@ import moment from "moment"
 const OrderDetails = () => {
 
     const { id } = useParams();
-    const { data: productData, isLoading: isProductLoading } = useFetchOrderByIdQuery(id);
+    const { data: productData } = useFetchOrderByIdQuery(id);
     console.log("data", productData)
 
     const address = productData?.data?.address;
     const items = productData?.data?.items;
     console.log("items", items)
 
-    const totalItemPrice = items?.reduce((total, item) => total + (item.variant.price * item.quantity), 0) || 0;
+    const totalItemPrice = items?.reduce((total: any, item:any) => total + (item.variant.price * item.quantity), 0) || 0;
 
     const navigate = useNavigate()
 
@@ -48,7 +48,7 @@ const OrderDetails = () => {
         
                     <div className="w-[100%] h-[2px] bg-[#E6E6E6] mt-[25px]"></div>
         
-                    {items?.map((item, index): any => (
+                    {items?.map((item: any, index: any): any => (
                         <div key={index} className="w-[100%] md:w-[85%] sm:w-[90%] flex justify-between mt-[20px]">
                         <div className="flex items-center sm:w-[100%]">
                             <div className="w-[90px] h-[90px] flex justify-center items-center border border-primary">

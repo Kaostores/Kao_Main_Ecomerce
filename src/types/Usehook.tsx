@@ -121,7 +121,7 @@ export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
 	return (
 		<div className='w-full mt-2'>
 			<FlutterWaveButton
-				className={`w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white py-[10px] rounded-sm mt-[20px] sm:hidden ${
+				className={`w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white py-[10px] rounded-sm mt-[20px] sm:mt-[0px] ${
           disabled || amount < 100 ? 'bg-[#B4B4B4] cursor-not-allowed' : 'bg-secondary cursor-pointer'
         }`}
 				text='yes'

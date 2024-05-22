@@ -1,18 +1,11 @@
-import React from "react";
+
 import pic2 from "@/assets/ep_sell.svg";
 import pic1 from "@/assets/lucide_locate-fixed.svg";
 import pic3 from "@/assets/bulk.png";
 import pic4 from "@/assets/hero2.png";
-import Slider from "react-slick";
 
 const Hero = () => {
-	var settings = {
-		dots: true,
-		infinite: true,
-		speed: 500,
-		slidesToShow: 1,
-		slidesToScroll: 1,
-	};
+	
 	return (
 		<div className=' flex w-full sm:flex-col md:flex-col mt-7 sm:mt-3  gap-5 '>
 			<div className='flex-1 bg-ascentBlue rounded-sm'>
