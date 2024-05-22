@@ -1,4 +1,3 @@
-import React from "react";
 import megaData from "@/components/json/MegaMenu.json";
 import pic from "@/assets/logo.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
@@ -10,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const MegaMenu = ({ setShowMegaMenu }: any) => {
 
 	const navigate = useNavigate()
-	
+
 	return (
 		<div
 			onClick={() => setShowMegaMenu(false)}

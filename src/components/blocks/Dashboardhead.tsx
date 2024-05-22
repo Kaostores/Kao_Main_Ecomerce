@@ -3,7 +3,6 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import SearchInput from "../commons/SearchInput";
-import { AiOutlineMenu } from "react-icons/ai";
 
 const Dashboardhead = () => {
   return (

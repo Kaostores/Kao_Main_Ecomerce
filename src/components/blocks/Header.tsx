@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import pic from "@/assets/logo.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -9,28 +9,28 @@ import MegaMenu from "../commons/MegaMenu";
 import Register from "../Auth/Register";
 import Login from "../Auth/Login";
 import { Link, useNavigate } from "react-router-dom";
-import ShowToast from "../reuse/ShowToast";
-import { useAppSelector } from "@/services/store";
-import { useDispatch } from "react-redux";
+// import ShowToast from "../reuse/ShowToast";
+// import { useAppSelector } from "@/services/store";
+import { useSelector } from "react-redux";
 
 const Header = () => {
-	const User = useAppSelector((state) => state.persistedReducer.currentUser);
+	const User = useSelector((state: any) => state?.persistedReducer.currentUser);
 
-	console.log('thjis the user', User);
-	const dispatch = useDispatch();
+	console.log("thjis the user", User);
+	// const dispatch = useDispatch();
 
-	const readCartQuantity = useAppSelector(
+	const readCartQuantity = useSelector(
 		(state: any) => state.persistedReducer.totalQuantity,
 	);
 
 	const show = () => {
-		ShowToast(true, "true");
+		// ShowToast(true, "true");
 	};
 	const [showMegaMenu, setShowMegaMenu] = useState(false);
 	const navigate = useNavigate();
 	const [open, setOpen] = useState({
 		state: false,
-		type: "register",
+		type: "login",
 	});
 
 	const onClose = () => {
@@ -107,10 +107,10 @@ const Header = () => {
 								<FaRegUser />
 							</div>
 							<Link to='/dashboard'>
-								<div className='text-[14px] ml-2 sm:hidden'>
+								<div className='text-[14px]  max-w-[70px] overflow-hidden ml-2 sm:hidden'>
 									<div className='flex items-start'>
-										<h2 className='mr-[8px]'>{User.firstname}</h2>
-										<h2>{User.lastname}</h2>
+										<h2 className='mr-[8px]  max-w-[70px] overflow-hidden'>{User.firstname}</h2>
+										{/* <h2>{User.lastname}</h2> */}
 									</div>
 								</div>
 							</Link>
@@ -120,7 +120,7 @@ const Header = () => {
 					<>
 						<div
 							onClick={() => {
-								onOpenRegister();
+								onOpenLogin();
 								console.log(open);
 							}}
 							className='flex items-center cursor-pointer sm:hidden'>
@@ -133,9 +133,39 @@ const Header = () => {
 				)}
 
 				<div className='hidden sm:flex gap-3 items-center'>
-					<div onClick={onOpenRegister} className='text-primary -mt-2'>
-						<FaRegUser />
-					</div>
+					{User?.id ? (
+						<>
+							<div className='hidden items-center cursor-pointer sm:flex'>
+								<div className='text-primary'>
+									<FaRegUser />
+								</div>
+								<Link to='/dashboard'>
+									<div className='text-[14px] ml-2  max-w-[70px] overflow-hidden sm:flex hidden'>
+										<div className='flex items-start'>
+											<h2 className='mr-[8px]  max-w-[70px] overflow-ellipsis '>
+												{User.firstname}
+											</h2>
+											{/* <h2>{User.lastname}</h2> */}
+										</div>
+									</div>
+								</Link>
+							</div>
+						</>
+					) : (
+						<>
+							<div
+								onClick={() => {
+									onOpenLogin();
+									console.log(open);
+								}}
+								className=' items-center cursor-pointer sm:flex hidden'>
+								<div className='text-primary'>
+									<FaRegUser />
+								</div>
+								<div className='text-[14px] ml-2 sm:flex'>Sign in/Sign up</div>
+							</div>
+						</>
+					)}
 					<Link to='/cart'>
 						<div className='relative inline-block '>
 							<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>

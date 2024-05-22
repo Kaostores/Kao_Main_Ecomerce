@@ -9,11 +9,13 @@ import UserForm from "@/components/props/AddressForm";
 import { useAppSelector } from "@/services/store";
 import { useNavigate } from "react-router-dom";
 import { FlutterWavePayment } from "@/types/Usehook";
+import { IoMdClose } from "react-icons/io";
 import {
 	useViewAllAddressQuery,
 	useUpdateAddressMutation,
 } from "@/services/apiSlice";
 import { MdModeEdit } from "react-icons/md";
+import ShowToast from "@/components/reuse/ShowToast";
 
 const Checkout = () => {
 	const [showAddress, setShowAddress] = useState(true);
@@ -29,29 +31,19 @@ const Checkout = () => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [showAllAddresses, setShowAllAddresses] = useState(false);
 	const [showModal, setShowModal] = useState(false)
+	
 
 	const ToggleModal = () => {
-		setShowModal(!showModal)
+		if(selectedAddressId === ""){
+			ShowToast(false, 'You have not selected an address')
+		}else{
+			setShowModal(!showModal);
+		}
 	}
-	const CancleleModal = () => {
+
+	const CloseModal = () => {
 		setShowModal(false)
 	}
-
-	useEffect(() => {
-		let timer: any;
-		if (showModal) {
-			timer = setTimeout(() => {
-				setShowModal(false);
-			}, 10000); // 10 seconds
-		}
-		return () => clearTimeout(timer);
-	}, [showModal]);
-
-	useEffect(() => {
-		if (addressData?.data?.length > 0) {
-			setSelectedAddressId(addressData.data[0].id); // Set the first address as default
-		}
-	}, [addressData]);
 
 	const toggleAddressesVisibility = () => {
         setShowAllAddresses(!showAllAddresses);
@@ -79,6 +71,22 @@ const Checkout = () => {
 		setIsEditing(false);
 	};
 
+	useEffect(() => {
+		let timer: any;
+		if (showModal) {
+			timer = setTimeout(() => {
+				setShowModal(false);
+			}, 10000);
+		}
+		return () => clearTimeout(timer);
+	}, [showModal]);
+// 
+	useEffect(() => {
+		if (addressData?.data?.length > 0) {
+			setSelectedAddressId(addressData.data[0].id);
+		}
+	}, [addressData]);
+
 	const cartItems = useAppSelector((state) => state.persistedReducer.cart);
 	const addresses = useAppSelector((state) => state.persistedReducer.addresses);
 	console.log("addresses", addresses);
@@ -105,7 +113,7 @@ const Checkout = () => {
 		setShowDet(!showDet);
 	};
 
-	const [items, setItems] = useState([
+	const [items,] = useState([
 		{
 			id: 1,
 			name: "Pay with USDT",
@@ -263,7 +271,7 @@ const Checkout = () => {
 										className='ml-[5px] text-primary font-semibold text-[15px] sm:hidden cursor-pointer'>
 										Modify items
 									</div>
-									<div className='ml-[5px] text-primary font-semibold text-[13px] xl:hidden md:hidden lg:hidden'>
+									<div onClick={() => navigate(-1)} className='ml-[5px] text-primary font-semibold text-[13px] xl:hidden md:hidden lg:hidden'>
 										Edit
 									</div>
 								</div>
@@ -422,7 +430,7 @@ const Checkout = () => {
 								</div>
 							) : null}
 							{showCheckOut ? null : (
-								<div className='w-[100%] sm:flex justify-center items-center text-white py-[10px] bg-secondary mt-[20px] md:hidden xl:hidden lg:hidden'>
+								<div onClick={ToggleModal} className='w-[100%] sm:flex justify-center items-center text-white py-[10px] bg-secondary mt-[20px] md:hidden xl:hidden lg:hidden'>
 									<div>Checkout</div>
 								</div>
 							)}
@@ -491,23 +499,24 @@ const Checkout = () => {
 								</div>
 							</div>
 						</div>
-						<button onClick={ToggleModal} className="w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white py-[10px] rounded-sm mt-[30px] bg-secondary cursor-pointer">
+						<button onClick={ToggleModal} className={`w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white sm:hidden py-[10px] rounded-sm mt-[30px] ${isEditing ? 'bg-[#B4B4B4] cursor-not-allowed' : 'bg-secondary cursor-pointer'}`}>
 							Checkout
 						</button>
 					</div>
 				</div>
 			</div>
 
-			{showModal ? (
-				<div className="w-[100%] h-[100vh] bg-[rgba(0,0,0,0.5)] fixed top-0 left-0 flex justify-center items-center">
-					<div className="w-[35%] p-[20px] pt-[40px] pb-[40px] bg-white rounded-md flex justify-center items-center flex-col">
-						<h1 className="text-[17px] font-[500]">Are you sure you want to CheckOut❓</h1>
+			{showModal  ? (
+				<div className="w-[100vw] h-[100vh] bg-[rgba(0,0,0,0.5)] sm:pl-[20px] sm:pr-[20px] flex justify-center items-center fixed top-0 left-0">
+					<div className="w-[35%] md:w-[55%] sm:w-[100%] relative p-[20px] pt-[40px] pb-[40px] bg-[#fff] rounded-md flex flex-col justify-center items-center">
+						<h3 className="text-[16px] sm:text-[14px] text-center font-[600]">Are you sure you want to CheckOut❓</h3>
 
-						<div className="w-[100%] flex items-center justify-between mt-[20px]">
-							<button onClick={CancleleModal} className="w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white py-[10px] mt-[28px] mr-[40px] rounded-sm bg-secondary cursor-pointer">
-								No
-							</button>
+						<div className="w-[100%] flex sm:flex-wrap items-center mt-[30px] justify-between">
+						<button onClick={ToggleModal} className={`w-[45%] sm:w-[100%] sm:mb-[10px] xl:flex lg:flex md:flex justify-center items-center text-white bg-secondary cursor-pointer py-[10px] rounded-sm mt-[30px] sm:mt-0`}>
+							No
+						</button>
 
+						<div className="w-[45%] mt-[10px] sm:mt-0 sm:w-[100%]">
 							<FlutterWavePayment
 							amount={totalPrice}
 							cartItems={cartItems}
@@ -515,8 +524,10 @@ const Checkout = () => {
 							disabled={isEditing} 
 						/>
 						</div>
+						</div>
+						<IoMdClose onClick={CloseModal} className="absolute top-[20px] sm:top-[10px] right-[30px] sm:right-[10px] text-[20px]"/>
 					</div>
-			</div>
+				</div>
 			) : null}
 		</div>
 	);

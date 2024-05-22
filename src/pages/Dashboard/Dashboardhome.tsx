@@ -11,6 +11,13 @@ import { MdOutlineSupportAgent } from "react-icons/md";
 import Recomended from "./Subpages/Recomended";
 import { useState } from "react"
 import { FaXmark } from "react-icons/fa6";
+import { GrLogout } from "react-icons/gr";
+import { logoutUser } from "@/services/reducers";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+// import { useSelector } from "react-redux";
+import { useGetUserDataQuery } from "@/services/apiSlice";
 
 const Dashboardhome = () => {
   const location = useLocation();
@@ -21,6 +28,11 @@ const Dashboardhome = () => {
   const [show2, setShow2] = useState(false)
   const [isActiveFirst, setIsActiveFirst] = useState(true);
   const [isActiveSecond, setIsActiveSecond] = useState(false);
+  // const user = useSelector((state:any)=> state?.persistedReducer?.currentUser)
+
+  const {data} = useGetUserDataQuery({})
+
+  console.log('this is the user', data);
 
   const handleClickFirst = () => {
     setIsActiveFirst(true);
@@ -42,7 +54,21 @@ const Dashboardhome = () => {
     const Close = () => {
       setShow(false)
       setShow2(false)
-    }
+  }
+
+  const dispatch = useDispatch()
+  
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    toast.success("You have logged out successfully", {
+        autoClose: 3000,
+        closeButton: true,
+        onClose: () => {
+            navigate("/") 
+        }
+    });
+  };
+  
   return (
     <div className="w-[100%]">
       <div className="w-[100%] flex-col p-[15px] mb-[60px] flex-1 bg-[#F4F4F4] ml-[15px] rounded-[8px] md:ml-0 md:hidden sm:hidden">
@@ -109,8 +135,8 @@ const Dashboardhome = () => {
 
       <div className="hidden md:flex sm:flex w-[100%] flex-col md:items-center sm:items-center relative">
         <div className="flex flex-col md:w-[85%] sm:w-[90%]">
-          <h3 className="text-[18px] font-[600]">Hello, Temiloluwa</h3>
-          <p className="text-[14px]">temiloluwamorafa@gmail.com</p>
+          <h3 className="text-[18px] font-[600]">Hello, {data?.data?.firstname}</h3>
+          <p className="text-[14px]">{data?.data?.email}</p>
         </div>
         <div className="h-[1px] w-full bg-[#F1F1F1] mt-[20px]"></div>
 
@@ -206,6 +232,26 @@ const Dashboardhome = () => {
            </div>
            <div className="text-iconGray text-[20px]"><IoIosArrowForward /></div>
           </div>
+
+          <div onClick={handleLogout}
+            className={`w-full min-h-[45px] flex justify-between items-center mb-[5px] cursor-pointer 
+                  ${active === "/help&support" ? "bg-[#0333ae] text-[#fff]" : "text-[#757575]"}
+                  }`}>
+           <div className="flex items-center">
+             <div className='text-[20px] text-[#DA0000] font-bold'>
+              <GrLogout />
+            </div>
+            <div className='font-medium  text-[15px] ml-[15px] text-[#DA0000]'>Logout</div>
+           </div>
+          </div>
+
+
+           {/* <div className="flex items-center pl-[20px] bottom-[40px]">
+			<div className='text-[20px] text-[#DA0000]  font-bold'>
+				<GrLogout />
+			</div>
+			<div onClick={handleLogout} className='font-medium cursor-pointer  text-[15px] ml-[20px] text-[#DA0000]'>Logout</div>
+		</div> */}
         </div>
 
         <div className="w-[100%] md:w-[85%] sm:w-[90%]">

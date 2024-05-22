@@ -1,4 +1,4 @@
-import { IoSearchOutline } from "react-icons/io5";
+
 import SideNav from "./SideNav";
 import Mobilenav from "./Mobilenav";
 import HelpHero from "@/components/HelpHero";

@@ -19,14 +19,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { IoMdClose } from "react-icons/io";
 
 const ProductDetails = () => {
-	const [show, setShow] = useState<boolean>(true);
-	const [show2, setShow2] = useState<boolean>(false);
-	const [show3, setShow3] = useState<boolean>(false);
 	const [showContent, setContent] = useState<boolean>(false);
 	const [showLove, setShowLove] = useState<boolean>(true);
 	const [showVariant, setShowVariant] = useState(false);
-	const [quantity, setQuantity] = useState(0);
-	const [selectedImage, setSelectedImage] = useState(null);
+	const [selectedImage, setSelectedImage] = useState<any | null>();
 	const { id } = useParams();
 	const { data: productData, isLoading: isProductLoading } = useViewAProductQuery(id);
 	const { data: allProductsData, isLoading: isAllProductsLoading } = useViewAllProductsQuery({});
@@ -74,21 +70,8 @@ const ProductDetails = () => {
 	const togContent = () => {
 		setContent(!showContent);
 	};
-	const tog = () => {
-		setShow(true);
-		setShow2(false);
-		setShow3(false);
-	};
-	const tog2 = () => {
-		setShow(false);
-		setShow2(true);
-		setShow3(false);
-	};
-	const tog3 = () => {
-		setShow(false);
-		setShow2(false);
-		setShow3(true);
-	};
+
+	
 	const loveBtn = () => {
 		setShowLove(!showLove);
 	};
@@ -102,10 +85,15 @@ const ProductDetails = () => {
 
 	
 	
-
+useEffect(() => {
+	if (productData?.data?.media?.length > 0) {
+		setSelectedId(productData.data?.media[0].id);
+		setSelectedImage(productData?.data?.media[0])
+	}
+}, [productData]);
 	
 
-	console.log("dfghyjdkhghj", selectedId);
+	// console.log("dfghyjdkhghj", selectedId);
 
 
 	useEffect(() => {}, [selectedId, productData]);
@@ -286,15 +274,15 @@ const ProductDetails = () => {
 									<div className='w-[100%] h-[100%] flex flex-col mt-[5px]'>
 
 									{showVariant ? (
-										<div className='w-[100%] h-[100%] flex justify-center items-center bg-[rgba(0,0,0,0.5)] fixed left-0 top-0'>
-											<div className='w-[43%] p-[18px] bg-white rounded-md flex flex-col'>
+										<div className='w-[100%] h-[100%] flex justify-center items-center bg-[rgba(0,0,0,0.5)] fixed left-0 top-0 sm:pl-[15px] sm:pr-[15px]'>
+											<div className='w-[43%] sm:w-[100%] md:w-[65%] p-[18px] bg-white rounded-md flex flex-col'>
 												<div className='w-[100%] flex items-center justify-between'>
-													<h2 className='text-[19px] font-[500]'>
+													<h2 className='text-[19px] sm:text-[16px] font-[500]'>
 														Please select a variation
 													</h2>
 													<div
 														onClick={closeVariant}
-														className='text-[25px] cursor-pointer'>
+														className='text-[25px] sm:text-[20px] cursor-pointer'>
 														<IoMdClose />
 													</div>
 												</div>
@@ -305,10 +293,10 @@ const ProductDetails = () => {
 															key={variant.id}
 															className='w-[100%] flex items-center justify-between mt-[25px] mb-[15px]'>
 															<div className='flex flex-col'>
-																<div className='text-[18px]'>
+																<div className='text-[18px] sm:text-[16px]'>
 																	{variant.title}
 																</div>
-																<div className='text-[14px] mt-[1px]'>
+																<div className='text-[14px] sm:text-[12px] mt-[1px]'>
 																	₦ {variant.price}
 																</div>
 															</div>
@@ -332,15 +320,15 @@ const ProductDetails = () => {
 													</div>
 												))}
 												<div className='w-[100%] h-[1px] bg-[#d6d6d6] mt-[20px]'></div>
-												<div className='w-[100%] flex items-center mt-[15px] justify-between'>
-													<button className='w-[48%] h-[50px] border border-[#DE801C] rounded-sm flex justify-center items-center cursor-pointer'>
-														<h3 className='text-[#DE801C] text-[16px]'>
+												<div className='w-[100%] flex items-center mt-[15px] justify-between sm:flex-wrap'>
+													<button className='w-[48%] sm:w-[100%] h-[50px] border border-[#DE801C] rounded-sm flex justify-center items-center cursor-pointer'>
+														<h3 className='text-[#DE801C] text-[16px] sm:text-[14px]'>
 															CONTINUE SHOPPING
 														</h3>
 													</button>
-													<button className='w-[48%] h-[50px] bg-[#DE801C] rounded-sm flex justify-center items-center cursor-pointer'>
-														<h3 className='text-[#fff] text-[16px]'>
-															VIEW CART AND CHECKOUT
+													<button className='w-[48%] sm:w-[100%] sm:mt-[10px] h-[50px] bg-[#DE801C] rounded-sm flex justify-center items-center cursor-pointer'>
+														<h3 className='text-[#fff] text-[16px] sm:text-[14px]'>
+															VIEW CART
 														</h3>
 													</button>
 												</div>
