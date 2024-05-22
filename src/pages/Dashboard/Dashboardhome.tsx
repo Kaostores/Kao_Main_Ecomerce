@@ -16,6 +16,8 @@ import { logoutUser } from "@/services/reducers";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+// import { useSelector } from "react-redux";
+import { useGetUserDataQuery } from "@/services/apiSlice";
 
 const Dashboardhome = () => {
   const location = useLocation();
@@ -26,6 +28,11 @@ const Dashboardhome = () => {
   const [show2, setShow2] = useState(false)
   const [isActiveFirst, setIsActiveFirst] = useState(true);
   const [isActiveSecond, setIsActiveSecond] = useState(false);
+  // const user = useSelector((state:any)=> state?.persistedReducer?.currentUser)
+
+  const {data} = useGetUserDataQuery({})
+
+  console.log('this is the user', data);
 
   const handleClickFirst = () => {
     setIsActiveFirst(true);
@@ -128,8 +135,8 @@ const Dashboardhome = () => {
 
       <div className="hidden md:flex sm:flex w-[100%] flex-col md:items-center sm:items-center relative">
         <div className="flex flex-col md:w-[85%] sm:w-[90%]">
-          <h3 className="text-[18px] font-[600]">Hello, Temiloluwa</h3>
-          <p className="text-[14px]">temiloluwamorafa@gmail.com</p>
+          <h3 className="text-[18px] font-[600]">Hello, {data?.data?.firstname}</h3>
+          <p className="text-[14px]">{data?.data?.email}</p>
         </div>
         <div className="h-[1px] w-full bg-[#F1F1F1] mt-[20px]"></div>
 

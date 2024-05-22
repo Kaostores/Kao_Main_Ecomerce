@@ -9,28 +9,33 @@ import MegaMenu from "../commons/MegaMenu";
 import Register from "../Auth/Register";
 import Login from "../Auth/Login";
 import { Link, useNavigate } from "react-router-dom";
-import ShowToast from "../reuse/ShowToast";
-import { useAppSelector } from "@/services/store";
+// import ShowToast from "../reuse/ShowToast";
+// import { useAppSelector } from "@/services/store";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+	const User = useSelector((state: any) => state?.persistedReducer.currentUser);
 
-	const User = useAppSelector((state) => state.persistedReducer.currentUser);
+	console.log("thjis the user", User);
+	// const dispatch = useDispatch();
 
-	const readCartQuantity = useAppSelector((state: any) => state.persistedReducer.totalQuantity)
+	const readCartQuantity = useSelector(
+		(state: any) => state.persistedReducer.totalQuantity,
+	);
 
 	const show = () => {
-		ShowToast(true, "true")
-	}
+		// ShowToast(true, "true");
+	};
 	const [showMegaMenu, setShowMegaMenu] = useState(false);
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 	const [open, setOpen] = useState({
 		state: false,
-		type: "register",
+		type: "login",
 	});
 
 	const onClose = () => {
 		setOpen({
-			type : '',
+			type: "",
 			state: false,
 		});
 	};
@@ -71,9 +76,11 @@ const Header = () => {
 					<SearchInput />
 				</div>
 
-				<div onClick={()=>{
-					navigate("/help&support");
-				}} className='flex gap-2 sm:hidden cursor-pointer'>
+				<div
+					onClick={() => {
+						navigate("/help&support");
+					}}
+					className='flex gap-2 sm:hidden cursor-pointer'>
 					<div className='h-[30px] w-[30px] rounded-[50%] bg-ascentGray flex justify-center items-center text-primary'>
 						?
 					</div>
@@ -93,60 +100,62 @@ const Header = () => {
 					</div>
 				</Link>
 
-				{User ? (
-    <>
-        <div className='flex items-center cursor-pointer sm:hidden'>
-            <div className='text-primary'>
-                <FaRegUser />
-            </div>
-            <Link to="/dashboard">
-                <div className='text-[14px] ml-2 sm:hidden'>
-                    <div className="flex items-start">
-                        <h2 className="mr-[8px]">{User.firstname}</h2>
-                        <h2>{User.lastname}</h2>
-                    </div>
-                </div>
-            </Link>
-        </div>
-    </>
-					) : (
+				{User?.id ? (
+					<>
+						<div className='flex items-center cursor-pointer sm:hidden'>
+							<div className='text-primary'>
+								<FaRegUser />
+							</div>
+							<Link to='/dashboard'>
+								<div className='text-[14px]  max-w-[70px] overflow-hidden ml-2 sm:hidden'>
+									<div className='flex items-start'>
+										<h2 className='mr-[8px]  max-w-[70px] overflow-hidden'>{User.firstname}</h2>
+										{/* <h2>{User.lastname}</h2> */}
+									</div>
+								</div>
+							</Link>
+						</div>
+					</>
+				) : (
+					<>
+						<div
+							onClick={() => {
+								onOpenLogin();
+								console.log(open);
+							}}
+							className='flex items-center cursor-pointer sm:hidden'>
+							<div className='text-primary'>
+								<FaRegUser />
+							</div>
+							<div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
+						</div>
+					</>
+				)}
+
+				<div className='hidden sm:flex gap-3 items-center'>
+					{User?.id ? (
 						<>
-							<div
-								onClick={() => {
-									onOpenRegister();
-									console.log(open);
-								}}
-								className='flex items-center cursor-pointer sm:hidden'>
+							<div className='hidden items-center cursor-pointer sm:flex'>
 								<div className='text-primary'>
 									<FaRegUser />
 								</div>
-								<div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
+								<Link to='/dashboard'>
+									<div className='text-[14px] ml-2  max-w-[70px] overflow-hidden sm:flex hidden'>
+										<div className='flex items-start'>
+											<h2 className='mr-[8px]  max-w-[70px] overflow-ellipsis '>
+												{User.firstname}
+											</h2>
+											{/* <h2>{User.lastname}</h2> */}
+										</div>
+									</div>
+								</Link>
 							</div>
 						</>
-					)}
-
-				<div className='hidden sm:flex gap-3 items-center'>
-					{User ? (
-    <>
-        <div className='hidden items-center cursor-pointer sm:flex'>
-            <div className='text-primary'>
-                <FaRegUser />
-            </div>
-            <Link to="/dashboard">
-                <div className='text-[14px] ml-2 sm:flex hidden'>
-                    <div className="flex items-start">
-                        <h2 className="mr-[8px]">{User.firstname}</h2>
-                        <h2>{User.lastname}</h2>
-                    </div>
-                </div>
-            </Link>
-        </div>
-    </>
 					) : (
 						<>
 							<div
 								onClick={() => {
-									onOpenRegister();
+									onOpenLogin();
 									console.log(open);
 								}}
 								className=' items-center cursor-pointer sm:flex hidden'>
@@ -190,21 +199,41 @@ const Header = () => {
 						className='text-lightGray cursor-pointer'>
 						Computer and Accessories
 					</div>
-					<div onClick={() => {
+					<div
+						onClick={() => {
 							navigate("/search");
-						}} className='text-lightGray cursor-pointer'>Phones and Tablets</div>
-					<div onClick={() => {
+						}}
+						className='text-lightGray cursor-pointer'>
+						Phones and Tablets
+					</div>
+					<div
+						onClick={() => {
 							navigate("/search");
-						}} className='text-lightGray cursor-pointer'>Electronics</div>
-					<div onClick={() => {
+						}}
+						className='text-lightGray cursor-pointer'>
+						Electronics
+					</div>
+					<div
+						onClick={() => {
 							navigate("/search");
-						}} className='text-lightGray cursor-pointer'>Baby kits</div>
-					<div onClick={() => {
+						}}
+						className='text-lightGray cursor-pointer'>
+						Baby kits
+					</div>
+					<div
+						onClick={() => {
 							navigate("/search");
-						}} className='text-lightGray cursor-pointer'>Gaming</div>
-					<div onClick={() => {
+						}}
+						className='text-lightGray cursor-pointer'>
+						Gaming
+					</div>
+					<div
+						onClick={() => {
 							navigate("/search");
-						}} className='text-lightGray cursor-pointer'>Groceries</div>
+						}}
+						className='text-lightGray cursor-pointer'>
+						Groceries
+					</div>
 				</div>
 			</div>
 		</div>

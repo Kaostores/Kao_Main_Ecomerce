@@ -40,6 +40,7 @@ interface FlutterWavePaymentProps {
 	cartItems: CartItem[];
 	addressId: any;
 	disabled: boolean;
+	
 }
 
 export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({

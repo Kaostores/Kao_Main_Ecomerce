@@ -85,10 +85,15 @@ const ProductDetails = () => {
 
 	
 	
-
+useEffect(() => {
+	if (productData?.data?.media?.length > 0) {
+		setSelectedId(productData.data?.media[0].id);
+		setSelectedImage(productData?.data?.media[0])
+	}
+}, [productData]);
 	
 
-	console.log("dfghyjdkhghj", selectedId);
+	// console.log("dfghyjdkhghj", selectedId);
 
 
 	useEffect(() => {}, [selectedId, productData]);

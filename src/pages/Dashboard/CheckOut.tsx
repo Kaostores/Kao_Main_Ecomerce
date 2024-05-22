@@ -15,6 +15,7 @@ import {
 	useUpdateAddressMutation,
 } from "@/services/apiSlice";
 import { MdModeEdit } from "react-icons/md";
+import ShowToast from "@/components/reuse/ShowToast";
 
 const Checkout = () => {
 	const [showAddress, setShowAddress] = useState(true);
@@ -30,9 +31,14 @@ const Checkout = () => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [showAllAddresses, setShowAllAddresses] = useState(false);
 	const [showModal, setShowModal] = useState(false)
+	
 
 	const ToggleModal = () => {
-		setShowModal(!showModal)
+		if(selectedAddressId === ""){
+			ShowToast(false, 'You have not selected an address')
+		}else{
+			setShowModal(!showModal);
+		}
 	}
 
 	const CloseModal = () => {
@@ -74,7 +80,7 @@ const Checkout = () => {
 		}
 		return () => clearTimeout(timer);
 	}, [showModal]);
-
+// 
 	useEffect(() => {
 		if (addressData?.data?.length > 0) {
 			setSelectedAddressId(addressData.data[0].id);
@@ -500,7 +506,7 @@ const Checkout = () => {
 				</div>
 			</div>
 
-			{showModal ? (
+			{showModal  ? (
 				<div className="w-[100vw] h-[100vh] bg-[rgba(0,0,0,0.5)] sm:pl-[20px] sm:pr-[20px] flex justify-center items-center fixed top-0 left-0">
 					<div className="w-[35%] md:w-[55%] sm:w-[100%] relative p-[20px] pt-[40px] pb-[40px] bg-[#fff] rounded-md flex flex-col justify-center items-center">
 						<h3 className="text-[16px] sm:text-[14px] text-center font-[600]">Are you sure you want to CheckOut❓</h3>

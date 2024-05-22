@@ -60,6 +60,7 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 					path: "/"
 				});
 				dispatch(updateUserDetails(response?.data.data));
+				onClose();
 			} else if (response?.status === 500) {
 				ShowToast(false, "Details do not match");
 			}
@@ -115,7 +116,7 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 							/>
 							<div className='flex justify-center'>
 								{load ? (
-									<LoadingButton w={"450px"} />
+									<LoadingButton w={"100%"} />
 								) : (
 									<Button
 										variant='secondary'
