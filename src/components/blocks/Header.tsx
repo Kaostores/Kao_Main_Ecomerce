@@ -14,17 +14,20 @@ import { useAppSelector } from "@/services/store";
 import { useDispatch } from "react-redux";
 
 const Header = () => {
-
 	const User = useAppSelector((state) => state.persistedReducer.currentUser);
-	const dispatch = useDispatch()
 
-	const readCartQuantity = useAppSelector((state: any) => state.persistedReducer.totalQuantity)
+	console.log('thjis the user', User);
+	const dispatch = useDispatch();
+
+	const readCartQuantity = useAppSelector(
+		(state: any) => state.persistedReducer.totalQuantity,
+	);
 
 	const show = () => {
-		ShowToast(true, "true")
-	}
+		ShowToast(true, "true");
+	};
 	const [showMegaMenu, setShowMegaMenu] = useState(false);
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 	const [open, setOpen] = useState({
 		state: false,
 		type: "register",
@@ -32,7 +35,7 @@ const Header = () => {
 
 	const onClose = () => {
 		setOpen({
-			type : '',
+			type: "",
 			state: false,
 		});
 	};
@@ -73,9 +76,11 @@ const Header = () => {
 					<SearchInput />
 				</div>
 
-				<div onClick={()=>{
-					navigate("/help&support");
-				}} className='flex gap-2 sm:hidden cursor-pointer'>
+				<div
+					onClick={() => {
+						navigate("/help&support");
+					}}
+					className='flex gap-2 sm:hidden cursor-pointer'>
 					<div className='h-[30px] w-[30px] rounded-[50%] bg-ascentGray flex justify-center items-center text-primary'>
 						?
 					</div>
@@ -95,37 +100,37 @@ const Header = () => {
 					</div>
 				</Link>
 
-				{User ? (
-    <>
-        <div className='flex items-center cursor-pointer sm:hidden'>
-            <div className='text-primary'>
-                <FaRegUser />
-            </div>
-            <Link to="/dashboard">
-                <div className='text-[14px] ml-2 sm:hidden'>
-                    <div className="flex items-start">
-                        <h2 className="mr-[8px]">{User.firstname}</h2>
-                        <h2>{User.lastname}</h2>
-                    </div>
-                </div>
-            </Link>
-        </div>
-    </>
-) : (
-    <>
-        <div
-            onClick={() => {
-                onOpenRegister();
-                console.log(open);
-            }}
-            className='flex items-center cursor-pointer sm:hidden'>
-            <div className='text-primary'>
-                <FaRegUser />
-            </div>
-            <div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
-        </div>
-    </>
-)}
+				{User?.id ? (
+					<>
+						<div className='flex items-center cursor-pointer sm:hidden'>
+							<div className='text-primary'>
+								<FaRegUser />
+							</div>
+							<Link to='/dashboard'>
+								<div className='text-[14px] ml-2 sm:hidden'>
+									<div className='flex items-start'>
+										<h2 className='mr-[8px]'>{User.firstname}</h2>
+										<h2>{User.lastname}</h2>
+									</div>
+								</div>
+							</Link>
+						</div>
+					</>
+				) : (
+					<>
+						<div
+							onClick={() => {
+								onOpenRegister();
+								console.log(open);
+							}}
+							className='flex items-center cursor-pointer sm:hidden'>
+							<div className='text-primary'>
+								<FaRegUser />
+							</div>
+							<div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
+						</div>
+					</>
+				)}
 
 				<div className='hidden sm:flex gap-3 items-center'>
 					<div onClick={onOpenRegister} className='text-primary -mt-2'>
@@ -164,21 +169,41 @@ const Header = () => {
 						className='text-lightGray cursor-pointer'>
 						Computer and Accessories
 					</div>
-					<div onClick={() => {
+					<div
+						onClick={() => {
 							navigate("/search");
-						}} className='text-lightGray cursor-pointer'>Phones and Tablets</div>
-					<div onClick={() => {
+						}}
+						className='text-lightGray cursor-pointer'>
+						Phones and Tablets
+					</div>
+					<div
+						onClick={() => {
 							navigate("/search");
-						}} className='text-lightGray cursor-pointer'>Electronics</div>
-					<div onClick={() => {
+						}}
+						className='text-lightGray cursor-pointer'>
+						Electronics
+					</div>
+					<div
+						onClick={() => {
 							navigate("/search");
-						}} className='text-lightGray cursor-pointer'>Baby kits</div>
-					<div onClick={() => {
+						}}
+						className='text-lightGray cursor-pointer'>
+						Baby kits
+					</div>
+					<div
+						onClick={() => {
 							navigate("/search");
-						}} className='text-lightGray cursor-pointer'>Gaming</div>
-					<div onClick={() => {
+						}}
+						className='text-lightGray cursor-pointer'>
+						Gaming
+					</div>
+					<div
+						onClick={() => {
 							navigate("/search");
-						}} className='text-lightGray cursor-pointer'>Groceries</div>
+						}}
+						className='text-lightGray cursor-pointer'>
+						Groceries
+					</div>
 				</div>
 			</div>
 		</div>
