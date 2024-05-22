@@ -1,4 +1,3 @@
-import react from "react";
 import pic from "@/assets/black.jpg";
 import { RiFacebookCircleFill } from "react-icons/ri";
 import { CgInstagram } from "react-icons/cg";

@@ -2,19 +2,16 @@ import { MdModeEditOutline } from "react-icons/md";
 import { IoIosArrowBack } from "react-icons/io";
 import Recomended from "./Subpages/Recomended";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { UseAppDispach, useAppSelector } from "@/services/store";
+import { useState } from "react";
 import { useGetUserDataQuery } from "@/services/apiSlice";
-import { updateUserDetails } from "@/services/reducers";
 
 const Account = () => {
   const [show, setShow] = useState(true)
   const [editAccount, setEditAccount] = useState(false)
   const [changePassword, setChangePassword] = useState(false)
   const Navigate = useNavigate()
-  const dispatch = UseAppDispach()
 
-  const { data: userData, isError, isLoading } = useGetUserDataQuery({});
+  const { data: userData, isLoading } = useGetUserDataQuery({});
   console.log("userData", userData)
 
   

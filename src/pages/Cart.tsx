@@ -8,7 +8,7 @@ import CardComp from "@/components/commons/CardComp";
 import BrandsComp from "@/components/commons/BrandsComp";
 import { useNavigate } from "react-router-dom";
 import { UseAppDispach, useAppSelector } from "@/services/store";
-import { addToCart, clearCart, remove, removeFromCart } from "@/services/reducers";
+import { addToCart, removeFromCart } from "@/services/reducers";
 import { useEffect, useReducer } from "react";
 import EmpyCart from "./EmpyCart";
 import { useViewAllProductsQuery } from "@/services/apiSlice";
@@ -19,12 +19,11 @@ type CartProps = {
     openRegisterDialog: () => void;
 };
 
-const Cart: React.FC<CartProps> = ({ openLoginDialog, openRegisterDialog }) => {
+const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 
 	const currentUser = useAppSelector((state) => state.persistedReducer.currentUser);
 	const dispatch = UseAppDispach();
     const cart = useAppSelector((state) => state.persistedReducer.cart);
-	const totalQuantity = useAppSelector((state) => state.persistedReducer.totalQuantity);
 	const totalPrice = useAppSelector((state) => state.persistedReducer.totalPrice);
 	console.log("totalPricet", totalPrice)
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
@@ -34,8 +33,6 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog, openRegisterDialog }) => {
 }, [totalPrice]);
 
 	const readCartQuantity = useAppSelector((state: any) => state.persistedReducer.totalQuantity)
-	
-	const readFromMyCart = useAppSelector((state: any) => state.persistedReducer.cart)
 
 	const isAuthenticated = currentUser && Object.keys(currentUser || {}).length !== 0;
 

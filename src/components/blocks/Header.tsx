@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import pic from "@/assets/logo.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -11,12 +11,10 @@ import Login from "../Auth/Login";
 import { Link, useNavigate } from "react-router-dom";
 import ShowToast from "../reuse/ShowToast";
 import { useAppSelector } from "@/services/store";
-import { useDispatch } from "react-redux";
 
 const Header = () => {
 
 	const User = useAppSelector((state) => state.persistedReducer.currentUser);
-	const dispatch = useDispatch()
 
 	const readCartQuantity = useAppSelector((state: any) => state.persistedReducer.totalQuantity)
 
@@ -111,26 +109,54 @@ const Header = () => {
             </Link>
         </div>
     </>
-) : (
+					) : (
+						<>
+							<div
+								onClick={() => {
+									onOpenRegister();
+									console.log(open);
+								}}
+								className='flex items-center cursor-pointer sm:hidden'>
+								<div className='text-primary'>
+									<FaRegUser />
+								</div>
+								<div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
+							</div>
+						</>
+					)}
+
+				<div className='hidden sm:flex gap-3 items-center'>
+					{User ? (
     <>
-        <div
-            onClick={() => {
-                onOpenRegister();
-                console.log(open);
-            }}
-            className='flex items-center cursor-pointer sm:hidden'>
+        <div className='hidden items-center cursor-pointer sm:flex'>
             <div className='text-primary'>
                 <FaRegUser />
             </div>
-            <div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
+            <Link to="/dashboard">
+                <div className='text-[14px] ml-2 sm:flex hidden'>
+                    <div className="flex items-start">
+                        <h2 className="mr-[8px]">{User.firstname}</h2>
+                        <h2>{User.lastname}</h2>
+                    </div>
+                </div>
+            </Link>
         </div>
     </>
-)}
-
-				<div className='hidden sm:flex gap-3 items-center'>
-					<div onClick={onOpenRegister} className='text-primary -mt-2'>
-						<FaRegUser />
-					</div>
+					) : (
+						<>
+							<div
+								onClick={() => {
+									onOpenRegister();
+									console.log(open);
+								}}
+								className=' items-center cursor-pointer sm:flex hidden'>
+								<div className='text-primary'>
+									<FaRegUser />
+								</div>
+								<div className='text-[14px] ml-2 sm:flex'>Sign in/Sign up</div>
+							</div>
+						</>
+					)}
 					<Link to='/cart'>
 						<div className='relative inline-block '>
 							<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>

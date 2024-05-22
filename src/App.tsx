@@ -1,7 +1,6 @@
 import { Provider } from "react-redux";
 import "./App.css";
 import { store, persistor } from "./services/store";
-import { Toaster } from "@/components/ui/toaster";
 import 'react-toastify/dist/ReactToastify.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";

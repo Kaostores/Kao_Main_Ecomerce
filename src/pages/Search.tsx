@@ -29,7 +29,7 @@ const SearchPage = () => {
 	};
 
 	return (
-		<div className='w-[100%] min-h-[100%] flex xl:justify-center md:justify-center items-center '>
+		<div className='w-[100%] min-h-[100%] flex xl:justify-center md:justify-center items-center sm:overflow-hidden'>
 			<div className='w-[100%]  flex flex-col my-[10px]'>
 				<div className='w-[100%] flex justify-between '>
 					<div className='flex flex-col sm:hidden mr-5 md:w-[32%] lg:w-[20%] xl:min-w-[17%]'>
@@ -365,6 +365,7 @@ const SearchPage = () => {
 										</div>
 										<span className='sr-only'>Loading...</span>
 										</div>
+
 									</div>
 								) : (
 									<div className='grid grid-cols-3 gap-4  sm:justify-center sm:flex sm:items-center sm:grid-cols-1 md:grid-cols-2 sm:flex-col flex-1 '>

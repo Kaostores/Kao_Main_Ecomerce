@@ -1,5 +1,3 @@
-import React from "react";
-import pic1 from "@/assets/pngegg (84) 1.png";
 import { BsStars } from "react-icons/bs";
 import pic2 from "@/assets/noto_fire.png";
 import { MdOutlineShoppingCart } from "react-icons/md";

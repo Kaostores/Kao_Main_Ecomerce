@@ -1,4 +1,4 @@
-import React from "react";
+
 import pic from '@/assets/Frame 181.svg'
 
 const HomeSectionAtm = () => {

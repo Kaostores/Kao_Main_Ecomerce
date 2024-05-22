@@ -94,7 +94,7 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 			{actionType === "edit" && (
 				<form
 					onSubmit={handleSubmitEdit}
-					className='xl:w-[400px] md:w-[350px] sm:w-[290px] mx-auto'>
+					className='xl:w-[400px] md:w-[350px] sm:w-[100%] mx-auto'>
 					<div className='flex mb-[20px] items-center'>
 						<div onClick={togleBtn} className='text-[20px] mr-5 cursor-pointer'>
 							<IoMdArrowBack />
@@ -212,7 +212,7 @@ dark:text-white'>
 					) : (
 						<button
 							type='submit'
-							className='text-white bg-[orange] hover:bg-blue-800 focus:ring-4focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-[290px] px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700dark:focus:ring-blue-800'>
+							className='text-white bg-[orange] hover:bg-blue-800 focus:ring-4focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-[100%] px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700dark:focus:ring-blue-800'>
 							Save & Update Address
 						</button>
 					)}
@@ -222,7 +222,7 @@ dark:text-white'>
 			{actionType === "new" && (
 				<form
 					onSubmit={handleSubmit}
-					className='xl:w-[400px] md:w-[350px] sm:w-[290px] mx-auto'>
+					className='xl:w-[400px] md:w-[350px] sm:w-[100%] mx-auto'>
 					<div className='flex mb-[20px] items-center'>
 						<div onClick={togleBtn} className='text-[20px] mr-5 cursor-pointer'>
 							<IoMdArrowBack />
@@ -344,7 +344,7 @@ dark:focus:ring-blue-500 dark:focus:border-blue-500'
 					) : (
 						<button
 							type='submit'
-							className='text-white bg-[orange] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-[290px] px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
+							className='text-white bg-[orange] hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-[100%] px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 							Save Address
 						</button>
 					)}
