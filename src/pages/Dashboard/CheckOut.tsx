@@ -82,6 +82,11 @@ const Checkout = () => {
 	}, [showModal]);
 
 
+	useEffect(() => {
+		if (addressData?.data?.length > 0) {
+			setSelectedAddressId(addressData.data[0].id);
+		}
+	}, [addressData]); 
 
 	const cartItems = useAppSelector((state) => state.persistedReducer.cart);
 	const addresses = useAppSelector((state) => state.persistedReducer.addresses);
