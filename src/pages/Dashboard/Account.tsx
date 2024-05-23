@@ -7,7 +7,7 @@ import {
 	useCreateNewAddressMutation,
 	useGetUserDataQuery,
 	useViewAllAddressQuery,
-	useUpdateAddressMutation
+	useUpdateAddressMutation,
 } from "@/services/apiSlice";
 import { AddressType } from "@/services/reducers";
 import LoadingButton from "@/components/reuse/LoadingButton";
@@ -17,9 +17,9 @@ const Account = () => {
 	const [show, setShow] = useState(true);
 	const [editAccount, setEditAccount] = useState(false);
 	const [changePassword, setChangePassword] = useState(false);
-  const [addAddress, setAddAddress] = useState(false);
-	const [editAddress, setEditAddress] = useState(false)
-	const [captureAddress, setCaptureAddress] = useState<any>(null)
+	const [addAddress, setAddAddress] = useState(false);
+	const [editAddress, setEditAddress] = useState(false);
+	const [captureAddress, setCaptureAddress] = useState<any>(null);
 	const Navigate = useNavigate();
 	const [formData, setFormData] = useState<AddressType>({
 		fullname: "",
@@ -31,25 +31,28 @@ const Account = () => {
 	const [EditformData, setEditFormData] = useState<AddressType>({
 		fullname: captureAddress?.fullname || "",
 		phone: captureAddress?.phone || "",
-		address: captureAddress?.address ||  "",
-		state: captureAddress?.state ||  "",
-		city: captureAddress?.city ||  "",
+		address: captureAddress?.address || "",
+		state: captureAddress?.state || "",
+		city: captureAddress?.city || "",
 	});
 
 	useEffect(() => {
 		setEditFormData({
 			fullname: captureAddress?.fullname || "",
 			phone: captureAddress?.phone || "",
-			address: captureAddress?.address ||  "",
-			state: captureAddress?.state ||  "",
-			city: captureAddress?.city ||  "",
-		})
-	}, [captureAddress])
+			address: captureAddress?.address || "",
+			state: captureAddress?.state || "",
+			city: captureAddress?.city || "",
+		});
+	}, [captureAddress]);
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData({ ...formData, [event.target.name]: event.target.value });
 	};
 	const handleChangeEdit = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setEditFormData({ ...EditformData, [event.target.name]: event.target.value });
+		setEditFormData({
+			...EditformData,
+			[event.target.name]: event.target.value,
+		});
 	};
 
 	const { data } = useViewAllAddressQuery({});
@@ -63,42 +66,42 @@ const Account = () => {
 	const Toggle = () => {
 		setShow(true);
 		setEditAccount(false);
-    setChangePassword(false);
-    setEditAddress(false);
+		setChangePassword(false);
+		setEditAddress(false);
 	};
 
 	const ToggleNewAddress = () => {
 		setAddAddress(true);
 		setShow(false);
-    setChangePassword(false);
-    setEditAddress(false);
+		setChangePassword(false);
+		setEditAddress(false);
 	};
 
 	const ToggleChangeNewAddress = () => {
 		setAddAddress(false);
 		setShow(true);
-    setChangePassword(false);
-    setEditAddress(false);
+		setChangePassword(false);
+		setEditAddress(false);
 	};
 	const Toggle2 = () => {
 		setEditAccount(true);
 		setShow(false);
-    setChangePassword(false);
-    setEditAddress(false);
+		setChangePassword(false);
+		setEditAddress(false);
 	};
 	const Toggle3 = () => {
 		setEditAccount(false);
 		setShow(false);
-    setChangePassword(true);
-    setEditAddress(false);
-  };
-  
-  const ToggleEdit = () => {
-    setEditAddress(true);
-    setEditAccount(false);
-    setShow(false);
-    setChangePassword(false);
-  }
+		setChangePassword(true);
+		setEditAddress(false);
+	};
+
+	const ToggleEdit = () => {
+		setEditAddress(true);
+		setEditAccount(false);
+		setShow(false);
+		setChangePassword(false);
+	};
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -119,14 +122,18 @@ const Account = () => {
 
 	const handleAddressSave = async () => {
 		try {
-			const response = await updateAddress({ addressId: captureAddress.id, addressData: EditformData });
-			console.log("response", response)
+			const response = await updateAddress({
+				addressId: captureAddress?.id,
+				...EditformData,
+			});
+			// console.log("response", response);
+      	ShowToast(true, "Address Updated Successfully");
 		} catch (error) {
 			console.error("Error updating address:", error);
 		}
 	};
 
-	console.log("Captyred Addess", captureAddress)
+	console.log("Captyred Addess", captureAddress);
 	return (
 		<>
 			{show ? (
@@ -217,10 +224,12 @@ const Account = () => {
 
 						{data?.data?.length >= 1 ? (
 							<div className='w-[100%] flex flex-col mt-[25px] sm:items-center md:items-center'>
-								<div onClick={() => {
-									ToggleEdit()
-									setCaptureAddress(data?.data[0])
-								}} className='cursor-pointer items-center sm:flex hidden sm:mb-[20px] sm:w-[90%]'>
+								<div
+									onClick={() => {
+										ToggleEdit();
+										setCaptureAddress(data?.data[0]);
+									}}
+									className='cursor-pointer items-center sm:flex hidden sm:mb-[20px] sm:w-[90%]'>
 									<div className='text-primary'>
 										<MdModeEditOutline />
 									</div>
@@ -231,10 +240,12 @@ const Account = () => {
 
 								<div className='w-[100%] md:w-[85%] sm:w-[90%] flex  items-center justify-between'>
 									<p className='text-[#606060] text-[13px]'>Default Address</p>
-									<div onClick={() => {
-									ToggleEdit()
-									setCaptureAddress(data?.data[0])
-								}} className='cursor-pointer flex items-center sm:hidden'>
+									<div
+										onClick={() => {
+											ToggleEdit();
+											setCaptureAddress(data?.data[0]);
+										}}
+										className='cursor-pointer flex items-center sm:hidden'>
 										<div className='text-primary'>
 											<MdModeEditOutline />
 										</div>
@@ -449,7 +460,7 @@ const Account = () => {
 								/>
 							</div>
 							{newLoading ? (
-								<div className="mt-[45px]">
+								<div className='mt-[45px]'>
 									<LoadingButton w={"100%"} />
 								</div>
 							) : (
@@ -511,13 +522,13 @@ const Account = () => {
 						</div>
 					</div>
 				</div>
-      ) : null}
-      
+			) : null}
+
 			{editAddress ? (
 				<form
 					onSubmit={(e: any) => {
-						e.preventDefault()
-						handleAddressSave()
+						e.preventDefault();
+						handleAddressSave();
 					}}
 					className='ml-[15px] w-[100%] flex sm:justify-center flex-col items-center sm:ml-0'>
 					<div className='w-[100%] h-[100%] flex flex-col p-[15px] bg-[#F4F4F4] rounded-[8px] sm:ml-0 sm:bg-white sm:p-0 sm:items-center'>
@@ -595,7 +606,7 @@ const Account = () => {
 								/>
 							</div>
 							{Loading ? (
-								<div className="mt-[45px] w-[100%]">
+								<div className='mt-[45px] w-[100%]'>
 									<LoadingButton w={"100%"} />
 								</div>
 							) : (
