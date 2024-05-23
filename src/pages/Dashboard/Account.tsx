@@ -2,11 +2,12 @@ import { MdModeEditOutline } from "react-icons/md";
 import { IoIosArrowBack } from "react-icons/io";
 import Recomended from "./Subpages/Recomended";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
 	useCreateNewAddressMutation,
 	useGetUserDataQuery,
 	useViewAllAddressQuery,
+  useUpdateAddressMutation,
 } from "@/services/apiSlice";
 import { AddressType } from "@/services/reducers";
 import LoadingButton from "@/components/reuse/LoadingButton";
@@ -16,8 +17,10 @@ const Account = () => {
 	const [show, setShow] = useState(true);
 	const [editAccount, setEditAccount] = useState(false);
 	const [changePassword, setChangePassword] = useState(false);
-	const [addAddress, setAddAddress] = useState(false);
-	const Navigate = useNavigate();
+  const [addAddress, setAddAddress] = useState(false);
+	const [editAddress, setEditAddress] = useState(false)
+	
+  const Navigate = useNavigate();
 	const [formData, setFormData] = useState<AddressType>({
 		fullname: "",
 		phone: "",
@@ -26,9 +29,31 @@ const Account = () => {
 		city: "",
 	});
 
+	const [editForm, setEditForm] = useState<AddressType>({
+        fullname: "",
+        phone: "",
+        address: "",
+        state: "",
+        city: "",
+    });
+
+	useEffect(() => {
+        setEditForm({
+            fullname: "",
+            phone: "",
+            address: "",
+            state: "",
+            city: "",
+        });
+    }, []);
+
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData({ ...formData, [event.target.name]: event.target.value });
-	};
+        if (actionType === "new") {
+            setFormData({ ...formData, [event.target.name]: event.target.value });
+        } else {
+            setEditForm({ ...editForm, [event.target.name]: event.target.value });
+        }
+    };
 
 	const { data } = useViewAllAddressQuery({});
 
@@ -36,51 +61,84 @@ const Account = () => {
 
 	const { data: userData, isLoading } = useGetUserDataQuery({});
 	console.log("userData", userData);
-	const [newAddress, { isLoading: newLoading }] = useCreateNewAddressMutation();
+  const [newAddress, { isLoading: newLoading }] = useCreateNewAddressMutation();
+  
+  const [updateAddress, {isLoading: updateLoading}] = useUpdateAddressMutation()
 
 	const Toggle = () => {
 		setShow(true);
 		setEditAccount(false);
-		setChangePassword(false);
+    setChangePassword(false);
+    setEditAddress(false);
 	};
 
 	const ToggleNewAddress = () => {
 		setAddAddress(true);
 		setShow(false);
-		setChangePassword(false);
+    setChangePassword(false);
+    setEditAddress(false);
 	};
 
 	const ToggleChangeNewAddress = () => {
 		setAddAddress(false);
 		setShow(true);
-		setChangePassword(false);
+    setChangePassword(false);
+    setEditAddress(false);
 	};
 	const Toggle2 = () => {
 		setEditAccount(true);
 		setShow(false);
-		setChangePassword(false);
+    setChangePassword(false);
+    setEditAddress(false);
 	};
 	const Toggle3 = () => {
 		setEditAccount(false);
 		setShow(false);
-		setChangePassword(true);
-	};
+    setChangePassword(true);
+    setEditAddress(false);
+  };
+  
+  const ToggleEdit = () => {
+    setEditAddress(true);
+    setEditAccount(false);
+    setShow(false);
+    setChangePassword(false);
+  }
+
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		try {
-			const response: any = await newAddress(formData);
-			console.log("new address", response);
-			if (response?.data?.success == true) {
+        event.preventDefault();
+        try {
+            const response: any = await newAddress(formData);
+            console.log("new address", response);
+            if (response?.data?.success === true) {
 				ShowToast(true, "Address Added Successfully");
-				ToggleChangeNewAddress();
-			} else {
-				ToggleChangeNewAddress();
-			}
-		} catch (error) {
-			console.error("Error adding address:", error);
-		}
+				ToggleChangeNewAddress()
+            } else {
+                return;
+            }
+        } catch (error) {
+            console.error("Error adding address:", error);
+        }
 	};
+	
+	const handleSubmitEdit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        try {
+            const response: any = await updateAddress({
+                addressId: addrData?.id,
+                ...editForm,
+            });
+            // console.log("edited address", response);
+            if (response?.data?.success === true) {
+                ShowToast(true, "Address Updated Successfully");
+            } else {
+                return;
+            }
+        } catch (error) {
+            console.error("Error adding address:", error);
+        }
+    };
 	return (
 		<>
 			{show ? (
@@ -171,7 +229,7 @@ const Account = () => {
 
 						{data?.data?.length >= 1 ? (
 							<div className='w-[100%] flex flex-col mt-[25px] sm:items-center md:items-center'>
-								<div className='items-center sm:flex hidden sm:mb-[20px] sm:w-[90%]'>
+								<div onClick={ToggleEdit} className='items-center sm:flex hidden sm:mb-[20px] sm:w-[90%]'>
 									<div className='text-primary'>
 										<MdModeEditOutline />
 									</div>
@@ -182,7 +240,7 @@ const Account = () => {
 
 								<div className='w-[100%] md:w-[85%] sm:w-[90%] flex  items-center justify-between'>
 									<p className='text-[#606060] text-[13px]'>Default Address</p>
-									<div className='flex items-center sm:hidden'>
+									<div onClick={ToggleEdit} className='flex items-center sm:hidden cursor-pointer'>
 										<div className='text-primary'>
 											<MdModeEditOutline />
 										</div>
@@ -459,6 +517,98 @@ const Account = () => {
 						</div>
 					</div>
 				</div>
+      ) : null}
+      
+			{editAddress ? (
+				<form
+					onSubmit={handleSubmitEdit}
+					className='ml-[15px] w-[100%] flex sm:justify-center flex-col items-center sm:ml-0'>
+					<div className='w-[100%] h-[100%] flex flex-col p-[15px] bg-[#F4F4F4] rounded-[8px] sm:ml-0 sm:bg-white sm:p-0 sm:items-center'>
+						<div
+							onClick={ToggleChangeNewAddress}
+							className='w-[100%] justify-center items-center flex sm:mb-[20px]'>
+							<div className='w-[100%] sm:w-[90%] flex items-center'>
+								<div className='text-primary text-[20px] cursor-pointer'>
+									<IoIosArrowBack />
+								</div>
+								<h3 className='text-primary text-[15px] font-[500] ml-[7px]'>
+									Edit Address
+								</h3>
+							</div>
+						</div>
+						<div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[4px] sm:mt-0'></div>
+						<div className='flex flex-col items-center w-[43%] sm:w-[90%] mt-[30px] mb-[50px]'>
+							<div className='flex flex-col w-[100%]'>
+								<h3 className='text-[14px] font-[400]'>Full Name</h3>
+								<input
+									value={editForm.fullname}
+									onChange={handleChange}
+									required
+									placeholder='enter fullname'
+									name='fullname'
+									type='text'
+									className='w-[100%] h-[40px] rounded-sm border border-[#AEAEAE] bg-transparent mt-[5px] outline-none pl-[7px] text-[14px]'
+								/>
+							</div>
+							<div className='flex flex-col w-[100%] mt-[20px]'>
+								<h3 className='text-[14px] font-[400]'>Phone Number</h3>
+								<input
+									value={editForm.phone}
+									onChange={handleChange}
+									required
+									placeholder='enter phone number'
+									type='text'
+									name='phone'
+									className='w-[100%] h-[40px] rounded-sm border border-[#AEAEAE] bg-transparent mt-[5px] outline-none pl-[7px] text-[14px]'
+								/>
+							</div>
+							<div className='flex flex-col w-[100%] mt-[20px]'>
+								<h3 className='text-[14px] font-[400]'> Address</h3>
+								<input
+									value={editForm.address}
+									onChange={handleChange}
+									required
+									name='address'
+									placeholder='enter address'
+									type='text'
+									className='w-[100%] h-[40px] rounded-sm border border-[#AEAEAE] bg-transparent mt-[5px] outline-none pl-[7px] text-[14px]'
+								/>
+							</div>
+
+							<div className='flex flex-col w-[100%] mt-[20px]'>
+								<h3 className='text-[14px] font-[400]'> State</h3>
+								<input
+									value={editForm.state}
+									onChange={handleChange}
+									name='state'
+									placeholder='enter state'
+									type='text'
+									className='w-[100%] h-[40px] rounded-sm border border-[#AEAEAE] bg-transparent mt-[5px] outline-none pl-[7px] text-[14px]'
+								/>
+							</div>
+							<div className='flex flex-col w-[100%] mt-[20px]'>
+								<h3 className='text-[14px] font-[400]'> City</h3>
+								<input
+									value={editForm.city}
+									onChange={handleChange}
+									name='city'
+									placeholder='enter City'
+									type='text'
+									className='w-[100%] h-[40px] rounded-sm border border-[#AEAEAE] bg-transparent mt-[5px] outline-none pl-[7px] text-[14px]'
+								/>
+							</div>
+							{newLoading ? (
+								<div className="mt-[45px]">
+									<LoadingButton w={"100%"} />
+								</div>
+							) : (
+								<button className='w-[100%] h-[43px] flex justify-center items-center text-[white] bg-secondary mt-[45px] text-[14px] rounded-sm'>
+									Save Address
+								</button>
+							)}
+						</div>
+					</div>
+				</form>
 			) : null}
 		</>
 	);

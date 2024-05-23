@@ -120,7 +120,7 @@ const Mobilenav = () => {
            <div className="text-primary text-[20px]"><IoIosArrowForward /></div>
         </div>
         
-        <div onClick={Refund} className={`w-full min-h-[50px] flex justify-between items-center mb-[5px] cursor-pointer text-[red] `}>
+        <div onClick={Refund} className={`w-full min-h-[50px] flex justify-between items-center mb-[5px] cursor-pointer text-[#000] `}>
            <div className="flex items-center">
              <div className='  font-bold'>
               <svg className="ml-[-13px]" width="48" height="48" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
