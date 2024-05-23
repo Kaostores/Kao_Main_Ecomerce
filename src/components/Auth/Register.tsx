@@ -25,8 +25,10 @@ import { updateUserDetails } from "@/services/reducers";
 import { useState } from "react";
 import { Register } from "@/utils/ApiCalls";
 import LoadingButton from "../reuse/LoadingButton";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 const formSchema = z.object({
 	firstname: z.string().min(2, {
@@ -64,18 +66,19 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 			const response: any = await Register(values);
 
 			if (response?.status === 201) {
-				toast.success('Registration Successful');
+				toast.success("Registration Successful");
 				cookies.set("Kao_cookie_user", response?.data?.token, {
 					expires: expiryDate,
-					path: "/"
+					path: "/",
 				});
 				dispatch(updateUserDetails(response?.data.data));
+				onClose();
 			} else if (response?.status === 500) {
-				toast.info('Account already exists')
+				toast.info("Account already exists");
 			}
 			setLoad(false);
 		} catch (error) {
-			toast.error('An error occurred. Please try again.')
+			toast.error("An error occurred. Please try again.");
 			setLoad(false);
 		}
 	}
@@ -85,12 +88,13 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 	const expiryDate = new Date();
 	expiryDate.setDate(expiryDate.getDate() + 7);
 	const [load, setLoad] = useState(false);
+	const [value] = useState();
 
 	return (
 		<Dialog
 			open={open?.type === "register" ? open?.state : false}
 			onOpenChange={onClose}>
-			<DialogContent className='overflow-y-scroll'>
+			<DialogContent className='overflow-y-scroll sm:h-[80vh]'>
 				<DialogHeader>
 					<DialogTitle className='mb-3'>Register</DialogTitle>
 				</DialogHeader>
@@ -143,7 +147,14 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 									<FormItem>
 										<FormLabel>Phone Number</FormLabel>
 										<FormControl>
-											<Input placeholder='input your phone number' {...field} />
+											<PhoneInput
+												className='flex h-10  w-full rounded-md border outline-none border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none  disabled:cursor-not-allowed disabled:opacity-50'
+												{...field}
+												placeholder='Enter phone number'
+												value={value}
+												// onChange={setValue}
+											/>
+											{/* <Input placeholder='input your phone number' {...field} /> */}
 										</FormControl>
 										<FormMessage style={{ color: "red" }} />
 									</FormItem>
@@ -190,7 +201,10 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 						<div className='flex-1 h-[1px] bg-black'></div>
 					</div>
 					<div className='flex justify-center'>
-						<Button variant='outline' className='w-full border-border' type='submit'>
+						<Button
+							variant='outline'
+							className='w-full border-border'
+							type='submit'>
 							<span className='text-lg mr-2 '>
 								<FcGoogle />
 							</span>
