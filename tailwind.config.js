@@ -34,6 +34,8 @@ module.exports = {
 				// => @media (min-width: 1280px and max-width: 1535px) { ... }
 				"2xl": { min: "1536px" },
 				// => @media (min-width: 1536px) { ... }
+				"3xl": { min: "1560px" },
+				// => @media (min-width: 1536px) { ... }
 			},
 			colors: {
 				border: "#AEAEAE",

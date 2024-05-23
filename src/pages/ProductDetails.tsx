@@ -116,7 +116,7 @@ useEffect(() => {
 					<div>Watch</div>
 				</div>
 				<div className=' xl:min-h-[500px] flex  items-start sm:flex-col sm:overflow-hidden'>
-					<div className='w-[500px] sm:justify-start flex  gap-20  sm:flex-col-reverse'>
+					<div className='w-[500px] 3xl:w-[1000px] sm:justify-start flex  gap-20  sm:flex-col-reverse'>
 						<div className=' xl:flex-col sm:flex sm:w-[100%]'>
 							{productData?.data?.media?.map((props: any) => (
 								<div
@@ -361,7 +361,7 @@ useEffect(() => {
 										toast.success("Added to Cart successfully"); // Show success message
 									}
 								}}
-								className='xl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'
+								className='xl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer '
 							>
 								<div>Add to cart</div>
 							</div>
