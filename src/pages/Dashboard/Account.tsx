@@ -19,6 +19,7 @@ const Account = () => {
 	const [changePassword, setChangePassword] = useState(false);
   const [addAddress, setAddAddress] = useState(false);
 	const [editAddress, setEditAddress] = useState(false)
+	const [currentAddress, setCurrentAddress] = useState<AddressType | null>(null);
 	
   const Navigate = useNavigate();
 	const [formData, setFormData] = useState<AddressType>({
@@ -48,12 +49,9 @@ const Account = () => {
     }, []);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (actionType === "new") {
-            setFormData({ ...formData, [event.target.name]: event.target.value });
-        } else {
-            setEditForm({ ...editForm, [event.target.name]: event.target.value });
-        }
-    };
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
 	const { data } = useViewAllAddressQuery({});
 
@@ -98,47 +96,46 @@ const Account = () => {
     setEditAddress(false);
   };
   
-  const ToggleEdit = () => {
+  const ToggleEdit = (address: AddressType) => {
     setEditAddress(true);
     setEditAccount(false);
     setShow(false);
-    setChangePassword(false);
+	  setChangePassword(false);
+	  setFormData(address);
   }
 
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        try {
-            const response: any = await newAddress(formData);
-            console.log("new address", response);
-            if (response?.data?.success === true) {
-				ShowToast(true, "Address Added Successfully");
-				ToggleChangeNewAddress()
-            } else {
-                return;
-            }
-        } catch (error) {
-            console.error("Error adding address:", error);
-        }
-	};
+    event.preventDefault();
+    try {
+      const response: any = await newAddress(formData);
+      if (response?.data?.success === true) {
+        ShowToast(true, "Address Added Successfully");
+        ToggleChangeNewAddress();
+      }
+    } catch (error) {
+      console.error("Error adding address:", error);
+    }
+  };
 	
 	const handleSubmitEdit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        try {
-            const response: any = await updateAddress({
-                addressId: addrData?.id,
-                ...editForm,
-            });
-            // console.log("edited address", response);
-            if (response?.data?.success === true) {
-                ShowToast(true, "Address Updated Successfully");
-            } else {
-                return;
-            }
-        } catch (error) {
-            console.error("Error adding address:", error);
+    event.preventDefault();
+    try {
+      if (currentAddress) {
+        const response: any = await updateAddress({
+          addressId: currentAddress.id,
+          ...formData,
+        });
+        if (response?.data?.success === true) {
+          ShowToast(true, "Address Updated Successfully");
+			ToggleChangeNewAddress();
+			console.error("updated:", response);
         }
-    };
+      }
+    } catch (error) {
+      console.error("Error updating address:", error);
+    }
+  };
 	return (
 		<>
 			{show ? (
@@ -229,33 +226,35 @@ const Account = () => {
 
 						{data?.data?.length >= 1 ? (
 							<div className='w-[100%] flex flex-col mt-[25px] sm:items-center md:items-center'>
-								<div onClick={ToggleEdit} className='items-center sm:flex hidden sm:mb-[20px] sm:w-[90%]'>
-									<div className='text-primary'>
-										<MdModeEditOutline />
-									</div>
-									<h3 className='text-primary text-[13px] sm:font-[600] font-[500] ml-[5px]'>
-										Change Address
-									</h3>
-								</div>
+                <div className='w-[100%] md:w-[85%] sm:w-[90%] flex flex-col'>
+                  <div className='w-[100%] flex justify-between'>
+                    <h3 className='font-[600]'>Address Book</h3>
+                    <h3 onClick={ToggleNewAddress} className='text-primary text-[13px] font-[500] cursor-pointer'>
+                      Add New Address
+                    </h3>
+                  </div>
+                </div>
 
-								<div className='w-[100%] md:w-[85%] sm:w-[90%] flex  items-center justify-between'>
-									<p className='text-[#606060] text-[13px]'>Default Address</p>
-									<div onClick={ToggleEdit} className='flex items-center sm:hidden cursor-pointer'>
-										<div className='text-primary'>
-											<MdModeEditOutline />
-										</div>
-										<h3 className='text-primary text-[13px] font-[500] ml-[5px]'>
-											Change Address
-										</h3>
-									</div>
-								</div>
-								<h3 className='mt-[10px] md:w-[85%] sm:w-[90%] font-[500]'>
-									{data?.data[0]?.fullname}
-								</h3>
-								<h3 className='mt-[8px] font-[500] md:w-[85%] sm:w-[90%]'>
-									{data?.data[0]?.address}
-								</h3>
-							</div>
+                {data?.data?.slice(0, 1).map((address: AddressType) => (
+                  <div key={address.id} className='w-[100%] md:w-[85%] sm:w-[90%] flex flex-col mt-[15px]'>
+                    <div className='w-[100%] flex flex-col bg-[#F9F9F9] rounded-[5px] p-[15px]'>
+                      <div className='flex items-center justify-between'>
+                        <h3 className='font-[600]'>{address.fullname}</h3>
+                        <h3 onClick={() => ToggleEdit(address)} className='text-primary text-[13px] font-[500] cursor-pointer'>
+                          Change Address
+                        </h3>
+                      </div>
+                      <div className='flex flex-col mt-[15px]'>
+                        <h3 className='text-[15px]'>{address.address}</h3>
+                        <h3 className='text-[15px] mt-[10px]'>
+                          {address.city}, {address.state}
+                        </h3>
+                        <h3 className='text-[15px] mt-[10px]'>{address.phone}</h3>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
 						) : (
 							<div className='w-[100%] flex flex-col mt-[25px] sm:items-center md:items-center'>
 								<div
@@ -541,7 +540,7 @@ const Account = () => {
 							<div className='flex flex-col w-[100%]'>
 								<h3 className='text-[14px] font-[400]'>Full Name</h3>
 								<input
-									value={editForm.fullname}
+									value={formData.fullname}
 									onChange={handleChange}
 									required
 									placeholder='enter fullname'
@@ -553,7 +552,7 @@ const Account = () => {
 							<div className='flex flex-col w-[100%] mt-[20px]'>
 								<h3 className='text-[14px] font-[400]'>Phone Number</h3>
 								<input
-									value={editForm.phone}
+									value={formData.phone}
 									onChange={handleChange}
 									required
 									placeholder='enter phone number'
@@ -565,7 +564,7 @@ const Account = () => {
 							<div className='flex flex-col w-[100%] mt-[20px]'>
 								<h3 className='text-[14px] font-[400]'> Address</h3>
 								<input
-									value={editForm.address}
+									value={formData.address}
 									onChange={handleChange}
 									required
 									name='address'
@@ -578,7 +577,7 @@ const Account = () => {
 							<div className='flex flex-col w-[100%] mt-[20px]'>
 								<h3 className='text-[14px] font-[400]'> State</h3>
 								<input
-									value={editForm.state}
+									value={formData.state}
 									onChange={handleChange}
 									name='state'
 									placeholder='enter state'
@@ -589,7 +588,7 @@ const Account = () => {
 							<div className='flex flex-col w-[100%] mt-[20px]'>
 								<h3 className='text-[14px] font-[400]'> City</h3>
 								<input
-									value={editForm.city}
+									value={formData.city}
 									onChange={handleChange}
 									name='city'
 									placeholder='enter City'
@@ -597,13 +596,13 @@ const Account = () => {
 									className='w-[100%] h-[40px] rounded-sm border border-[#AEAEAE] bg-transparent mt-[5px] outline-none pl-[7px] text-[14px]'
 								/>
 							</div>
-							{newLoading ? (
+							{updateLoading ? (
 								<div className="mt-[45px]">
 									<LoadingButton w={"100%"} />
 								</div>
 							) : (
-								<button className='w-[100%] h-[43px] flex justify-center items-center text-[white] bg-secondary mt-[45px] text-[14px] rounded-sm'>
-									Save Address
+								<button type="submit" className='w-[100%] h-[43px] flex justify-center items-center text-[white] bg-secondary mt-[45px] text-[14px] rounded-sm'>
+									Save Address and Update
 								</button>
 							)}
 						</div>

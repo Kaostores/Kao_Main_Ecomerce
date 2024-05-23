@@ -39,9 +39,7 @@ export const Reducers = createSlice({
       		state.currentUser = action.payload;
     	},
 
-		logoutUser: (state) => {
-			state.currentUser = null
-		},
+		logoutUser: () => initialState, 
 		addAddress: (state, action: PayloadAction<AddressType>) => {
 			state.addresses = action.payload;
         },
