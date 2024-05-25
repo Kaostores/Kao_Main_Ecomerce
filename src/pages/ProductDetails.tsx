@@ -116,11 +116,11 @@ useEffect(() => {
 					<div>Watch</div>
 				</div>
 				<div className=' xl:min-h-[500px] flex  items-start sm:flex-col sm:overflow-hidden'>
-					<div className='w-[500px] sm:justify-start flex  gap-20  sm:flex-col-reverse'>
+					<div className='w-[500px] xxl:w-[40%] sm:justify-start flex  gap-20  sm:flex-col-reverse'>
 						<div className=' xl:flex-col sm:flex sm:w-[100%]'>
 							{productData?.data?.media?.map((props: any) => (
 								<div
-									className={`xl:w-[100px] xl:h-[100px] md:w-[80px] lg:w-[100px] lg:h-[100px] md:h-[80px]  sm:w-[60px] sm:h-[60px] overflow-hidden mb-[10px] cursor-pointer flex justify-center  items-center ${
+									className={`xl:w-[100px] xxl:w-[130px] xxl:h-[130px] xl:h-[100px] md:w-[80px] lg:w-[100px] lg:h-[100px] md:h-[80px]  sm:w-[60px] sm:h-[60px] overflow-hidden mb-[10px] cursor-pointer flex justify-center  items-center ${
 										selectedId === props?.id
 											? "border-[2px] border-[#0000ff]"
 											: null
@@ -159,7 +159,7 @@ useEffect(() => {
 					</div>
 					<div className='flex-1 flex  justify-center'>
 						<div
-							className={`mr-[50px] xl:w-[35px] xl:h-[35px] lg:w-[35px] lg:h-[35px] md:w-[30px] md:h-[30px] bg-[#b1b0b098] rounded-[50%] xl:flex md:flex lg:flex justify-center items-center text-[18px] md:text-[15px] cursor-pointer sm:hidden ${
+							className={`mr-[50px] xxl:ml-[10px] xl:w-[35px] xxl:w-[45px] xxl:h-[45px] xl:h-[35px] lg:w-[35px] lg:h-[35px] md:w-[30px] md:h-[30px] bg-[#b1b0b098] rounded-[50%] xl:flex xxl:flex md:flex lg:flex justify-center items-center text-[18px] xxl:text-[24px] md:text-[15px] cursor-pointer sm:hidden ${
 								showLove ? "text-white" : "text-[red]"
 							}`}
 							onClick={loveBtn}>
@@ -192,7 +192,7 @@ useEffect(() => {
 							</div>
 							)}
 							<div className='flex flex-col'>
-								<div className='flex items-center'>
+								{/* <div className='flex items-center'>
 									<div className='mr-[10px] text-[14px]'>Quantity</div>
 									<div className='flex justify-center items-center border border-[#ddd]'>
 										<div className='px-[15px] py-[5px] border-r border-[#ddd]'>
@@ -205,7 +205,7 @@ useEffect(() => {
 											+
 										</div>
 									</div>
-								</div>
+								</div> */}
 
 									{isProductLoading ? (
 										<div className="text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full mt-[5px]"></div>
@@ -361,7 +361,7 @@ useEffect(() => {
 										toast.success("Added to Cart successfully"); // Show success message
 									}
 								}}
-								className='xl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'
+								className='xl:w-[300px] xxl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'
 							>
 								<div>Add to cart</div>
 							</div>
