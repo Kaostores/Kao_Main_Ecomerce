@@ -122,12 +122,12 @@ const Account = () => {
 
 	const handleAddressSave = async () => {
 		try {
-			const response = await updateAddress({
+			await updateAddress({
 				addressId: captureAddress?.id,
 				...EditformData,
 			});
 			// console.log("response", response);
-      	ShowToast(true, "Address Updated Successfully");
+			ShowToast(true, "Address Updated Successfully");
 		} catch (error) {
 			console.error("Error updating address:", error);
 		}

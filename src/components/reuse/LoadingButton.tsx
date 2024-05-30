@@ -3,7 +3,7 @@ import { Button } from '../ui/button';
 
 const LoadingButton = ({w}: { w: string }) => {
   return (
-		<Button className={`w-[${w}] h-[45px] `} variant='secondary'>
+		<Button disabled className={`w-[${w}] h-[45px]  `} variant = 'secondary'>
 			<div role='status'>
 				<svg
 					aria-hidden='true'
