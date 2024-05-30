@@ -90,11 +90,11 @@ const Header = () => {
 				</div>
 				<Link to='/cart'>
 					<div className='relative inline-block sm:hidden'>
-						<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>
+						<div className=' text-[20px] p-2 mt-1 rounded-full focus:outline-none text-primary'>
 							<MdOutlineShoppingCart />
 						</div>
 
-						<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
+						<span className='absolute top-3 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
 							{readCartQuantity}
 						</span>
 					</div>
@@ -167,12 +167,12 @@ const Header = () => {
 						</>
 					)}
 					<Link to='/cart'>
-						<div className='relative inline-block '>
-							<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>
+						<div className='relative inline-block  '>
+							<div className=' text-[20px] p-2 mt-2 rounded-full focus:outline-none text-primary'>
 								<MdOutlineShoppingCart />
 							</div>
 
-							<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
+							<span className='absolute top-4 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
 								{readCartQuantity}
 							</span>
 						</div>
