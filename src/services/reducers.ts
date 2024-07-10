@@ -68,15 +68,15 @@ export const Reducers = createSlice({
   if (index !== -1) {
     const item = state.cart[index];
     if (item.cartQuantity > 1) {
-      item.cartQuantity -= 1;  // Decrement the quantity
+      item.cartQuantity -= 1; 
       const amountToDeduct = item.variant ? item.variant.price : item.price;
-      state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct);  // Ensure totalPrice does not go negative
-      state.totalQuantity -= 1;  // Decrement the total item count
+      state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct);
+      state.totalQuantity -= 1; 
     } else {
       const amountToDeduct = (item.variant ? item.variant.price : item.price) * item.cartQuantity;
-      state.cart.splice(index, 1); // Remove the item from the cart
-      state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct); // Ensure totalPrice does not go negative
-      state.totalQuantity -= item.cartQuantity;  // Adjust the total item count
+      state.cart.splice(index, 1);
+      state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct);
+      state.totalQuantity -= item.cartQuantity; 
     }
   }
 },
