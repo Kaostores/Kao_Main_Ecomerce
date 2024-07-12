@@ -38,22 +38,21 @@ const ProductDetails = () => {
 	const [imageLoading, setImageLoading] = useState(true);
 
 	const dispatch = UseAppDispach();
-	const globalstate = useSelector((state: any) => state.persistedReducer.cart);
+	const globalstate = useSelector((state: any) => state?.persistedReducer.cart);
 
 	const findQuantity = (variantId: any) => {
 		// First, ensure the global state and the items array are not null.
 		if (!globalstate || !variantId) return 0;
 
-		const item = globalstate.find(
+		const item = globalstate?.find(
 			(item: any) => item?.variant?.id === variantId,
 		);
 		console.log(item);
-		return item ? item.cartQuantity : 0;
+		return item ? item?.cartQuantity : 0;
 	};
 
 	const handleIncrement = (variant: any) => {
-
-		console.log('ccccccccc', productData);
+		console.log("ccccccccc", productData);
 		dispatch(
 			addToCart({
 				id: variant.id,
@@ -97,12 +96,13 @@ const ProductDetails = () => {
 
 	useEffect(() => {
 		if (productData?.data?.media?.length > 0) {
-			setSelectedId(productData.data?.media[0].id);
+			setSelectedId(productData?.data?.media[0]?.id);
 			setSelectedImage(productData?.data?.media[0]);
 		}
+		return;
 	}, [productData]);
 
-	console.log("dfghyjdkhghj", productData);
+	// console.log("dfghyjdkhghj", productData);
 
 	useEffect(() => {}, [selectedId, productData]);
 	return (
@@ -198,7 +198,7 @@ const ProductDetails = () => {
 								<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full my-[20px]'></div>
 							) : (
 								<div className='text-[20px] font-semibold my-[20px]'>
-									#{formatPrice(productData?.data.price)}
+									#{formatPrice(productData?.data?.price)}
 								</div>
 							)}
 							<div className='flex flex-col'>
@@ -551,7 +551,7 @@ const ProductDetails = () => {
 								</div>
 							</div>
 						) : (
-							<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
+							<div className='grid grid-cols-3 gap-4  sm:justify-center sm:grid sm:items-center sm:grid-cols-2 md:grid-cols-2 sm:flex-col flex-1 '>
 								{allProductsData?.data.slice(0, 4).map((props: any) => (
 									<CardComp
 										key={props.id}

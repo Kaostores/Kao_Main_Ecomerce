@@ -3,18 +3,19 @@ import pic2 from "@/assets/noto_fire.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import StarRating from "../StarRating";
 import { Link } from "react-router-dom";
-import pic3 from "../../assets/lenovo.png"
-
+import pic3 from "../../assets/lenovo.png";
 
 const CardComp = ({ deal, isLoading, ...props }: any) => {
-
-
 	return (
 		<div className='h-[370px]  sm:w-[100%]  pb-3  flex-shrink-0  bg-ascentBlue rounded-sm'>
-			<div className='h-[270px] relative w-[100%]'>
+			<div className='h-[260px] relative w-[100%]'>
 				<img
 					className='w-[100%] h-[100%] object-cover pt-10 rounded-sm'
-					src={props?.media?.length > 0 && props.media[0].link ? props.media[0].link : pic3}
+					src={
+						props?.media?.length > 0 && props.media[0].link
+							? props.media[0].link
+							: pic3
+					}
 				/>
 				<div className='absolute top-2 pl-3 pr-3 flex justify-between w-full'>
 					<div className='h-[25px] w-[25px] bg-white rounded-[50%]'></div>
@@ -41,21 +42,23 @@ const CardComp = ({ deal, isLoading, ...props }: any) => {
 				</div>
 			</div>
 			<Link to={`/product-details/${props.id}`}>
-				<h2 className='ml-[10px] text-nowrap  text-[16px] font-[600] mt-[15px] overflow-hidden whitespace-nowrap truncate '>
-					{props.name} 
+				<h2 className='ml-[10px] text-nowrap  text-[16px] sm:text-[12px] font-[600] mt-[15px] overflow-hidden whitespace-nowrap truncate '>
+					{props.name}
 				</h2>
 			</Link>
 			<div className='p-2'>
-				<div className='flex justify-between overflow-hidden '>
+				<div
+					className='flex justify-between sm:flex-col sm:pb-3
+				  '>
 					<div className='flex text-[10px] '>
 						(12)
 						<StarRating />
 						{/* <Rating  size={10}   initialValue={ratingValue} /> */}
 					</div>
-					<div className='text-right'>
+					<div className='text-right  '>
 						<div className='flex font-bold'>
-							<div className='text-[10px] mt-2 mr-2'>NGN </div>
-							{props.price}
+							<div className='text-[10px] mt-2 mr-2 sm:mt-1 '>NGN </div>
+							{props.price?.toLocaleString()}
 						</div>
 						<div className='line-through text-[12px] text-cardBrown font-bold'>
 							35,000
