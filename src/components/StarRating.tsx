@@ -1,10 +1,8 @@
-import {useState} from "react"
+import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 
 const StarRating = () => {
-	const [rating, ] = useState(4);
-
-
+	const [rating] = useState(4);
 
 	return (
 		<div style={{ overflow: "hidden" }} className='flex overflow-hidden'>

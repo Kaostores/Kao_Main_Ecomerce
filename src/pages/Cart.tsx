@@ -386,7 +386,7 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 								</div>
 							</div>
 						) : (
-							<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
+							<div className='grid grid-cols-3 gap-4  sm:justify-center sm:grid sm:items-center sm:grid-cols-2 md:grid-cols-2 sm:flex-col flex-1 '>
 								{data?.data.slice(0, 4).map((props: any) => (
 									<CardComp
 										key={props.id}
