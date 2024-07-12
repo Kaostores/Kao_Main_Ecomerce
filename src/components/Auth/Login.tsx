@@ -9,8 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FcGoogle } from "react-icons/fc";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -53,20 +53,24 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 		try {
 			const response: any = await LogIn(values);
 
+			console.log("reeee", response);
+
 			if (response?.status === 201) {
-				toast.success('Login Successful');
+				toast.success("Login Successful");
 				cookies.set("Kao_cookie_user", response?.data?.token, {
 					expires: expiryDate,
-					path: "/"
+					path: "/",
 				});
 				dispatch(updateUserDetails(response?.data.data));
 				onClose();
 			} else if (response?.status === 500) {
 				ShowToast(false, "Details do not match");
+			} else if (response?.response?.status === 401) {
+				ShowToast(false, "Invalid Credentials");
 			}
 			setLoad(false);
 		} catch (error) {
-			toast.info('An error occurred. Please try again.')
+			toast.info("An error occurred. Please try again.");
 			setLoad(false);
 		}
 	}
@@ -142,7 +146,10 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 						<div className='flex-1 h-[1px] bg-black'></div>
 					</div>
 					<div className='flex justify-center'>
-						<Button variant='outline' className='w-full border-border' type='submit'>
+						<Button
+							variant='outline'
+							className='w-full border-border'
+							type='submit'>
 							<span className='text-lg mr-2 '>
 								<FcGoogle />
 							</span>

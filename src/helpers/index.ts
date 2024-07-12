@@ -9,6 +9,10 @@ export const validateEmail = (email: string): boolean => {
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	return emailRegex.test(email);
 };
+// price formatter
+export function formatPrice(price: number) {
+	return price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 // useLocalStorage.ts
 import { useState } from "react";
