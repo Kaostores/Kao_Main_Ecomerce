@@ -59,7 +59,12 @@ const Header = () => {
 		<div className='w-[100%] flex flex-col justify-center items-center'>
 			<Register open={open} onClose={onClose} onOpenLogin={onOpenLogin} />
 			<Login open={open} onClose={onClose} onOpenRegister={onOpenRegister} />
-			{showMegaMenu ? <MegaMenu setShowMegaMenu={setShowMegaMenu} /> : null}
+			{showMegaMenu ? (
+				<MegaMenu
+					setShowMegaMenu={setShowMegaMenu}
+					showMegaMenu={showMegaMenu}
+				/>
+			) : null}
 			<div className='w-[85%] sm:w-[90%] flex items-center gap-5 sm:justify-between  '>
 				<div className='flex items-center'>
 					<div
@@ -109,7 +114,9 @@ const Header = () => {
 							<Link to='/dashboard'>
 								<div className='text-[14px]  max-w-[70px] overflow-hidden ml-2 sm:hidden'>
 									<div className='flex items-start'>
-										<h2 className='mr-[8px]  max-w-[70px] overflow-hidden'>{User.firstname}</h2>
+										<h2 className='mr-[8px]  max-w-[70px] overflow-hidden'>
+											{User.firstname}
+										</h2>
 										{/* <h2>{User.lastname}</h2> */}
 									</div>
 								</div>

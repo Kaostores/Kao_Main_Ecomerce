@@ -7,8 +7,7 @@ import { MdOutlineClear } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 const MegaMenu = ({ setShowMegaMenu }: any) => {
-
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	return (
 		<div
@@ -76,9 +75,11 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 					<div key={i} className='text-[15px] md:text-[13px]'>
 						<div className='font-bold mb-2'>{props?.title}</div>
 						{props?.sub?.map((el) => (
-							<div onClick={() => {
-							navigate("/search");
-						}} className='mb-3 hover:underline transition ease-in-out delay-150 cursor-pointer'>
+							<div
+								onClick={() => {
+									navigate("/search");
+								}}
+								className='mb-3 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 								{el?.name}
 							</div>
 						))}
