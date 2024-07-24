@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 // import ShowToast from "../reuse/ShowToast";
 // import { useAppSelector } from "@/services/store";
 import { useSelector } from "react-redux";
+import { useGetAllCategoryQuery } from "@/services/apiSlice";
 
 const Header = () => {
 	const User = useSelector((state: any) => state?.persistedReducer.currentUser);
@@ -53,6 +54,8 @@ const Header = () => {
 			state: true,
 		});
 	};
+
+	const { data: catData, isLoading: isCatLoading } = useGetAllCategoryQuery({});
 
 	// if (showMegaMenu) return <MegaMenu />;
 	return (
@@ -199,48 +202,17 @@ const Header = () => {
 						</div>
 						Browser Categories
 					</div>
-					<div
-						onClick={() => {
-							navigate("/search");
-						}}
-						className='text-lightGray cursor-pointer'>
-						Computer and Accessories
-					</div>
-					<div
-						onClick={() => {
-							navigate("/search");
-						}}
-						className='text-lightGray cursor-pointer'>
-						Phones and Tablets
-					</div>
-					<div
-						onClick={() => {
-							navigate("/search");
-						}}
-						className='text-lightGray cursor-pointer'>
-						Electronics
-					</div>
-					<div
-						onClick={() => {
-							navigate("/search");
-						}}
-						className='text-lightGray cursor-pointer'>
-						Baby kits
-					</div>
-					<div
-						onClick={() => {
-							navigate("/search");
-						}}
-						className='text-lightGray cursor-pointer'>
-						Gaming
-					</div>
-					<div
-						onClick={() => {
-							navigate("/search");
-						}}
-						className='text-lightGray cursor-pointer'>
-						Groceries
-					</div>
+					{Object?.values(catData?.data)
+						?.slice(0, 7)
+						?.map((props: any) => (
+							<div
+								onClick={() => {
+									navigate("/search");
+								}}
+								className='text-lightGray cursor-pointer'>
+								{props}
+							</div>
+						))}
 				</div>
 			</div>
 		</div>

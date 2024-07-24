@@ -6,24 +6,20 @@ import { FaRegUser } from "react-icons/fa6";
 import { MdOutlineClear } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import {
+	useGetAllCategoryAndSubCategoryQuery,
 	useGetAllCategoryQuery,
-	useGetAllSubCategoryQuery,
 } from "@/services/apiSlice";
 
 const MegaMenu = ({ setShowMegaMenu }: any) => {
 	const navigate = useNavigate();
 
-	const categoryId: any = 1;
-
-	const { data: catData } = useGetAllCategoryQuery({});
-	const parsedCategoryId = parseInt(categoryId);
 	const {
-		data: SubData,
+		data: catData,
 		error,
 		isLoading,
-	} = useGetAllSubCategoryQuery(parsedCategoryId);
+	} = useGetAllCategoryAndSubCategoryQuery({});
 
-	console.log("this is the sub category", SubData);
+	console.log("this is the sub categorybvz", catData);
 
 	return (
 		<div
@@ -87,20 +83,32 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 						</div>
 					</div>
 				</div>
-				{megaData?.map((props, i) => (
-					<div key={i} className='text-[15px] md:text-[13px]'>
-						<div className='font-bold mb-2'>{props?.title}</div>
-						{props?.sub?.map((el) => (
-							<div
-								onClick={() => {
-									navigate("/search");
-								}}
-								className='mb-3 hover:underline transition ease-in-out delay-150 cursor-pointer'>
-								{el?.name}
-							</div>
-						))}
-					</div>
-				))}
+				{isLoading ? (
+					<div>Loading...</div>
+				) : (
+					<>
+						{[...catData?.data]
+							?.sort(
+								(a: any, b: any) =>
+									a?.sub_categories?.length - b.sub_categories?.length,
+							)
+							.map((props: any, i: any) => (
+								<div key={i} className='text-[15px] md:text-[13px]'>
+									<div className='font-bold mb-3 mt-5'>{props?.name}</div>
+									{props?.sub_categories?.map((el: any, index: any) => (
+										<div
+											key={index}
+											onClick={() => {
+												navigate("/search");
+											}}
+											className='mb-5 hover:underline transition ease-in-out delay-150 cursor-pointer'>
+											{el?.name}
+										</div>
+									))}
+								</div>
+							))}
+					</>
+				)}
 			</div>
 		</div>
 	);

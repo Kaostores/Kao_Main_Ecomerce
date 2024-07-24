@@ -91,6 +91,9 @@ export const api = createApi({
 		getHotSales: builder.query({
 			query: () => "/settings/home/hot/sales",
 		}),
+		getAllCategoryAndSubCategory: builder.query({
+			query: () => "/categories/all",
+		}),
 	}),
 });
 
@@ -109,4 +112,5 @@ export const {
 	useGetAllCategoryQuery,
 	useGetAllSubCategoryQuery,
 	useGetHotSalesQuery,
+	useGetAllCategoryAndSubCategoryQuery,
 } = api;

@@ -6,6 +6,7 @@ import FilterComponent from "@/components/FilteredSearch";
 import { IoFilterSharp } from "react-icons/io5";
 import { useState } from "react";
 import FilterBar from "@/components/FilterBar";
+import BrandData from "@/components/reuse/BrandData";
 
 const SearchPage = () => {
 	const { data, isLoading, isFetching } = useViewAllProductsQuery({});
@@ -58,16 +59,8 @@ const SearchPage = () => {
 					</div>
 
 					<h3 className='mt-7 font-bold mb-3'>Brand Sportlight</h3>
-					<div className='grid  grid-cols-4 gap-4 sm:grid-cols-2 mb-10 md:grid-cols-3'>
-						<BrandsComp />
-						<BrandsComp />
-						<BrandsComp />
-						<BrandsComp />
-						<BrandsComp />
-						<BrandsComp />
-						<BrandsComp />
-						<BrandsComp />
-					</div>
+
+					<BrandData />
 				</div>
 			</div>
 		</>
