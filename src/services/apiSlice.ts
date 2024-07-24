@@ -43,7 +43,7 @@ export const api = createApi({
 		fetchOrderById: builder.query({
 			query: (orderId: any) => `/customer/orders/${orderId}`,
 			providesTags: ["Orders"],
-        }),
+		}),
 
 		ViewAllAddress: builder.query({
 			query: () => "/customer/profile/address",
@@ -75,6 +75,22 @@ export const api = createApi({
 		fetchAddressById: builder.query({
 			query: (addressId) => `/customer/profile/address/${addressId}`,
 		}),
+
+		getBrandsSpootlight: builder.query({
+			query: () => "/settings/home/spotlights",
+		}),
+
+		getAllCategory: builder.query({
+			query: () => "/categories",
+		}),
+
+		getAllSubCategory: builder.query({
+			query: (categoryId) => `/sub/category?category=${parseInt(categoryId)}`,
+		}),
+
+		getHotSales: builder.query({
+			query: () => "/settings/home/hot/sales",
+		}),
 	}),
 });
 
@@ -89,4 +105,8 @@ export const {
 	useGetUserDataQuery,
 	useFetchAddressByIdQuery,
 	useFetchOrderByIdQuery,
+	useGetBrandsSpootlightQuery,
+	useGetAllCategoryQuery,
+	useGetAllSubCategoryQuery,
+	useGetHotSalesQuery,
 } = api;

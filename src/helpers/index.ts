@@ -1,6 +1,6 @@
 //Capitalize first character
 export const capitalizeString = (str: string): string => {
-	return str.charAt(0).toUpperCase() + str.slice(1);
+	return str?.charAt(0)?.toUpperCase() + str.slice(1);
 };
 
 //Validate Email
@@ -11,7 +11,7 @@ export const validateEmail = (email: string): boolean => {
 };
 // price formatter
 export function formatPrice(price: number) {
-	return price.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	return price?.toFixed(0)?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // useLocalStorage.ts

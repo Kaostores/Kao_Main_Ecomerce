@@ -3,11 +3,21 @@ import AdvertComp from "@/components/commons/AdvertComp";
 import BrandsComp from "@/components/commons/BrandsComp";
 import CardComp from "@/components/commons/CardComp";
 import CategoriesCard from "@/components/commons/CategoriesCard";
+import BrandData from "@/components/reuse/BrandData";
+import CategoriesData from "@/components/reuse/CategoriesData";
+import BrandsCompSkeleton from "@/components/skeleton/BrandCompSkeleton";
 import ProductSkeleton from "@/components/skeleton/ProductSkeleton";
-import { useViewAllProductsQuery } from "@/services/apiSlice";
+import {
+	useGetBrandsSpootlightQuery,
+	useGetHotSalesQuery,
+	useViewAllProductsQuery,
+} from "@/services/apiSlice";
 
 const Home = () => {
 	const { data, isLoading } = useViewAllProductsQuery({});
+	const { data: HotData, isLoading: isHotLoading } = useGetHotSalesQuery({});
+
+	console.log("hot salessss", HotData);
 
 	return (
 		<div className='overflow-hidden'>
@@ -35,18 +45,8 @@ const Home = () => {
 			</div>
 
 			<h3 className='mt-7 font-bold mb-3'>Categories</h3>
-			<div className='grid  grid-cols-5 gap-4 sm:grid-cols-2 mb-10 md:grid-cols-3'>
-				<CategoriesCard />
-				<CategoriesCard />
-				<CategoriesCard />
-				<CategoriesCard />
-				<CategoriesCard />
-				<CategoriesCard />
-				<CategoriesCard />
-				<CategoriesCard />
-				<CategoriesCard />
-				<CategoriesCard />
-			</div>
+			<CategoriesData />
+
 			<div>
 				<div className='flex gap-5 mb-5'>
 					<AdvertComp />
@@ -56,7 +56,7 @@ const Home = () => {
 			</div>
 			<h3 className='mt-7 font-bold mb-3'>Hot Sales</h3>
 			<div className='w-[100%]'>
-				{isLoading && !data ? (
+				{isHotLoading && !HotData ? (
 					<div className='grid grid-cols-3 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3'>
 						{[...Array(6)].map((_, index) => (
 							<ProductSkeleton key={index} />
@@ -64,28 +64,20 @@ const Home = () => {
 					</div>
 				) : (
 					<div className='grid grid-cols-4 gap-4  sm:justify-center sm:grid sm:items-center sm:grid-cols-2 md:grid-cols-2 sm:flex-col flex-1 '>
-						{data?.data.slice(0, 8).map((props: any) => (
+						{HotData?.data?.map((props: any) => (
 							<CardComp
 								key={props.id}
 								deal={true}
 								isLoading={isLoading}
-								{...props}
+								{...props?.productDetails}
+								productId={props?.productId}
 							/>
 						))}
 					</div>
 				)}
 			</div>
 			<h3 className='mt-7 font-bold mb-3'>Brand Sportlight</h3>
-			<div className='grid  grid-cols-4 gap-4 sm:grid-cols-2 mb-10 md:grid-cols-3'>
-				<BrandsComp />
-				<BrandsComp />
-				<BrandsComp />
-				<BrandsComp />
-				<BrandsComp />
-				<BrandsComp />
-				<BrandsComp />
-				<BrandsComp />
-			</div>
+			<BrandData />
 		</div>
 	);
 };

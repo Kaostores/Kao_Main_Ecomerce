@@ -38,7 +38,9 @@ const ProductDetails = () => {
 	const [imageLoading, setImageLoading] = useState(true);
 
 	const dispatch = UseAppDispach();
-	const globalstate = useSelector((state: any) => state?.persistedReducer.cart);
+	const globalstate = useSelector(
+		(state: any) => state?.persistedReducer?.cart,
+	);
 
 	const findQuantity = (variantId: any) => {
 		// First, ensure the global state and the items array are not null.
@@ -197,7 +199,7 @@ const ProductDetails = () => {
 							{isProductLoading ? (
 								<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full my-[20px]'></div>
 							) : (
-								<div className='text-[20px] font-semibold my-[20px]'>
+								<div className='text-[20px] font-semibold my-[5px]'>
 									#{formatPrice(productData?.data?.price)}
 								</div>
 							)}
@@ -313,7 +315,8 @@ const ProductDetails = () => {
 																className='w-[100%] flex items-center justify-between mt-[25px] mb-[15px]'>
 																<div className='flex flex-col'>
 																	<div className='text-[18px] sm:text-[16px]'>
-																		{variant?.title}
+																		{variant?.title} {variant?.color}{" "}
+																		{variant?.size}
 																	</div>
 																	<div className='text-[14px] sm:text-[12px] mt-[1px] font-bold'>
 																		₦ {formatPrice(variant?.price)}

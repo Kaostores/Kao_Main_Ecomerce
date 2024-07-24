@@ -5,9 +5,25 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { MdOutlineClear } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import {
+	useGetAllCategoryQuery,
+	useGetAllSubCategoryQuery,
+} from "@/services/apiSlice";
 
 const MegaMenu = ({ setShowMegaMenu }: any) => {
 	const navigate = useNavigate();
+
+	const categoryId: any = 1;
+
+	const { data: catData } = useGetAllCategoryQuery({});
+	const parsedCategoryId = parseInt(categoryId);
+	const {
+		data: SubData,
+		error,
+		isLoading,
+	} = useGetAllSubCategoryQuery(parsedCategoryId);
+
+	console.log("this is the sub category", SubData);
 
 	return (
 		<div
