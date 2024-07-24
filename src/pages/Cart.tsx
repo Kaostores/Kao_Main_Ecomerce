@@ -28,7 +28,7 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 	const totalPrice = useAppSelector(
 		(state) => state.persistedReducer.totalPrice,
 	);
-	console.log("totalPricet", totalPrice);
+	// console.log("totalPricet", totalPrice);
 	const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
 	useEffect(() => {
@@ -56,15 +56,6 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 	return (
 		<div className='w-[100%] min-h-[100%] flex xl:justify-center items-center '>
 			<div className='w-[100%]  flex flex-col my-[10px]'>
-				<div className='flex  items-center mb-[10px] text-[13px]'>
-					<div className='flex justify-center items-center '>
-						<div>Home</div>
-						<div>
-							<GoChevronRight />
-						</div>
-					</div>
-					<div className='font-bold text-primary'>Cart</div>
-				</div>
 				{cart.length === 0 ? (
 					<EmpyCart />
 				) : (

@@ -11,6 +11,7 @@ import CardComp from "@/components/commons/CardComp";
 import BrandsComp from "@/components/commons/BrandsComp";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+	useAddNewBookmarkMutation,
 	useViewAProductQuery,
 	useViewAllProductsQuery,
 } from "@/services/apiSlice";
@@ -104,27 +105,25 @@ const ProductDetails = () => {
 		return;
 	}, [productData]);
 
-	// console.log("dfghyjdkhghj", productData);
+	const [newBookMark, { data: newBookMarkData }] = useAddNewBookmarkMutation();
+
+	// console.log("boooookmark", newBookMarkData);
+
+	const handleNewBookMark = () => {
+		if (!newBookMarkData) {
+			newBookMark({ product_id: productData?.data?.id });
+			toast.success("Bookmarked successfully");
+		} else {
+			toast.error("Already bookmarked");
+		}
+	};
+
+	console.log("main product", productData);
 
 	useEffect(() => {}, [selectedId, productData]);
 	return (
 		<div className='w-[100%] min-h-[100%] flex xl:justify-center items-center'>
 			<div className='w-[100%]  flex flex-col my-[10px]'>
-				<div className='flex  items-center mb-[10px]'>
-					<div className='flex justify-center items-center'>
-						<div>Home</div>
-						<div>
-							<GoChevronRight />
-						</div>
-					</div>
-					<div className='flex justify-center items-center'>
-						<div>Jewelleries</div>
-						<div>
-							<GoChevronRight />
-						</div>
-					</div>
-					<div>Watch</div>
-				</div>
 				<div className=' xl:min-h-[500px] flex  items-start sm:flex-col sm:overflow-hidden'>
 					<div className='w-[500px] sm:w-[100%] md:w-[400px] xxl:w-[40%] sm:justify-start flex  gap-20  sm:flex-col-reverse sm:gap-5'>
 						<div className=' xl:flex-col  sm:flex sm:w-[100%]'>
@@ -172,7 +171,10 @@ const ProductDetails = () => {
 							className={`mr-[50px] xxl:ml-[10px] xl:w-[35px] xxl:w-[45px] xxl:h-[45px] xl:h-[35px] lg:w-[35px] lg:h-[35px] md:w-[30px] md:h-[30px] bg-[#b1b0b098] rounded-[50%] xl:flex xxl:flex md:flex lg:flex justify-center items-center text-[18px] xxl:text-[24px] md:text-[15px] cursor-pointer sm:hidden ${
 								showLove ? "text-white" : "text-[red]"
 							}`}
-							onClick={loveBtn}>
+							onClick={() => {
+								handleNewBookMark();
+								loveBtn();
+							}}>
 							<BsHeartFill />
 						</div>
 						<div className='flex-1'>

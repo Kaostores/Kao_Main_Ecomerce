@@ -14,7 +14,14 @@ export const api = createApi({
 			return headers;
 		},
 	}),
-	tagTypes: ["stores", "products", "product", "Orders", "Addresses"],
+	tagTypes: [
+		"stores",
+		"products",
+		"product",
+		"Orders",
+		"Addresses",
+		"bookmark",
+	],
 	endpoints: (builder) => ({
 		viewAllProducts: builder.query({
 			query: () => `/customer/home`,
@@ -94,6 +101,29 @@ export const api = createApi({
 		getAllCategoryAndSubCategory: builder.query({
 			query: () => "/categories/all",
 		}),
+
+		AddNewBookmark: builder.mutation({
+			query: (body) => ({
+				url: `/customer/product/bookmark/add/${body.product_id}`,
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["bookmark"],
+		}),
+
+		DeleteNewBookmark: builder.mutation({
+			query: (body) => ({
+				url: `/customer/product/bookmark/remove/${body.product_id}`,
+				method: "DELETE",
+				body: body,
+			}),
+			invalidatesTags: ["bookmark"],
+		}),
+
+		ViewAllBookmarks: builder.query({
+			query: () => "/customer/bookmarks",
+			providesTags: ["bookmark"],
+		}),
 	}),
 });
 
@@ -113,4 +143,7 @@ export const {
 	useGetAllSubCategoryQuery,
 	useGetHotSalesQuery,
 	useGetAllCategoryAndSubCategoryQuery,
+	useAddNewBookmarkMutation,
+	useViewAllBookmarksQuery,
+	useDeleteNewBookmarkMutation,
 } = api;
