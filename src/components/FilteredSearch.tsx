@@ -1,3 +1,4 @@
+import { useGetAllCategoryQuery } from "@/services/apiSlice";
 import React, { useState } from "react";
 import { BsStarFill } from "react-icons/bs";
 import { IoStarOutline } from "react-icons/io5";
@@ -118,12 +119,19 @@ const FilterComponent: React.FC = ({ classNames }: any) => {
 	const [isActive3, setIsActive3] = useState<string>("opt9");
 	const [isActive4, setIsActive4] = useState<string>("opt12");
 
-	const categoryOptions = [
-		{ label: "Phone and Tablet", value: "opt1" },
-		{ label: "Electronic", value: "opt2" },
-		{ label: "Accessories", value: "opt3" },
-	];
+	const { data: catData, isLoading: isCatLoading } = useGetAllCategoryQuery({});
 
+	const categoryOptions = Object.keys(catData?.data || {}).map((key) => ({
+		label: catData?.data[key],
+		value: key,
+	}));
+	//
+	// const categoryOptions = [
+	// { label: "Phone and Tablet", value: "opt1" },
+	// { label: "Electronic", value: "opt2" },
+	// { label: "Accessories", value: "opt3" },
+	// ];
+	//
 	const priceOptions = [
 		{ label: "NGN 1,000 - NGN 10,000", value: "opt4" },
 		{ label: "NGN 10,000 - NGN 20,000", value: "opt5" },
@@ -137,6 +145,8 @@ const FilterComponent: React.FC = ({ classNames }: any) => {
 		{ label: "Female", value: "opt10" },
 		{ label: "Unisex", value: "opt11" },
 	];
+
+	console.log("na cat data", catData);
 
 	return (
 		<div
