@@ -1,12 +1,11 @@
-import pic from '@/assets/cate.svg'
+import pic from "@/assets/cate.svg";
 
-const CategoriesCard = () => {
+const CategoriesCard = ({ props }: any) => {
+	console.log("yoooo", props);
 	return (
 		<div className='  '>
-		
-				<img className='w-[100%] object-cover h-[120px] rounded-sm' src={pic} />
-		
-			<div className='mt-3 text-center text-sm'>Electronics</div>
+			<img className='w-[100%] object-cover h-[120px] rounded-sm' src={pic} />
+			<div className='mt-3 text-center text-sm'>{props}</div>
 		</div>
 	);
 };
