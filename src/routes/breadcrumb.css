@@ -1,0 +1,27 @@
+/* Breadcrumbs.css */
+.breadcrumb {
+	display: flex;
+	list-style: none;
+	padding: 0;
+	/* background: black; */
+	font-size: 13px;
+	margin-top: 5px;
+}
+
+.breadcrumb-item {
+	margin-right: 5px;
+}
+
+.breadcrumb-item + .breadcrumb-item:before {
+	content: ">";
+	margin-right: 5px;
+}
+
+.breadcrumb-item a {
+	text-decoration: none;
+	color: #007bff;
+}
+
+.breadcrumb-item a:hover {
+	text-decoration: underline;
+}

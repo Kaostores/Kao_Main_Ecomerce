@@ -202,17 +202,23 @@ const Header = () => {
 						</div>
 						Browser Categories
 					</div>
-					{Object?.values(catData?.data)
-						?.slice(0, 7)
-						?.map((props: any) => (
-							<div
-								onClick={() => {
-									navigate("/search");
-								}}
-								className='text-lightGray cursor-pointer'>
-								{props}
-							</div>
-						))}
+					{isCatLoading ? (
+						<></>
+					) : (
+						<>
+							{Object?.values(catData?.data)
+								?.slice(0, 7)
+								?.map((props: any) => (
+									<div
+										onClick={() => {
+											navigate("/search");
+										}}
+										className='text-lightGray cursor-pointer'>
+										{props}
+									</div>
+								))}
+						</>
+					)}
 				</div>
 			</div>
 		</div>
