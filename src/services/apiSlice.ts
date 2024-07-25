@@ -21,6 +21,7 @@ export const api = createApi({
 		"Orders",
 		"Addresses",
 		"bookmark",
+		"reviews",
 	],
 	endpoints: (builder) => ({
 		viewAllProducts: builder.query({
@@ -124,6 +125,25 @@ export const api = createApi({
 			query: () => "/customer/bookmarks",
 			providesTags: ["bookmark"],
 		}),
+
+		ViewAllMyReviews: builder.query({
+			query: () => "/customer/reviews",
+			providesTags: ["reviews"],
+		}),
+
+		DropReview: builder.mutation({
+			query: (body) => ({
+				url: `/customer/product/${body.product_id}/reviews/add`,
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["reviews"],
+		}),
+
+		viewProductReviews: builder.query({
+			query: (body) => `/customer/product/${body.product_id}/reviews`,
+			providesTags: ["reviews"],
+		}),
 	}),
 });
 
@@ -146,4 +166,7 @@ export const {
 	useAddNewBookmarkMutation,
 	useViewAllBookmarksQuery,
 	useDeleteNewBookmarkMutation,
+	useViewAllMyReviewsQuery,
+	useDropReviewMutation,
+	useViewProductReviewsQuery,
 } = api;

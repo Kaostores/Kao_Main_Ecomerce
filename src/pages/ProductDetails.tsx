@@ -14,6 +14,7 @@ import {
 	useAddNewBookmarkMutation,
 	useViewAProductQuery,
 	useViewAllProductsQuery,
+	useViewProductReviewsQuery,
 } from "@/services/apiSlice";
 import { useSelector } from "react-redux";
 import { UseAppDispach } from "@/services/store";
@@ -23,11 +24,15 @@ import "react-toastify/dist/ReactToastify.css";
 import { IoMdClose } from "react-icons/io";
 import { getColorFromCode } from "@/helpers/ColorCode";
 import { formatPrice } from "@/helpers";
+import ReviewComponent from "@/components/Reviews/ReviewsComp";
+import { AccordionDemo } from "@/components/reuse/ProductSummaryAccordion";
+import ReviewPage from "./Dashboard/Subpages/ReviewPage";
 
 const ProductDetails = () => {
 	const [showContent, setContent] = useState<boolean>(false);
 	const navigate = useNavigate();
 	const [showLove, setShowLove] = useState<boolean>(true);
+	const [showReview, setShowReview] = useState(false);
 	const [showVariant, setShowVariant] = useState(false);
 	const [selectedImage, setSelectedImage] = useState<any | null>();
 	const { id } = useParams();
@@ -97,6 +102,11 @@ const ProductDetails = () => {
 		setShowVariant(false);
 	};
 
+	const { data: RatingData, isLoading: RatingLoading } =
+		useViewProductReviewsQuery({
+			product_id: id,
+		});
+
 	useEffect(() => {
 		if (productData?.data?.media?.length > 0) {
 			setSelectedId(productData?.data?.media[0]?.id);
@@ -106,6 +116,7 @@ const ProductDetails = () => {
 	}, [productData]);
 
 	const [newBookMark, { data: newBookMarkData }] = useAddNewBookmarkMutation();
+	const [toggleType, setToggleType] = useState("productdetails");
 
 	// console.log("boooookmark", newBookMarkData);
 
@@ -118,7 +129,17 @@ const ProductDetails = () => {
 		}
 	};
 
-	console.log("main product", productData);
+	const overallRating = 4.0;
+	const totalReviews = 1;
+	const ratingsBreakdown = { 5: 0, 4: 1, 3: 0, 2: 0, 1: 0 };
+	const reviews = [
+		{
+			name: "Philip",
+			date: "July 9, 2024",
+			rating: 4,
+			comment: "Good",
+		},
+	];
 
 	useEffect(() => {}, [selectedId, productData]);
 	return (
@@ -435,51 +456,119 @@ const ProductDetails = () => {
 							<BiCheck />
 						</div>
 					</div>
-					<div className='xl:flex flex-col my-[20px] sm:hidden '>
-						<div className='flex text-[16px]'>
-							<div className='mr-[40px] font-semibold text-primary'>
+					<div className='hidden sm:block md:block'>
+						<AccordionDemo />
+					</div>
+					<div className='xl:flex hidden flex-col my-[20px]  '>
+						<div className='flex text-[16px] gap-10 sm:flex-col'>
+							<div
+								onClick={() => setToggleType("productdetails")}
+								className={` font-semibold cursor-pointer ${
+									toggleType === "productdetails" ? "text-primary" : null
+								}`}>
 								Product details
 							</div>
-							<div className='flex justify-center items-center'>
-								<div className='mr-[40px] font-semibold'>Description</div>
-								<div className='mr-[40px] font-semibold '>Shipping</div>
-								<div className='mr-[40px] font-semibold '>Warranty</div>
-								<div className='mr-[40px] font-semibold '>Return Policy</div>
-								<div className='mr-[40px] font-semibold'>Reviews</div>
+							<div
+								onClick={() => setToggleType("description")}
+								className={` font-semibold cursor-pointer ${
+									toggleType === "description" ? "text-primary" : null
+								}`}>
+								Description
+							</div>
+							<div
+								onClick={() => setToggleType("shipping")}
+								className={` font-semibold cursor-pointer ${
+									toggleType === "shipping" ? "text-primary" : null
+								}`}>
+								Shipping
+							</div>
+							<div
+								onClick={() => setToggleType("warranty")}
+								className={` font-semibold cursor-pointer ${
+									toggleType === "warranty" ? "text-primary" : null
+								}`}>
+								Warranty
+							</div>
+							<div
+								onClick={() => setToggleType("policy")}
+								className={` font-semibold cursor-pointer ${
+									toggleType === "policy" ? "text-primary" : null
+								}`}>
+								Return Policy
+							</div>
+							<div
+								onClick={() => setToggleType("reviews")}
+								className={` font-semibold cursor-pointer ${
+									toggleType === "reviews" ? "text-primary" : null
+								}`}>
+								Reviews
 							</div>
 						</div>
-						<div className='mt-[15px] text-[14px]'>
-							<div>
-								In the Box <br /> Handset USB-C to Lighting Cable Documentation
+						{toggleType === "productdetails" && (
+							<div className='mt-[15px] text-[14px]  '>
+								<div>product details product details</div>
 							</div>
-						</div>
-					</div>
-					<div className='xl:hidden flex-col my-[20px] sm:flex w-[100%]'>
-						<div className='flex text-[16px] flex-col'>
-							<div className='sm:flex sm:justify-between sm:w-[100%] sm:items-center md:hidden lg:hidden'>
-								<div className='mr-[40px] font-semibold text-primary'>
-									Product details
-								</div>
-								<div className='text-[20px] text-primary' onClick={togContent}>
-									{showContent ? <GoChevronDown /> : <GoChevronRight />}
+						)}
+
+						{toggleType === "description" && (
+							<div className='mt-[15px] text-[14px] '>
+								<div>
+									In the Box <br /> Handset USB-C to Lighting Cable
+									Documentation
 								</div>
 							</div>
-							{showContent ? (
-								<div className='flex flex-col justify-center items-start'>
-									<div className='mt-[15px] text-[14px] mb-[20px]'>
-										<div>
-											In the Box <br /> Handset USB-C to Lighting Cable
-											Documentation
-										</div>
-									</div>
-									<div className='mb-[40px] font-semibold'>Description</div>
-									<div className='mb-[40px] font-semibold '>Shipping</div>
-									<div className='mb-[40px] font-semibold '>Warranty</div>
-									<div className='mb-[40px] font-semibold '>Return Policy</div>
-									<div className='mb-[40px] font-semibold'>Reviews</div>
+						)}
+
+						{toggleType === "shipping" && (
+							<div className='mt-[15px] text-[14px] '>
+								<div>Shipping</div>
+							</div>
+						)}
+
+						{toggleType === "warranty" && (
+							<div className='mt-[15px] text-[14px] '>
+								<div>Warranty</div>
+							</div>
+						)}
+
+						{toggleType === "policy" && (
+							<div className='mt-[15px] text-[14px] '>
+								<div>Policy</div>
+							</div>
+						)}
+
+						{toggleType === "reviews" && (
+							<div className='mt-[15px] text-[14px] '>
+								<div className='min-h-[20px] bg-ascentBlue p-4'>
+									{RatingLoading ? (
+										<div>Loading...</div>
+									) : (
+										<>
+											{RatingData?.data?.length >= 1 ? (
+												<ReviewComponent
+													showReview={showReview}
+													setShowReview={setShowReview}
+												/>
+											) : (
+												<div>
+													<div> No Reviews for this product</div>
+
+													<h4
+														onClick={() => {
+															setShowReview(!showReview);
+														}}
+														className='text-primary text-[14px] mt-5  cursor-pointer font-[600] '>
+														Drop review
+													</h4>
+
+													{showReview && <ReviewPage />}
+												</div>
+											)}
+										</>
+									)}
 								</div>
-							) : null}
-						</div>
+							</div>
+						)}
 					</div>
 				</div>
 
