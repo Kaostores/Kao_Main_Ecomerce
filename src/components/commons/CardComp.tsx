@@ -51,11 +51,9 @@ const CardComp = ({ deal, productId, isLoading, ...props }: any) => {
 					<div
 						className='flex justify-between sm:flex-col sm:pb-3
 				  '>
-						<div className='flex text-[10px] '>
-							(12)
-							<StarRating />
-							{/* <Rating  size={10}   initialValue={ratingValue} /> */}
-						</div>
+						<StarRating id={props?.id} />
+						{/* <Rating  size={10}   initialValue={ratingValue} /> */}
+
 						<div className='text-right  '>
 							<div className='flex font-bold'>
 								<div className='text-[10px] mt-2 mr-2 sm:mt-1 '>NGN </div>

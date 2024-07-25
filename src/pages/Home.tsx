@@ -32,7 +32,7 @@ const Home = () => {
 					</div>
 				) : (
 					<div className='grid grid-cols-4 gap-4  sm:justify-center sm:grid sm:items-center sm:grid-cols-2 md:grid-cols-2 sm:flex-col flex-1 '>
-						{data?.data.slice(0, 4).map((props: any) => (
+						{data?.data?.slice(0, 4).map((props: any) => (
 							<CardComp
 								key={props.id}
 								deal={true}

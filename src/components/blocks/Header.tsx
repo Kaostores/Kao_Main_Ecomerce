@@ -55,7 +55,11 @@ const Header = () => {
 		});
 	};
 
-	const { data: catData, isLoading: isCatLoading } = useGetAllCategoryQuery({});
+	const {
+		data: catData,
+		isLoading: isCatLoading,
+		isFetching,
+	} = useGetAllCategoryQuery({});
 
 	// if (showMegaMenu) return <MegaMenu />;
 	return (
@@ -202,21 +206,31 @@ const Header = () => {
 						</div>
 						Browser Categories
 					</div>
-					{isCatLoading ? (
+
+					{isCatLoading || isFetching ? (
 						<></>
 					) : (
 						<>
-							{Object?.values(catData?.data)
-								?.slice(0, 7)
-								?.map((props: any) => (
-									<div
-										onClick={() => {
-											navigate("/search");
-										}}
-										className='text-lightGray cursor-pointer'>
-										{props}
-									</div>
-								))}
+							{catData?.data && Object.values(catData.data).length > 0 ? (
+								Object.values(catData.data)
+									.slice(0, 7)
+									.map((props: any, index: number) => (
+										<div
+											key={index}
+											onClick={() => {
+												navigate("/search");
+											}}
+											className='text-lightGray cursor-pointer'>
+											{props}
+										</div>
+									))
+							) : (
+								<div className='space-y-4'>
+									<div className='bg-gray-300 h-4 w-full rounded animate-pulse'></div>
+									<div className='bg-gray-300 h-4 w-full rounded animate-pulse'></div>
+									<div className='bg-gray-300 h-4 w-full rounded animate-pulse'></div>
+								</div>
+							)}
 						</>
 					)}
 				</div>

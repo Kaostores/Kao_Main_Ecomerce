@@ -1,0 +1,62 @@
+[
+	{
+		"id": 1,
+		"name": "SUPERMARKET",
+		"image": "https://plus.unsplash.com/premium_photo-1661376982657-bde8393b0f4d"
+	},
+	{
+		"id": 2,
+		"name": "HEALTH & BEAUTY",
+		"image": "https://images.unsplash.com/photo-1531751519425-e1fa9110434b"
+	},
+	{
+		"id": 3,
+		"name": "HOME & OFFICE",
+		"image": "https://images.unsplash.com/photo-1496664444929-8c75efb9546f"
+	},
+	{
+		"id": 4,
+		"name": "APPLIANCES",
+		"image": "https://media.istockphoto.com/id/1127551092/photo/kitchen-appliances-on-a-neutral-background.jpg?s=1024x1024&w=is&k=20&c=MOrhGSAdzmfRDD9jmcDxesH1SC09y1XQp3ALOfNqtGE="
+	},
+	{
+		"id": 5,
+		"name": "PHONE & TABLETS",
+		"image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9"
+	},
+	{
+		"id": 6,
+		"name": "COMPUTING",
+		"image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8"
+	},
+	{
+		"id": 7,
+		"name": "ELECTRONICS",
+		"image": "https://media.istockphoto.com/id/979076604/photo/home-appliance.jpg?s=1024x1024&w=is&k=20&c=fpkDDC6LHsGCwNbwBy07uF6VnS1bspQ9elVcPQQj5GM="
+	},
+	{
+		"id": 8,
+		"name": "FASHION",
+		"image": "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+	},
+	{
+		"id": 9,
+		"name": "BABY PRODUCTS",
+		"image": "https://plus.unsplash.com/premium_photo-1661591614198-b99e04b39703?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+	},
+	{
+		"id": 10,
+		"name": "GAMING",
+		"image": "https://images.unsplash.com/photo-1593305841991-05c297ba4575"
+	},
+	{
+		"id": 11,
+		"name": "SPORTING GOODS",
+		"image": "https://images.unsplash.com/photo-1521412644187-c49fa049e84d"
+	},
+	{
+		"id": 12,
+		"name": "OTHER CATEGORIES",
+		"image": "https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+	}
+]
