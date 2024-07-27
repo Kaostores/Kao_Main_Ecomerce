@@ -1,5 +1,3 @@
-import pic from "@/assets/cate.svg";
-
 const CategoriesCard = ({ props }: any) => {
 	console.log("yoooo", props);
 	return (

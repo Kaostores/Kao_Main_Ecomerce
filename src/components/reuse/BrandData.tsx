@@ -1,4 +1,3 @@
-import React from "react";
 import BrandsCompSkeleton from "../skeleton/BrandCompSkeleton";
 import { useGetBrandsSpootlightQuery } from "@/services/apiSlice";
 import BrandsComp from "../commons/BrandsComp";

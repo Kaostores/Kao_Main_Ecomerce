@@ -1,7 +1,6 @@
 import pic2 from "@/assets/ep_sell.svg";
 import pic1 from "@/assets/lucide_locate-fixed.svg";
 import pic3 from "@/assets/bulk.png";
-import pic4 from "@/assets/hero2.png";
 import CarouselComp from "./CarouselComp";
 
 const Hero = () => {

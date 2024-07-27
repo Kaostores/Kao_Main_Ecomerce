@@ -94,7 +94,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 		<Dialog
 			open={open?.type === "register" ? open?.state : false}
 			onOpenChange={onClose}>
-			<DialogContent className='overflow-y-scroll sm:h-[80vh] h-[80vh]'>
+			<DialogContent className='overflow-y-scroll sm:h-[90vh] h-[80vh]'>
 				<DialogHeader>
 					<DialogTitle className='mb-3'>Register</DialogTitle>
 				</DialogHeader>

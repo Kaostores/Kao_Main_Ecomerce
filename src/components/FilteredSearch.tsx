@@ -113,13 +113,13 @@ const RatingSection: React.FC<RatingSectionProps> = ({
 	</div>
 );
 
-const FilterComponent: React.FC = ({ classNames }: any) => {
+const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 	const [isActive, setIsActive] = useState<string>("opt1");
 	const [isActive2, setIsActive2] = useState<string>("opt4");
 	const [isActive3, setIsActive3] = useState<string>("opt9");
 	const [isActive4, setIsActive4] = useState<string>("opt12");
 
-	const { data: catData, isLoading: isCatLoading } = useGetAllCategoryQuery({});
+	const { data: catData } = useGetAllCategoryQuery({});
 
 	const categoryOptions = Object.keys(catData?.data || {}).map((key) => ({
 		label: catData?.data[key],

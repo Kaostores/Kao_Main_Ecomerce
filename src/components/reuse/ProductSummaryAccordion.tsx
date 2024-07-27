@@ -45,7 +45,7 @@ export function AccordionDemo() {
 					prefer.
 				</AccordionContent>
 			</AccordionItem>
-			<AccordionItem value='item-3'>
+			<AccordionItem value='item-6'>
 				<AccordionTrigger>Reviews</AccordionTrigger>
 				<AccordionContent className='min-h-screen '>
 					{/* Review Component*/}

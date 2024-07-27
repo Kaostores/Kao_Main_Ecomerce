@@ -197,7 +197,7 @@ const Header = () => {
 				<SearchInput />
 			</div>
 			<div className='bg-primary sm:hidden flex justify-center items-center text-white w-[100%] h-[45px]'>
-				<div className='w-[85%] text-[14px] md:text-[7px]  h-[100%] flex gap-10 items-center'>
+				<div className='w-[85%] text-[14px] md:text-[7px] whitespace-nowrap  h-[100%] flex gap-10 items-center'>
 					<div
 						onClick={() => setShowMegaMenu(!showMegaMenu)}
 						className='flex gap-2 items-center font-bold cursor-pointer'>

@@ -1,21 +1,17 @@
-import megaData from "@/components/json/MegaMenu.json";
 import pic from "@/assets/logo.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { MdOutlineClear } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import {
-	useGetAllCategoryAndSubCategoryQuery,
-	useGetAllCategoryQuery,
-} from "@/services/apiSlice";
+import { useGetAllCategoryAndSubCategoryQuery } from "@/services/apiSlice";
 
 const MegaMenu = ({ setShowMegaMenu }: any) => {
 	const navigate = useNavigate();
 
 	const {
 		data: catData,
-		error,
+
 		isLoading,
 	} = useGetAllCategoryAndSubCategoryQuery({});
 

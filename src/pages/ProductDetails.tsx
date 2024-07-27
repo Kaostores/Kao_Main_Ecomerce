@@ -5,8 +5,7 @@ import { CgFacebook } from "react-icons/cg";
 import { BiCheck } from "react-icons/bi";
 import { BsTwitterX } from "react-icons/bs";
 import { FaWhatsapp } from "react-icons/fa";
-import { GoChevronRight } from "react-icons/go";
-import { GoChevronDown } from "react-icons/go";
+
 import CardComp from "@/components/commons/CardComp";
 import BrandsComp from "@/components/commons/BrandsComp";
 import { useNavigate, useParams } from "react-router-dom";
@@ -23,13 +22,12 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoMdClose } from "react-icons/io";
 import { getColorFromCode } from "@/helpers/ColorCode";
-import { formatPrice } from "@/helpers";
+import { decodeHTMLEntities, formatPrice } from "@/helpers";
 import ReviewComponent from "@/components/Reviews/ReviewsComp";
 import { AccordionDemo } from "@/components/reuse/ProductSummaryAccordion";
 import ReviewPage from "./Dashboard/Subpages/ReviewPage";
 
 const ProductDetails = () => {
-	const [showContent, setContent] = useState<boolean>(false);
 	const navigate = useNavigate();
 	const [showLove, setShowLove] = useState<boolean>(true);
 	const [showReview, setShowReview] = useState(false);
@@ -87,10 +85,6 @@ const ProductDetails = () => {
 		}
 	};
 
-	const togContent = () => {
-		setContent(!showContent);
-	};
-
 	const loveBtn = () => {
 		setShowLove(!showLove);
 	};
@@ -129,17 +123,17 @@ const ProductDetails = () => {
 		}
 	};
 
-	const overallRating = 4.0;
-	const totalReviews = 1;
-	const ratingsBreakdown = { 5: 0, 4: 1, 3: 0, 2: 0, 1: 0 };
-	const reviews = [
-		{
-			name: "Philip",
-			date: "July 9, 2024",
-			rating: 4,
-			comment: "Good",
-		},
-	];
+	// const overallRating = 4.0;
+	// const totalReviews = 1;
+	// const ratingsBreakdown = { 5: 0, 4: 1, 3: 0, 2: 0, 1: 0 };
+	// const reviews = [
+	// {
+	// name: "Philip",
+	// date: "July 9, 2024",
+	// rating: 4,
+	// comment: "Good",
+	// },
+	// ];
 
 	useEffect(() => {}, [selectedId, productData]);
 	return (
@@ -204,7 +198,7 @@ const ProductDetails = () => {
 									<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[20px] w-[500px] mb-[10px] rounded-full'></div>
 								) : (
 									<div className='text-[25px] sm:text-[20px] font-semibold'>
-										{productData?.data?.name}
+										{decodeHTMLEntities(productData?.data?.name)}
 									</div>
 								)}
 								{isProductLoading ? (
@@ -215,7 +209,7 @@ const ProductDetails = () => {
 									</div>
 								) : (
 									<div className='text-[13px] my-[10px]'>
-										{productData?.data.description}
+										{decodeHTMLEntities(productData?.data.description)}
 									</div>
 								)}
 							</div>
@@ -512,10 +506,7 @@ const ProductDetails = () => {
 
 						{toggleType === "description" && (
 							<div className='mt-[15px] text-[14px] '>
-								<div>
-									In the Box <br /> Handset USB-C to Lighting Cable
-									Documentation
-								</div>
+								<div>{decodeHTMLEntities(productData?.data?.description)}</div>
 							</div>
 						)}
 

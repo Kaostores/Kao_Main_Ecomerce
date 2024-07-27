@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useViewProductReviewsQuery } from "@/services/apiSlice";
 import moment from "moment";
 import { useSelector } from "react-redux";

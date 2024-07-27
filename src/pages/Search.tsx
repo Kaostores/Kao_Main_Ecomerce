@@ -1,5 +1,4 @@
 import CardComp from "@/components/commons/CardComp";
-import BrandsComp from "@/components/commons/BrandsComp";
 import { useViewAllProductsQuery } from "@/services/apiSlice";
 import ProductSkeleton from "@/components/skeleton/ProductSkeleton";
 import FilterComponent from "@/components/FilteredSearch";
