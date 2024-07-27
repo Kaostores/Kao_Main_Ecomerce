@@ -5,8 +5,6 @@ import { FaStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 const StarRating = ({ id }: any) => {
-	const [rating] = useState(4);
-
 	const { data } = useViewProductReviewsQuery({ product_id: id });
 	const [overallRating, setOverallRating] = useState(0);
 	const user = useSelector(

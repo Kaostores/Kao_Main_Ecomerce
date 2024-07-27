@@ -1,5 +1,3 @@
-import React from "react";
-
 const ProductSkeleton = () => {
 	return (
 		<div className='h-[370px] sm:w-[100%] pb-3 flex-shrink-0 bg-ascentBlue rounded-sm mb-4 animate-pulse'>

@@ -1,6 +1,3 @@
-import React from "react";
-import BrandsCompSkeleton from "../skeleton/BrandCompSkeleton";
-import { useGetAllCategoryQuery } from "@/services/apiSlice";
 import CategoriesCard from "../commons/CategoriesCard";
 import myData from "@/components/json/CategoriesData.json";
 

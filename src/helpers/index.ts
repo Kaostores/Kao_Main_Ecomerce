@@ -14,6 +14,12 @@ export function formatPrice(price: number) {
 	return price?.toFixed(0)?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+// Decoded HTML ENTITES
+export const decodeHTMLEntities = (text: string) => {
+	const doc = new DOMParser().parseFromString(text, "text/html");
+	return doc.documentElement.textContent;
+};
+
 // useLocalStorage.ts
 import { useState } from "react";
 

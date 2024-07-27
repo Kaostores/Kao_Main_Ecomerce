@@ -1,4 +1,3 @@
-import img from "../../assets/watch.png";
 import { RiDeleteBin6Line, RiShoppingCartLine } from "react-icons/ri";
 import Recomended from "./Subpages/Recomended";
 import { IoIosArrowBack } from "react-icons/io";

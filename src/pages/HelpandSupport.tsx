@@ -1,7 +1,6 @@
 import SideNav from "./SideNav";
 import Mobilenav from "./Mobilenav";
 import HelpHero from "@/components/HelpHero";
-import HomeSectionAtm from "@/components/HomeSectionAtm";
 
 const HelpandSupport = () => {
 	return (

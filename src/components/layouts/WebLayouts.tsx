@@ -1,5 +1,5 @@
 import Header from "../blocks/Header";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "@/components/blocks/Footer";
 import HomeSectionAtm from "../HomeSectionAtm";
 import ScrollToTop from "@/utils/ScrollToTop";
@@ -7,7 +7,7 @@ import Breadcrumbs from "@/routes/BreadCrumb";
 
 const WebLayouts = () => {
 	const location = useLocation();
-	const navigate = useNavigate();
+
 	const active = location?.pathname;
 	return (
 		<ScrollToTop>

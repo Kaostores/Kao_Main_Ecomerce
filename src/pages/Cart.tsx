@@ -1,4 +1,3 @@
-import { GoChevronRight } from "react-icons/go";
 import im2 from "../../src/assets/adidas.png";
 import { HiTrash } from "react-icons/hi2";
 import { FaNairaSign } from "react-icons/fa6";

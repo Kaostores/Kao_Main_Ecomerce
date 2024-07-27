@@ -1,9 +1,9 @@
 import { BsStars } from "react-icons/bs";
-import pic2 from "@/assets/noto_fire.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import StarRating from "../StarRating";
 import { Link } from "react-router-dom";
 import pic3 from "../../assets/lenovo.png";
+import { decodeHTMLEntities } from "@/helpers";
 
 const CardComp = ({ deal, productId, isLoading, ...props }: any) => {
 	return (
@@ -44,7 +44,7 @@ const CardComp = ({ deal, productId, isLoading, ...props }: any) => {
 				</div>
 
 				<h2 className='ml-[10px] text-nowrap  text-[16px] sm:text-[12px] font-[600] mt-[15px] overflow-hidden whitespace-nowrap truncate '>
-					{props.name}
+					{decodeHTMLEntities(props?.name)}
 				</h2>
 
 				<div className='p-2'>

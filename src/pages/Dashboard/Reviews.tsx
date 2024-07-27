@@ -2,28 +2,21 @@ import { useState } from "react";
 import img from "../../assets/watch.png";
 import { IoIosArrowBack } from "react-icons/io";
 import ReviewPage from "./Subpages/ReviewPage";
-import { FaRegStar } from "react-icons/fa";
 import Recomended from "./Subpages/Recomended";
 import { useNavigate } from "react-router-dom";
 import { useViewAllMyReviewsQuery } from "@/services/apiSlice";
 
 const Reviews = () => {
 	const [show, setShow] = useState(false);
-	const [show2, setShow2] = useState(true);
+	const [, setShow2] = useState(true);
 	const [pending, setPending] = useState(true);
 	const [review, setReview] = useState(false);
-	const [selectedStars, setSelectedStars] = useState(0);
 
 	const { data, isLoading, isFetching } = useViewAllMyReviewsQuery({});
 
 	console.log("this is my review", data);
 
 	const Navigate = useNavigate();
-
-	const handleStarClick = (index: any) => {
-		const selectedStarsCount = index + 1;
-		setSelectedStars(selectedStarsCount);
-	};
 
 	const Reviewpage = () => {
 		setReview(true);
@@ -37,10 +30,7 @@ const Reviews = () => {
 		setShow(false);
 		setShow2(true);
 	};
-	const Toggle1 = () => {
-		setShow(true);
-		setShow2(false);
-	};
+
 	return (
 		<>
 			<div className='w-[100%] flex flex-col md:items-center sm:items-center bg-[#F4F4F4] md:bg-white sm:bg-white ml-[15px] md:ml-0 sm:ml-0 rounded-[8px]'>

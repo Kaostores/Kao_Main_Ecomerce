@@ -1,14 +1,13 @@
 import Hero from "@/components/Hero";
 import AdvertComp from "@/components/commons/AdvertComp";
-import BrandsComp from "@/components/commons/BrandsComp";
+
 import CardComp from "@/components/commons/CardComp";
-import CategoriesCard from "@/components/commons/CategoriesCard";
+
 import BrandData from "@/components/reuse/BrandData";
 import CategoriesData from "@/components/reuse/CategoriesData";
-import BrandsCompSkeleton from "@/components/skeleton/BrandCompSkeleton";
+
 import ProductSkeleton from "@/components/skeleton/ProductSkeleton";
 import {
-	useGetBrandsSpootlightQuery,
 	useGetHotSalesQuery,
 	useViewAllProductsQuery,
 } from "@/services/apiSlice";
