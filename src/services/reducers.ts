@@ -18,6 +18,12 @@ export interface AddressType {
 	city?: string;
 }
 
+interface SearchState {
+	query: string;
+	categoryID: string;
+	subCategoryID: string;
+}
+
 const initialState = {
 	currentUser: {} as UserDetails | any,
 	cart: [] as Array<any>,
@@ -46,9 +52,13 @@ export const Reducers = createSlice({
 		},
 		addToCart: (state, action: PayloadAction<any>) => {
 			const itemToAdd = action.payload;
+
+			console.log("itttttt", itemToAdd);
 			const existingItem = state.cart.find(
 				(item) =>
-					item.id === itemToAdd.id && item.variant.id === itemToAdd.variant.id,
+					item.id === itemToAdd.id ||
+					(item.productID === itemToAdd.productID &&
+						item.variant.id === itemToAdd.variant.id),
 			);
 
 			if (existingItem) {
@@ -57,9 +67,7 @@ export const Reducers = createSlice({
 				state.cart.push({ ...itemToAdd, cartQuantity: 1 });
 			}
 
-			state.totalPrice += itemToAdd.variant
-				? itemToAdd.variant.price
-				: itemToAdd.price;
+			state.totalPrice += itemToAdd.price;
 			state.totalQuantity += 1;
 		},
 
@@ -72,13 +80,11 @@ export const Reducers = createSlice({
 				const item = state.cart[index];
 				if (item.cartQuantity > 1) {
 					item.cartQuantity -= 1; // Decrement the quantity
-					const amountToDeduct = item.variant ? item.variant.price : item.price;
+					const amountToDeduct = item.price;
 					state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct); // Ensure totalPrice does not go negative
 					state.totalQuantity -= 1; // Decrement the total item count
 				} else {
-					const amountToDeduct =
-						(item.variant ? item.variant.price : item.price) *
-						item.cartQuantity;
+					const amountToDeduct = item.price * item.cartQuantity;
 					state.cart.splice(index, 1); // Remove the item from the cart
 					state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct); // Ensure totalPrice does not go negative
 					state.totalQuantity -= item.cartQuantity; // Adjust the total item count

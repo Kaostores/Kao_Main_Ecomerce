@@ -4,18 +4,27 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { MdOutlineClear } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { useGetAllCategoryAndSubCategoryQuery } from "@/services/apiSlice";
+import {
+	useGetAllAdminCategoryAndSubCategoryQuery,
+	useGetAllAdminCategoryQuery,
+} from "@/services/apiSlice";
+import { useDispatch } from "react-redux";
+import useUpdateUrlParams from "../SearchRoute";
 
 const MegaMenu = ({ setShowMegaMenu }: any) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const updateUrlParams = useUpdateUrlParams();
 
 	const {
 		data: catData,
 
 		isLoading,
-	} = useGetAllCategoryAndSubCategoryQuery({});
+	} = useGetAllAdminCategoryAndSubCategoryQuery({});
 
-	console.log("this is the sub categorybvz", catData);
+	// const { data: adminCategory } = useGetAllAdminCategoryQuery({});
+
+	// console.log("this is the sub categorybvz", catData);
 
 	return (
 		<div
@@ -95,7 +104,7 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 										<div
 											key={index}
 											onClick={() => {
-												navigate("/search");
+												updateUrlParams({ sub_category_id: el?.id });
 											}}
 											className='mb-5 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 											{el?.name}
@@ -111,3 +120,43 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 };
 
 export default MegaMenu;
+
+//
+{
+	/* <> */
+}
+{
+	/* {[...catData?.data] */
+}
+// ?.sort(
+// (a: any, b: any) => a?.sub_categories?.length - b.sub_categories?.length,
+// )
+// .map((props: any, i: any) => (
+// <div key={i} className='text-[15px] md:text-[13px]'>
+{
+	/* <div className='font-bold mb-3 mt-5'>{props?.name}</div> */
+}
+{
+	/* {props?.sub_categories?.map((el: any, index: any) => ( */
+}
+// <div
+// key={index}
+// onClick={() => {
+// navigate("/search");
+// }}
+// className='mb-5 hover:underline transition ease-in-out delay-150
+// cursor-pointer'>
+{
+	/* {el?.name} */
+}
+{
+	/* </div> */
+}
+// ))}
+{
+	/* </div> */
+}
+// ))}
+{
+	/* </>; */
+}

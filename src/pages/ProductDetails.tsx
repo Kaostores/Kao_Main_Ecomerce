@@ -41,6 +41,8 @@ const ProductDetails = () => {
 	const [selectedId, setSelectedId] = useState("");
 	const [imageLoading, setImageLoading] = useState(true);
 
+	console.log("this is product data", productData);
+
 	const dispatch = UseAppDispach();
 	const globalstate = useSelector(
 		(state: any) => state?.persistedReducer?.cart,
@@ -63,7 +65,9 @@ const ProductDetails = () => {
 			addToCart({
 				id: variant.id,
 				productName: productData?.data?.name,
+				productID: productData?.data?.id,
 				media: productData?.data?.media[0],
+				price: productData?.data?.discountPrice,
 				variant,
 				quantity: 1, // This will be handled in the reducer
 			}),
@@ -156,7 +160,7 @@ const ProductDetails = () => {
 										// console.log("this is it", props);
 									}}>
 									<img
-										src={props?.link}
+										src={props?.url}
 										alt=''
 										className='xl:w-[50px] md:w-[50px] lg:w-[50px] sm:w-[30px]'
 									/>
@@ -170,8 +174,8 @@ const ProductDetails = () => {
 							<img
 								src={
 									selectedImage !== null
-										? selectedImage?.link
-										: productData?.data?.media[0]?.link
+										? selectedImage?.url
+										: productData?.data?.media[0]?.url
 								}
 								alt=''
 								onLoad={() => setImageLoading(false)}
@@ -184,11 +188,15 @@ const ProductDetails = () => {
 					<div className='flex-1 flex  justify-center'>
 						<div
 							className={`mr-[50px] xxl:ml-[10px] xl:w-[35px] xxl:w-[45px] xxl:h-[45px] xl:h-[35px] lg:w-[35px] lg:h-[35px] md:w-[30px] md:h-[30px] bg-[#b1b0b098] rounded-[50%] xl:flex xxl:flex md:flex lg:flex justify-center items-center text-[18px] xxl:text-[24px] md:text-[15px] cursor-pointer sm:hidden ${
-								showLove ? "text-white" : "text-[red]"
+								productData?.data?.isBookmarked === false
+									? "text-white"
+									: "text-[red]"
 							}`}
 							onClick={() => {
-								handleNewBookMark();
-								loveBtn();
+								if (!productData?.data?.isBookmarked) {
+									handleNewBookMark();
+									loveBtn();
+								}
 							}}>
 							<BsHeartFill />
 						</div>
@@ -217,7 +225,7 @@ const ProductDetails = () => {
 								<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full my-[20px]'></div>
 							) : (
 								<div className='text-[20px] font-semibold my-[5px]'>
-									#{formatPrice(productData?.data?.price)}
+									#{formatPrice(productData?.data?.discountPrice)}
 								</div>
 							)}
 							<div className='flex flex-col'>
@@ -240,68 +248,26 @@ const ProductDetails = () => {
 									<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full mt-[5px]'></div>
 								) : (
 									<>
-										{productData?.data?.variants &&
-											productData.data.variants.some(
-												(variant: any) => variant.color,
-											) && (
-												<div className='mt-[15px] flex flex-col mb-[10px]'>
-													<div className='flex items-center'>
-														<p className='text-[14px]'>Color</p>
-													</div>
-
-													<div className='flex items-center mt-[5px]'>
-														{productData.data.variants.map(
-															(variant: any) =>
-																variant.color && (
-																	<div
-																		onClick={openVariant}
-																		key={variant.id}
-																		className='w-[48px] h-[28px] rounded-sm mr-[5px] border border-[#E0E0E0] p-[3px] cursor-pointer'>
-																		<div
-																			className='w-[100%] h-[100%] rounded-sm'
-																			style={{
-																				backgroundColor: getColorFromCode(
-																					variant.color,
-																				),
-																			}}></div>
-																	</div>
-																),
-														)}
-													</div>
+										{productData?.data?.proVariants && (
+											<div className='mt-[15px] flex flex-col mb-[10px]'>
+												<div className='flex items-center'>
+													<p className='text-[14px]'>Variations</p>
 												</div>
-											)}
-									</>
-								)}
 
-								{isProductLoading ? (
-									<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full mt-[5px]'></div>
-								) : (
-									<>
-										{productData?.data?.variants &&
-											productData.data.variants.some(
-												(variant: any) => variant.size,
-											) && (
-												<div className='mt-[15px] flex flex-col'>
-													<div className='flex items-center'>
-														<p className='text-[14px]'>Size</p>
-													</div>
-													<div className='flex items-center mt-[5px]'>
-														{productData.data.variants.map(
-															(variant: any) =>
-																variant.size && (
-																	<div
-																		onClick={openVariant}
-																		key={variant.id}
-																		className='w-[48px] h-[28px] rounded-sm mr-[5px] border border-[#E0E0E0] p-[3px] cursor-pointer'>
-																		<div className='w-[100%] h-[100%] flex justify-center items-center rounded-sm'>
-																			{variant.size}
-																		</div>
-																	</div>
-																),
-														)}
-													</div>
+												<div className='flex items-center mt-[5px]'>
+													{productData.data.proVariants.map((variant: any) => (
+														<div
+															onClick={openVariant}
+															key={variant.id}
+															className='min-w-[48px] h-[28px] rounded-sm mr-[5px] border border-[#E0E0E0] p-[3px] cursor-pointer text-[14px]'>
+															<div className='w-[100%] h-[100%] rounded-sm'>
+																{variant?.name}
+															</div>
+														</div>
+													))}
 												</div>
-											)}
+											</div>
+										)}
 									</>
 								)}
 
@@ -325,39 +291,48 @@ const ProductDetails = () => {
 														</div>
 													</div>
 
-													{productData?.data?.variants?.map((variant: any) => (
-														<div className='w-[100%] flex flex-col'>
-															<div
-																key={variant?.id}
-																className='w-[100%] flex items-center justify-between mt-[25px] mb-[15px]'>
-																<div className='flex flex-col'>
-																	<div className='text-[18px] sm:text-[16px]'>
-																		{variant?.title} {variant?.color}{" "}
-																		{variant?.size}
-																	</div>
-																	<div className='text-[14px] sm:text-[12px] mt-[1px] font-bold'>
-																		₦ {formatPrice(variant?.price)}
-																	</div>
-																</div>
-
+													{productData?.data?.proVariants?.map(
+														(variant: any) => (
+															<div className='w-[100%] flex flex-col'>
 																<div
-																	onClick={() => handleDecrement(variant)}
-																	className='flex items-center'>
-																	<div className='w-[30px] h-[30px] sm:w-[20px]  sm:h-[20px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
-																		-
+																	key={variant?.id}
+																	className='w-[100%] flex items-center justify-between mt-[25px] mb-[15px]'>
+																	<div className='flex flex-col'>
+																		<div className='text-[18px] sm:text-[16px]'>
+																			{variant?.name}
+																		</div>
+																		<div className='text-[14px] sm:text-[12px] mt-[1px] font-bold whitespace-nowrap flex gap-2'>
+																			₦{" "}
+																			{formatPrice(
+																				productData?.data?.discountPrice,
+																			)}{" "}
+																			<div className='line-through text-gray-400'>
+																				{formatPrice(
+																					productData?.data?.originalPrice,
+																				)}{" "}
+																			</div>
+																		</div>
 																	</div>
-																	<div className='w-[30px] h-[30px] rounded-sm flex justify-center items-center mr-[10px]'>
-																		{findQuantity(variant.id)}
-																	</div>
+
 																	<div
-																		onClick={() => handleIncrement(variant)}
-																		className='w-[30px] h-[30px] sm:w-[20px] sm:h-[20px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
-																		+
+																		onClick={() => handleDecrement(variant)}
+																		className='flex items-center'>
+																		<div className='w-[30px] h-[30px] sm:w-[20px]  sm:h-[20px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
+																			-
+																		</div>
+																		<div className='w-[30px] h-[30px] rounded-sm flex justify-center items-center mr-[10px]'>
+																			{findQuantity(variant.id)}
+																		</div>
+																		<div
+																			onClick={() => handleIncrement(variant)}
+																			className='w-[30px] h-[30px] sm:w-[20px] sm:h-[20px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
+																			+
+																		</div>
 																	</div>
 																</div>
 															</div>
-														</div>
-													))}
+														),
+													)}
 													<div className='w-[100%] h-[1px] bg-[#d6d6d6] mt-[20px]'></div>
 													<div className='w-[100%] flex items-center mt-[15px] justify-between sm:flex-wrap'>
 														<button
@@ -390,17 +365,17 @@ const ProductDetails = () => {
 
 								<div
 									onClick={() => {
-										if (productData?.data?.variants?.length > 0) {
+										if (productData?.data?.proVariants?.length > 0) {
 											setShowVariant(true); // Show variant selection popup if variants exist
 										} else {
 											// If no variants, directly add the product to the cart
 											dispatch(
 												addToCart({
-													id: productData?.data?.id,
-													name: productData?.data?.name,
+													productName: productData?.data?.name,
+													productID: productData?.data?.id,
 													variant: null, // No variants, so set to null
-													price: productData?.data?.price,
-													image: productData?.data?.mainImage, // Use the main image of the product
+													price: productData?.data?.discountPrice,
+													media: productData?.data?.media[0], // Use the main image of the product
 													cartQuantity: 1, // Setting initial cart quantity
 												}),
 											);
@@ -444,7 +419,7 @@ const ProductDetails = () => {
 						</div>
 						<div className='text-[15px] text-[#535353] mr-[10px]'>Sold by</div>
 						<div className='text-[15px] font-semibold underline text-primary mr-[5px]'>
-							Olatunde
+							{productData?.data?.store?.vendor?.name}
 						</div>
 						<div className='w-[25px] h-[25px] text-[16px] mr-[10px] rounded-[50%] bg-[#0000ff77] flex justify-center items-center text-primary'>
 							<BiCheck />
@@ -544,13 +519,15 @@ const ProductDetails = () => {
 												<div>
 													<div> No Reviews for this product</div>
 
-													<h4
-														onClick={() => {
-															setShowReview(!showReview);
-														}}
-														className='text-primary text-[14px] mt-5  cursor-pointer font-[600] '>
-														Drop review
-													</h4>
+													{productData?.data?.canReview && (
+														<h4
+															onClick={() => {
+																setShowReview(!showReview);
+															}}
+															className='text-primary text-[14px] mt-5  cursor-pointer font-[600] '>
+															Drop review
+														</h4>
+													)}
 
 													{showReview && <ReviewPage />}
 												</div>

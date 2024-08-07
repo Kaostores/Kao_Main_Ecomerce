@@ -91,6 +91,9 @@ export const api = createApi({
 		getAllCategory: builder.query({
 			query: () => "/categories",
 		}),
+		getAllAdminCategory: builder.query({
+			query: () => "/admin/category",
+		}),
 
 		getAllSubCategory: builder.query({
 			query: (categoryId) => `/sub/category?category=${parseInt(categoryId)}`,
@@ -99,8 +102,9 @@ export const api = createApi({
 		getHotSales: builder.query({
 			query: () => "/settings/home/hot/sales",
 		}),
-		getAllCategoryAndSubCategory: builder.query({
-			query: () => "/categories/all",
+
+		getAllAdminCategoryAndSubCategory: builder.query({
+			query: () => "/admin/category/subs",
 		}),
 
 		AddNewBookmark: builder.mutation({
@@ -144,6 +148,11 @@ export const api = createApi({
 			query: (body) => `/customer/product/${body.product_id}/reviews`,
 			providesTags: ["reviews"],
 		}),
+
+		SearchProduct: builder.query({
+			query: (body) =>
+				`/customer/product/search?search=${body.query}&category_id=${body.categoryID}&sub_category_id=${body.subCategoryID}`,
+		}),
 	}),
 });
 
@@ -162,11 +171,13 @@ export const {
 	useGetAllCategoryQuery,
 	useGetAllSubCategoryQuery,
 	useGetHotSalesQuery,
-	useGetAllCategoryAndSubCategoryQuery,
+	useGetAllAdminCategoryAndSubCategoryQuery,
 	useAddNewBookmarkMutation,
 	useViewAllBookmarksQuery,
 	useDeleteNewBookmarkMutation,
 	useViewAllMyReviewsQuery,
 	useDropReviewMutation,
 	useViewProductReviewsQuery,
+	useSearchProductQuery,
+	useGetAllAdminCategoryQuery,
 } = api;

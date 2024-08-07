@@ -5,6 +5,8 @@ import ReviewPage from "./Subpages/ReviewPage";
 import Recomended from "./Subpages/Recomended";
 import { useNavigate } from "react-router-dom";
 import { useViewAllMyReviewsQuery } from "@/services/apiSlice";
+import ReviewSkeleton from "@/components/skeleton/ReviewsSkeleton";
+import EmptyData from "@/components/reuse/EmptyData";
 
 const Reviews = () => {
 	const [show, setShow] = useState(false);
@@ -105,7 +107,10 @@ const Reviews = () => {
 						) : null}
 
 						{isLoading || isFetching ? (
-							<div>Loading...</div>
+							<div className='w-full sm:w-[80%]'>
+								<ReviewSkeleton />
+								<ReviewSkeleton />
+							</div>
 						) : (
 							<>
 								{data?.data?.length >= 1 ? (
@@ -196,7 +201,9 @@ const Reviews = () => {
 										))}
 									</>
 								) : (
-									<div>No Review</div>
+									<div>
+										<EmptyData title={"No Review Found"} />
+									</div>
 								)}
 							</>
 						)}

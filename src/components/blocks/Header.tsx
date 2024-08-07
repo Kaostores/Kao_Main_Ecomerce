@@ -12,10 +12,12 @@ import { Link, useNavigate } from "react-router-dom";
 // import ShowToast from "../reuse/ShowToast";
 // import { useAppSelector } from "@/services/store";
 import { useSelector } from "react-redux";
-import { useGetAllCategoryQuery } from "@/services/apiSlice";
+import { useGetAllAdminCategoryQuery } from "@/services/apiSlice";
+import useUpdateUrlParams from "../SearchRoute";
 
 const Header = () => {
 	const User = useSelector((state: any) => state?.persistedReducer.currentUser);
+	const updateUrlParams = useUpdateUrlParams();
 
 	console.log("thjis the user", User);
 	// const dispatch = useDispatch();
@@ -59,7 +61,7 @@ const Header = () => {
 		data: catData,
 		isLoading: isCatLoading,
 		isFetching,
-	} = useGetAllCategoryQuery({});
+	} = useGetAllAdminCategoryQuery({});
 
 	// if (showMegaMenu) return <MegaMenu />;
 	return (
@@ -211,19 +213,18 @@ const Header = () => {
 						<></>
 					) : (
 						<>
-							{catData?.data && Object.values(catData.data).length > 0 ? (
-								Object.values(catData.data)
-									.slice(0, 7)
-									.map((props: any, index: number) => (
-										<div
-											key={index}
-											onClick={() => {
-												navigate("/search");
-											}}
-											className='text-lightGray cursor-pointer'>
-											{props}
-										</div>
-									))
+							{catData?.data?.length > 0 ? (
+								catData.data?.slice(0, 7)?.map((props: any, index: number) => (
+									<div
+										key={index}
+										onClick={() => {
+											updateUrlParams({ category_id: props?.id });
+											// navigate("/search");
+										}}
+										className='text-lightGray cursor-pointer uppercase'>
+										{props?.name}
+									</div>
+								))
 							) : (
 								<div className='space-y-4'>
 									<div className='bg-gray-300 h-4 w-full rounded animate-pulse'></div>

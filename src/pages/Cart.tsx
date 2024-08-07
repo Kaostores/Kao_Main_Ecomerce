@@ -49,6 +49,8 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 		}
 	};
 
+	console.log("this is the cart", cart);
+
 	const { data, isLoading } = useViewAllProductsQuery({});
 
 	const navigate = useNavigate();
@@ -78,8 +80,8 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 											<div className='xl:w-[100px] xl:h-[100px] lg:w-[100px] lg:h-[100px] md:w-[80px] md:h-[80px] sm:w-[60px] sm:h-[60px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff]'>
 												<img
 													src={
-														product?.media && product.media?.link
-															? product.media?.link
+														product?.media && product.media?.url
+															? product.media?.url
 															: im2
 													}
 													alt=''
@@ -88,8 +90,8 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 											</div>
 											<div className='flex flex-col justify-between md:h-[80px]'>
 												<div className='xl:text-[20px] md:text-[14px] font-semibold'>
-													{product.name} -{" "}
-													{product.variant?.title || "No Variant"}
+													{product.productName} -{" "}
+													{product.variant?.name || "No Variant"}
 												</div>
 												<div className='xl:text-[13px] md:text-[10px]'>
 													Brand{" "}
@@ -109,13 +111,7 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 														<FaNairaSign />
 													</div>
 													<div className='font-semibold text-[18px]'>
-														{product.variant
-															? formatPrice(
-																	product.variant.price * product.cartQuantity,
-															  )
-															: formatPrice(
-																	product.price * product.cartQuantity,
-															  )}
+														{formatPrice(product.price * product.cartQuantity)}
 													</div>
 												</div>
 												<div className='xl:w-[200px] pl-2 pr-2 rounded-md lg:w-[150px] md:w-[150px] flex justify-between items-center bg-ascentGray '>
@@ -163,8 +159,8 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 											<div className=' md:w-[80px] md:h-[80px] sm:w-[80px] sm:h-[100px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff]'>
 												<img
 													src={
-														product?.media && product.media?.link
-															? product.media?.link
+														product?.media && product.media?.url
+															? product.media?.url
 															: im2
 													}
 													alt=''
@@ -173,8 +169,8 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 											</div>
 											<div className='flex flex-col justify-between items-start'>
 												<div className=' font-semibold text-[14px]'>
-													{product.name} -{" "}
-													{product.variant?.title || "No Variant"}
+													{product.productName} -{" "}
+													{product.variant?.name || "No Variant"}
 												</div>
 												<div className='text-[9px]'>
 													Brand{" "}
@@ -189,14 +185,9 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 																	<FaNairaSign />
 																</div>
 																<div className='font-semibold text-[14px]'>
-																	{product.variant
-																		? formatPrice(
-																				product.variant.price *
-																					product.cartQuantity,
-																		  )
-																		: formatPrice(
-																				product.price * product.cartQuantity,
-																		  )}
+																	{formatPrice(
+																		product.price * product.cartQuantity,
+																	)}
 																</div>
 															</div>
 														</div>
@@ -314,7 +305,9 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 					</div>
 				)}
 				<div className='xl:flex flex-col mb-20 sm:hidden'>
-					<h3 className='mt-[80px] font-bold mb-3'>Saved items</h3>
+					{data?.data?.length > 0 && (
+						<h3 className='mt-[80px] font-bold mb-3'>Saved items</h3>
+					)}
 					<div className='w-[100%]'>
 						{isLoading && !data ? (
 							<div className='grid  grid-cols-4 gap-4 sm:grid-cols-none sm:flex sm:hiddden md:grid-cols-2 '>
