@@ -3,7 +3,7 @@ const CategoriesCard = ({ props }: any) => {
 	return (
 		<div className='  '>
 			<img
-				className='w-[100%] object-cover h-[120px] rounded-sm'
+				className='w-[100%] object-cover h-[120px] rounded-sm border'
 				src={props?.image}
 			/>
 			<div className='mt-3 text-center text-sm'>{props?.name}</div>

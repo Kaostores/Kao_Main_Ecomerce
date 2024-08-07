@@ -82,8 +82,7 @@ const ReviewPage = () => {
 			) : (
 				<button
 					onClick={onRatingSubmit}
-					className='w-[190px] sm:w-[100%] h-[43px] flex justify-center items-center text-[white] 
-bg-secondary mt-[30px] text-[14px] rounded-sm'>
+					className='w-[190px] sm:w-[100%] h-[43px] flex justify-center items-center text-[white] bg-secondary mt-[30px] text-[14px] rounded-sm'>
 					Save review
 				</button>
 			)}

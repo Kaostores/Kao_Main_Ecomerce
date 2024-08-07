@@ -13,8 +13,8 @@ const CardComp = ({ deal, productId, isLoading, ...props }: any) => {
 					<img
 						className='w-[100%] h-[100%] object-cover pt-10 rounded-sm'
 						src={
-							props?.media?.length > 0 && props.media[0].link
-								? props.media[0].link
+							props?.media?.length > 0 && props.media[0].url
+								? props.media[0].url
 								: pic3
 						}
 					/>
@@ -57,10 +57,10 @@ const CardComp = ({ deal, productId, isLoading, ...props }: any) => {
 						<div className='text-right  '>
 							<div className='flex font-bold'>
 								<div className='text-[10px] mt-2 mr-2 sm:mt-1 '>NGN </div>
-								{props.price?.toLocaleString()}
+								{props.discountPrice?.toLocaleString()}
 							</div>
 							<div className='line-through text-[12px] text-cardBrown font-bold'>
-								35,000
+								{props.originalPrice?.toLocaleString()}
 							</div>
 						</div>
 					</div>

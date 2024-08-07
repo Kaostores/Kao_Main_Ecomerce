@@ -9,6 +9,8 @@ import {
 import img2 from "../../assets/nopending.png";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReviewSkeleton from "@/components/skeleton/ReviewsSkeleton";
+import EmptyData from "@/components/reuse/EmptyData";
 
 const Items = () => {
 	const Navigate = useNavigate();
@@ -45,7 +47,10 @@ const Items = () => {
 			<div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[4px] sm:mt-0'></div>
 
 			{isLoading || isFetching ? (
-				<>Loading...</>
+				<div className='w-full sm:w-[80%]'>
+					<ReviewSkeleton />
+					<ReviewSkeleton />
+				</div>
 			) : (
 				<>
 					{data?.data?.length >= 1 ? (
@@ -57,8 +62,7 @@ const Items = () => {
 										<div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
 											<img
 												src={
-													props?.product?.media &&
-													props?.product?.media[0]?.link
+													props?.product?.media && props?.product?.media[0]?.url
 												}
 												alt=''
 												className='h-[60px]'
@@ -119,7 +123,7 @@ const Items = () => {
 									<div className='flex items-center sm:hidden'>
 										<p className='text-[10px] font-[700]'>₦</p>{" "}
 										<h4 className='text-[17px] font-[600] ml-[3px]'>
-											{props?.product?.price?.toLocaleString()}
+											{props?.product?.discountPrice?.toLocaleString()}
 										</h4>
 									</div>
 								</div>
@@ -127,16 +131,7 @@ const Items = () => {
 						</>
 					) : (
 						<>
-							<div className='w-[100%] h-[100%] flex justify-center items-center flex-col pt-[70px]'>
-								<img
-									src={img2}
-									alt=''
-									className='h-[210px] md:h-[170px] sm:h-[130px]'
-								/>
-								<p className='mt-[40px] font-[600] text-[20px] md:text-[18px] sm:text-[14px]'>
-									You have no Saved Item
-								</p>
-							</div>
+							<EmptyData title={"You have no Saved Item"} />
 						</>
 					)}
 				</>

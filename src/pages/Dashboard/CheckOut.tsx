@@ -30,24 +30,23 @@ const Checkout = () => {
 	const [addrData, setAddrData] = useState<any>();
 	const [isEditing, setIsEditing] = useState(false);
 	const [showAllAddresses, setShowAllAddresses] = useState(false);
-	const [showModal, setShowModal] = useState(false)
-	
+	const [showModal, setShowModal] = useState(false);
 
 	const ToggleModal = () => {
-		if(selectedAddressId === ""){
-			ShowToast(false, 'You have not selected an address')
-		}else{
+		if (selectedAddressId === "") {
+			ShowToast(false, "You have not selected an address");
+		} else {
 			setShowModal(!showModal);
 		}
-	}
+	};
 
 	const CloseModal = () => {
-		setShowModal(false)
-	}
+		setShowModal(false);
+	};
 
 	const toggleAddressesVisibility = () => {
-        setShowAllAddresses(!showAllAddresses);
-    };
+		setShowAllAddresses(!showAllAddresses);
+	};
 
 	console.log("all addresss", addressData);
 
@@ -58,8 +57,8 @@ const Checkout = () => {
 		try {
 			await updateAddress({ addressId: editAddressId, addressData: formData });
 			setEditAddressId("");
-			setAddressFormData(null); 
-			setShowAddress(true); 
+			setAddressFormData(null);
+			setShowAddress(true);
 			setIsEditing(true);
 		} catch (error) {
 			console.error("Error updating address:", error);
@@ -81,12 +80,11 @@ const Checkout = () => {
 		return () => clearTimeout(timer);
 	}, [showModal]);
 
-
 	useEffect(() => {
 		if (addressData?.data?.length > 0) {
 			setSelectedAddressId(addressData.data[0].id);
 		}
-	}, [addressData]); 
+	}, [addressData]);
 
 	const cartItems = useAppSelector((state) => state.persistedReducer.cart);
 	const addresses = useAppSelector((state) => state.persistedReducer.addresses);
@@ -99,7 +97,7 @@ const Checkout = () => {
 		setSelectedAddressId(id);
 	};
 
-	// console.log("selected address", selectedAddressId);
+	// console.log("carrrrrrrrrrrrt", cartItems);
 
 	const [showAllItems, setShowAllItems] = useState(false);
 
@@ -114,7 +112,7 @@ const Checkout = () => {
 		setShowDet(!showDet);
 	};
 
-	const [items,] = useState([
+	const [items] = useState([
 		{
 			id: 1,
 			name: "Pay with USDT",
@@ -184,43 +182,45 @@ const Checkout = () => {
 
 							{addressData?.data?.length >= 1 ? (
 								<>
-									{addressData?.data?.slice(0, showAllAddresses ? addressData?.data?.length : 1).map((address: any) => (
-										<div
-											key={address.id}
-											className='flex cursor-pointer mb-[10px] justify-between'>
-											<div className='flex'>
-												<div>
-													<input
-														type='radio'
-														value={address.id}
-														checked={selectedAddressId === address.id}
-														onChange={() => handleAddressSelect(address.id)}
-													/>
-												</div>
-												<div className='flex flex-col ml-[15px]'>
-													<div className='font-semibold mb-[5px] '>
-														{address.fullname}
-													</div>
-													<div className='text-[13px] text-[#535353]'>
-														{`${address.address}, ${address.city}, ${address.state}`}
-													</div>
-												</div>
-											</div>
+									{addressData?.data
+										?.slice(0, showAllAddresses ? addressData?.data?.length : 1)
+										.map((address: any) => (
 											<div
-												// onClick={() => handleEditAddress(address.id)}
-												onClick={() => {
-													setActionType("edit");
-													setAddrData(address);
-													toggleBtn();
-													setIsEditing(true);
-												}}
-												className='ml-[5px] text-primary font-semibold text-[16px]'>
-												<MdModeEdit />
+												key={address.id}
+												className='flex cursor-pointer mb-[10px] justify-between'>
+												<div className='flex'>
+													<div>
+														<input
+															type='radio'
+															value={address.id}
+															checked={selectedAddressId === address.id}
+															onChange={() => handleAddressSelect(address.id)}
+														/>
+													</div>
+													<div className='flex flex-col ml-[15px]'>
+														<div className='font-semibold mb-[5px] '>
+															{address.fullname}
+														</div>
+														<div className='text-[13px] text-[#535353]'>
+															{`${address.address}, ${address.city}, ${address.state}`}
+														</div>
+													</div>
+												</div>
+												<div
+													// onClick={() => handleEditAddress(address.id)}
+													onClick={() => {
+														setActionType("edit");
+														setAddrData(address);
+														toggleBtn();
+														setIsEditing(true);
+													}}
+													className='ml-[5px] text-primary font-semibold text-[16px]'>
+													<MdModeEdit />
+												</div>
 											</div>
-										</div>
-									))}
-									 <div className='w-[100%] flex justify-center items-center'>
-											{addressData?.data?.length > 1 && (
+										))}
+									<div className='w-[100%] flex justify-center items-center'>
+										{addressData?.data?.length > 1 && (
 											<button
 												onClick={toggleAddressesVisibility}
 												className='w-[110px] mt-[10px] h-[35px] text-[15px] rounded-sm cursor-pointer bg-secondary text-white'>
@@ -272,7 +272,9 @@ const Checkout = () => {
 										className='ml-[5px] text-primary font-semibold text-[15px] sm:hidden cursor-pointer'>
 										Modify items
 									</div>
-									<div onClick={() => navigate(-1)} className='ml-[5px] text-primary font-semibold text-[13px] xl:hidden md:hidden lg:hidden'>
+									<div
+										onClick={() => navigate(-1)}
+										className='ml-[5px] text-primary font-semibold text-[13px] xl:hidden md:hidden lg:hidden'>
 										Edit
 									</div>
 								</div>
@@ -289,14 +291,15 @@ const Checkout = () => {
 										className='flex h-[100px] md:w-[300px] mb-[15px]'>
 										<div className='xl:w-[100px] xl:h-[100px] lg:w-[100px] lg:h-[100px] md:w-[80px] md:h-[80px] sm:w-[90px] sm:h-[100px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff]'>
 											<img
-												src={im2}
+												src={item?.media ? item?.media?.url : im2}
 												alt=''
 												className='xl:w-[50px] md:w-[30px] lg:w-[50px] sm:w-[50px]'
 											/>
 										</div>
 										<div className='flex flex-col md:h-[80px]'>
 											<div className='xl:text-[20px] sm:text-[14px] md:text-[14px] font-semibold mb-[5px]'>
-												{item.name} - {item.variant?.title || "No Variant"}
+												{item.productName} -{" "}
+												{item.variant?.name || "No Variant"}
 											</div>
 											<div className='xl:text-[13px] md:text-[10px] sm:text-[9px]'>
 												Brand{" "}
@@ -431,7 +434,9 @@ const Checkout = () => {
 								</div>
 							) : null}
 							{showCheckOut ? null : (
-								<div onClick={ToggleModal} className='w-[100%] sm:flex justify-center items-center text-white py-[10px] bg-secondary mt-[20px] md:hidden xl:hidden lg:hidden'>
+								<div
+									onClick={ToggleModal}
+									className='w-[100%] sm:flex justify-center items-center text-white py-[10px] bg-secondary mt-[20px] md:hidden xl:hidden lg:hidden'>
 									<div>Checkout</div>
 								</div>
 							)}
@@ -500,33 +505,46 @@ const Checkout = () => {
 								</div>
 							</div>
 						</div>
-						<button onClick={ToggleModal} className={`w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white sm:hidden py-[10px] rounded-sm mt-[30px] ${isEditing ? 'bg-[#B4B4B4] cursor-not-allowed' : 'bg-secondary cursor-pointer'}`}>
+						<button
+							onClick={ToggleModal}
+							className={`w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white sm:hidden py-[10px] rounded-sm mt-[30px] ${
+								isEditing
+									? "bg-[#B4B4B4] cursor-not-allowed"
+									: "bg-secondary cursor-pointer"
+							}`}>
 							Checkout
 						</button>
 					</div>
 				</div>
 			</div>
 
-			{showModal  ? (
-				<div className="w-[100vw] h-[100vh] bg-[rgba(0,0,0,0.5)] sm:pl-[20px] sm:pr-[20px] flex justify-center items-center fixed top-0 left-0">
-					<div className="w-[35%] md:w-[55%] sm:w-[100%] relative p-[20px] pt-[40px] pb-[40px] bg-[#fff] rounded-md flex flex-col justify-center items-center">
-						<h3 className="text-[16px] sm:text-[14px] text-center font-[600]">Are you sure you want to CheckOut❓</h3>
+			{showModal ? (
+				<div className='w-[100vw] h-[100vh] bg-[rgba(0,0,0,0.5)] sm:pl-[20px] sm:pr-[20px] flex justify-center items-center fixed top-0 left-0'>
+					<div className='w-[35%] md:w-[55%] sm:w-[100%] relative p-[20px] pt-[40px] pb-[40px] bg-[#fff] rounded-md flex flex-col justify-center items-center'>
+						<h3 className='text-[16px] sm:text-[14px] text-center font-[600]'>
+							Are you sure you want to CheckOut❓
+						</h3>
 
-						<div className="w-[100%] flex sm:flex-wrap items-center mt-[30px] justify-between">
-						<button onClick={ToggleModal} className={`w-[45%] sm:w-[100%] sm:mb-[10px] xl:flex lg:flex md:flex justify-center items-center text-white bg-secondary cursor-pointer py-[10px] rounded-sm mt-[30px] sm:mt-0`}>
-							No
-						</button>
+						<div className='w-[100%] flex sm:flex-wrap items-center mt-[30px] justify-between'>
+							<button
+								onClick={ToggleModal}
+								className={`w-[45%] sm:w-[100%] sm:mb-[10px] xl:flex lg:flex md:flex justify-center items-center text-white bg-secondary cursor-pointer py-[10px] rounded-sm mt-[30px] sm:mt-0`}>
+								No
+							</button>
 
-						<div className="w-[45%] mt-[10px] sm:mt-0 sm:w-[100%]">
-							<FlutterWavePayment
-							amount={totalPrice}
-							cartItems={cartItems}
-							addressId={selectedAddressId}
-							disabled={isEditing} 
+							<div className='w-[45%] mt-[10px] sm:mt-0 sm:w-[100%]'>
+								<FlutterWavePayment
+									amount={totalPrice}
+									cartItems={cartItems}
+									addressId={selectedAddressId}
+									disabled={isEditing}
+								/>
+							</div>
+						</div>
+						<IoMdClose
+							onClick={CloseModal}
+							className='absolute top-[20px] sm:top-[10px] right-[30px] sm:right-[10px] text-[20px]'
 						/>
-						</div>
-						</div>
-						<IoMdClose onClick={CloseModal} className="absolute top-[20px] sm:top-[10px] right-[30px] sm:right-[10px] text-[20px]"/>
 					</div>
 				</div>
 			) : null}

@@ -1,7 +1,10 @@
-import { useGetAllCategoryQuery } from "@/services/apiSlice";
 import React, { useState } from "react";
+
 import { BsStarFill } from "react-icons/bs";
 import { IoStarOutline } from "react-icons/io5";
+import { useGetAllAdminCategoryQuery } from "@/services/apiSlice";
+import { useSearchParams } from "react-router-dom";
+import useUpdateUrlParams from "./SearchRoute";
 
 interface FilterOptionProps {
 	label: string;
@@ -43,14 +46,28 @@ const FilterSection: React.FC<FilterSectionProps> = ({
 }) => (
 	<div className='flex flex-col items-start mb-[20px]'>
 		<div className='text-[17px] font-bold mb-[5px]'>{title}</div>
-		{options.map((option) => (
-			<FilterOption
-				key={option.value}
-				label={option.label}
-				isChecked={activeOption === option.value}
-				onChange={() => onChange(option.value)}
-			/>
-		))}
+
+		{options?.length > 0 ? (
+			<>
+				{options.map((option) => (
+					<FilterOption
+						key={option.value}
+						label={option.label}
+						isChecked={activeOption === option.value}
+						onChange={() => onChange(option.value)}
+					/>
+				))}
+			</>
+		) : (
+			<div className='animate-pulse'>
+				{" "}
+				<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-40 mb-4'></div>
+				<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-40 mb-4'></div>
+				<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-40 mb-4'></div>
+				<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-40 mb-4'></div>
+				<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-40 mb-4'></div>
+			</div>
+		)}
 	</div>
 );
 
@@ -114,24 +131,23 @@ const RatingSection: React.FC<RatingSectionProps> = ({
 );
 
 const FilterComponent: React.FC<any> = ({ classNames }: any) => {
-	const [isActive, setIsActive] = useState<string>("opt1");
+	const [searchParams] = useSearchParams();
+	const activeCategoryID = searchParams.get("category_id") || "";
+
 	const [isActive2, setIsActive2] = useState<string>("opt4");
 	const [isActive3, setIsActive3] = useState<string>("opt9");
 	const [isActive4, setIsActive4] = useState<string>("opt12");
 
-	const { data: catData } = useGetAllCategoryQuery({});
+	const { data: catData } = useGetAllAdminCategoryQuery({});
 
-	const categoryOptions = Object.keys(catData?.data || {}).map((key) => ({
-		label: catData?.data[key],
-		value: key,
-	}));
-	//
-	// const categoryOptions = [
-	// { label: "Phone and Tablet", value: "opt1" },
-	// { label: "Electronic", value: "opt2" },
-	// { label: "Accessories", value: "opt3" },
-	// ];
-	//
+	const categoryOptions =
+		catData?.data?.length > 0
+			? catData?.data?.map((key: any) => ({
+					label: key?.name,
+					value: key?.id,
+			  }))
+			: null;
+
 	const priceOptions = [
 		{ label: "NGN 1,000 - NGN 10,000", value: "opt4" },
 		{ label: "NGN 10,000 - NGN 20,000", value: "opt5" },
@@ -146,7 +162,12 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 		{ label: "Unisex", value: "opt11" },
 	];
 
-	console.log("na cat data", catData);
+	const updateUrlParams = useUpdateUrlParams();
+
+	const handleCategoryChange = (value: string) => {
+		console.log("Selected Category:", value);
+		updateUrlParams({ category_id: value });
+	};
 
 	return (
 		<div
@@ -154,8 +175,8 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 			<FilterSection
 				title='Category'
 				options={categoryOptions}
-				activeOption={isActive}
-				onChange={setIsActive}
+				activeOption={activeCategoryID}
+				onChange={handleCategoryChange}
 			/>
 			<FilterSection
 				title='Price Range'

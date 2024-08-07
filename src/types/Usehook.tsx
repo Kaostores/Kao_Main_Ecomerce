@@ -25,6 +25,10 @@ interface CartItem {
 	};
 	quantity: number;
 	coupon?: string;
+	productID: any;
+	id: any;
+	productName: any;
+	price: any;
 }
 
 interface AddressType {
@@ -40,13 +44,12 @@ interface FlutterWavePaymentProps {
 	cartItems: CartItem[];
 	addressId: any;
 	disabled: boolean;
-	
 }
 
 export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
 	amount,
 	addressId,
-	disabled
+	disabled,
 }) => {
 	const [createOrder] = useCreateOrderMutation();
 	const { user, cartItems } = useSelector((state: RootState) => ({
@@ -82,18 +85,24 @@ export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
 				response.charge_response_code === "00"
 			) {
 				const orderData = {
-					items: cartItems.map((cart) => ({
-						variant: cart.variant.id,
+					cart: cartItems.map((cart) => ({
+						variant: cart.variant === null ? null : cart.id,
+						productID: cart?.productID,
+						productName: cart?.productName,
 						quantity: cart.quantity,
-						coupon: cart.coupon || "",
+						price: cart?.price,
 					})),
 
-					address: addressId,
-					notes: "Order created after successful payment",
 					tx_ref: response?.tx_ref,
+					totalPrice: amount,
+					orderTotal: amount,
+					paymentMethod: "prepaid",
+					couponCode: "",
+					shippingAddress: addressId, //This is the id of the one of the customer addressses
+					orderNote: "Additional notes about the order",
 				};
 
-				console.log("response", response)
+				console.log("response", response);
 
 				createOrder(orderData)
 					.unwrap()
@@ -123,13 +132,13 @@ export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
 		<div className='w-full mt-2'>
 			<FlutterWaveButton
 				className={`w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white py-[10px] rounded-sm mt-[20px] sm:mt-[0px] ${
-          disabled || amount < 100 ? 'bg-[#B4B4B4] cursor-not-allowed' : 'bg-secondary cursor-pointer'
-        }`}
+					disabled || amount < 100
+						? "bg-[#B4B4B4] cursor-not-allowed"
+						: "bg-secondary cursor-pointer"
+				}`}
 				text='yes'
 				{...config}
-				disabled={disabled || amount < 100}>
-
-			</FlutterWaveButton>
+				disabled={disabled || amount < 100}></FlutterWaveButton>
 			{amount < 100 && <p>Amount should be at least 100.</p>}
 		</div>
 	);
