@@ -22,6 +22,7 @@ export const api = createApi({
 		"Addresses",
 		"bookmark",
 		"reviews",
+		"cart",
 	],
 	endpoints: (builder) => ({
 		viewAllProducts: builder.query({
@@ -153,6 +154,64 @@ export const api = createApi({
 			query: (body) =>
 				`/customer/product/search?search=${body.query}&category_id=${body.categoryID}&sub_category_id=${body.subCategoryID}`,
 		}),
+
+		AddCartCustomer: builder.mutation({
+			query: (body) => ({
+				url: `/customer/cart/add`,
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["cart"],
+		}),
+		RemoveCartCustomer: builder.mutation({
+			query: (body) => ({
+				url: `/customer/cart/remove/${body.product_id}`,
+				method: "DELETE",
+				body: body,
+			}),
+			invalidatesTags: ["cart"],
+		}),
+
+		UpdateCartCustomer: builder.mutation({
+			query: (body) => ({
+				url: `/customer/cart/update`,
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["cart"],
+		}),
+
+		ViewAllCartCustomer: builder.query({
+			query: () => "/customer/cart",
+			providesTags: ["cart"],
+		}),
+
+		ApplyCoupon: builder.mutation({
+			query: (body) => ({
+				url: `/customer/cart/apply/coupon`,
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["cart"],
+		}),
+
+		verifyPay: builder.mutation({
+			query: (body) => ({
+				url: `/customer/cart/payment/verify`,
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["cart"],
+		}),
+
+		ShippmentAddress: builder.mutation({
+			query: (body) => ({
+				url: `/customer/cart/shipping/address`,
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["cart"],
+		}),
 	}),
 });
 
@@ -180,4 +239,11 @@ export const {
 	useViewProductReviewsQuery,
 	useSearchProductQuery,
 	useGetAllAdminCategoryQuery,
+	useAddCartCustomerMutation,
+	useViewAllCartCustomerQuery,
+	useRemoveCartCustomerMutation,
+	useUpdateCartCustomerMutation,
+	useApplyCouponMutation,
+	useVerifyPayMutation,
+	useShippmentAddressMutation,
 } = api;

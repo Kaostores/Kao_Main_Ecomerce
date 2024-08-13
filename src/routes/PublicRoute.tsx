@@ -15,13 +15,17 @@ import HelpandSupport from "@/pages/HelpandSupport";
 import Contact from "@/pages/Contact";
 import SearchPage from "@/pages/Search";
 import OrderDetails from "@/pages/Dashboard/Subpages/OrderDetails";
+import PaymentSuccess from "@/pages/Dashboard/PaymentSuccess";
 
 type PublicRouteProps = {
-    openLoginDialog: () => void;
-    openRegisterDialog: () => void;
+	openLoginDialog: () => void;
+	openRegisterDialog: () => void;
 };
 
-const PublicRoute = ({openLoginDialog, openRegisterDialog}: PublicRouteProps) => {
+const PublicRoute = ({
+	openLoginDialog,
+	openRegisterDialog,
+}: PublicRouteProps) => {
 	return [
 		{
 			path: "/",
@@ -38,7 +42,7 @@ const PublicRoute = ({openLoginDialog, openRegisterDialog}: PublicRouteProps) =>
 				},
 				{
 					path: "help&support",
-					element: <HelpandSupport />
+					element: <HelpandSupport />,
 				},
 
 				{
@@ -55,7 +59,12 @@ const PublicRoute = ({openLoginDialog, openRegisterDialog}: PublicRouteProps) =>
 					children: [
 						{
 							index: true,
-							element: <Cart openLoginDialog={openLoginDialog} openRegisterDialog={openRegisterDialog}/>,
+							element: (
+								<Cart
+									openLoginDialog={openLoginDialog}
+									openRegisterDialog={openRegisterDialog}
+								/>
+							),
 						},
 
 						{
@@ -84,7 +93,7 @@ const PublicRoute = ({openLoginDialog, openRegisterDialog}: PublicRouteProps) =>
 				},
 				{
 					path: "orderdetails/:id",
-					element: <OrderDetails />
+					element: <OrderDetails />,
 				},
 				{
 					path: "reviews",
@@ -103,6 +112,11 @@ const PublicRoute = ({openLoginDialog, openRegisterDialog}: PublicRouteProps) =>
 					element: <Inbox />,
 				},
 			],
+		},
+
+		{
+			path: "/payment-success",
+			element: <PaymentSuccess />,
 		},
 	];
 };

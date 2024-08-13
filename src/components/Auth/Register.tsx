@@ -29,7 +29,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-
+// import { useAddCartCustomerMutation } from "@/services/apiSlice";
+// import { useAppSelector } from "@/services/store";
+//
 const formSchema = z.object({
 	firstname: z.string().min(2, {
 		message: "firstname is required",
@@ -59,6 +61,63 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 			password: "",
 		},
 	});
+
+	// const cart = useAppSelector((state: any) => state.persistedReducer.cart);
+
+	// const [addCartFn, { isLoading: loadingCart }] = useAddCartCustomerMutation();
+
+	// const handleAddToCartUser = async (props: any) => {
+	// try {
+	// const response: any = await addCartFn({
+	// product: props?.product_id,
+	// quantity: 1,
+	// variant: props?.variantID ? props?.variantID : null,
+	// });
+	//
+	// if (response?.data?.success) {
+	// } else {
+	// toast.error("Failed to add item to Cart");
+	// }
+	//
+	// console.log("Response from adding to cart:", response);
+	// } catch (error) {
+	// toast.error("An error occurred while adding to the cart");
+	// console.error("Error adding cart item:", error);
+	// }
+	// };
+	//
+	// async function onSubmit(values: z.infer<typeof formSchema>) {
+	// setLoad(true);
+	// try {
+	// const response: any = await Register(values);
+	//
+	// if (response?.status === 201) {
+	// cookies.set("Kao_cookie_user", response?.data?.token, {
+	// expires: expiryDate,
+	// path: "/",
+	// });
+	// dispatch(updateUserDetails(response?.data.data));
+	//
+	// if (cart.length > 0) {
+	// for (const cartItem of cart) {
+	// await handleAddToCartUser({
+	// product_id: cartItem.id,
+	// variantID: cartItem.variant ? cartItem.variant.id : null,
+	// });
+	// }
+	// }
+	//
+	// onClose();
+	// toast.success("Registration Successful");
+	// } else if (response?.status === 500) {
+	// toast.info("Account already exists");
+	// }
+	// setLoad(false);
+	// } catch (error) {
+	// toast.error("An error occurred. Please try again.");
+	// setLoad(false);
+	// }
+	// }
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		setLoad(true);

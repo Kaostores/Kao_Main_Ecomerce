@@ -1,5 +1,3 @@
-import React from "react";
-
 const ReviewSkeleton = () => {
 	return (
 		<div className=' flex flex-col  md:items-center md:mt-5 sm:items-center'>

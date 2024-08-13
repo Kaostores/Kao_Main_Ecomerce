@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { CiSearch } from "react-icons/ci";
 
 import { useNavigate } from "react-router-dom";
 import useUpdateUrlParams from "../SearchRoute";
 
 const SearchInput = () => {
-	const dispatch = useDispatch();
 	const updateUrlParams = useUpdateUrlParams();
 	const { query } = useSelector((state: any) => state.persistedReducer);
 	const [searchValue, setSearchValue] = useState(query);
