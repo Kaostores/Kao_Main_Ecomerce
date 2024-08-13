@@ -6,7 +6,6 @@ import {
 	useDeleteNewBookmarkMutation,
 	useViewAllBookmarksQuery,
 } from "@/services/apiSlice";
-import img2 from "../../assets/nopending.png";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReviewSkeleton from "@/components/skeleton/ReviewsSkeleton";

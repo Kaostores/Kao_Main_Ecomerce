@@ -8,19 +8,25 @@ import { GoCheckCircleFill } from "react-icons/go";
 import UserForm from "@/components/props/AddressForm";
 import { useAppSelector } from "@/services/store";
 import { useNavigate } from "react-router-dom";
-import { FlutterWavePayment } from "@/types/Usehook";
 import { IoMdClose } from "react-icons/io";
 import {
 	useViewAllAddressQuery,
 	useUpdateAddressMutation,
+	useViewAllCartCustomerQuery,
+	useVerifyPayMutation,
+	useShippmentAddressMutation,
+	useApplyCouponMutation,
 } from "@/services/apiSlice";
 import { MdModeEdit } from "react-icons/md";
 import ShowToast from "@/components/reuse/ShowToast";
+import { formatPrice } from "@/helpers";
 
 const Checkout = () => {
 	const [showAddress, setShowAddress] = useState(true);
 	const [showDet, setShowDet] = useState(true);
+	const [load, setLoad] = useState(false);
 	const [showCheckOut, setShowCheckout] = useState(false);
+	const { data: userCartData } = useViewAllCartCustomerQuery({});
 
 	const { data: addressData } = useViewAllAddressQuery({});
 	const [selectedAddressId, setSelectedAddressId] = useState("");
@@ -31,6 +37,7 @@ const Checkout = () => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [showAllAddresses, setShowAllAddresses] = useState(false);
 	const [showModal, setShowModal] = useState(false);
+	const [couponCode, setCouponCode] = useState("");
 
 	const ToggleModal = () => {
 		if (selectedAddressId === "") {
@@ -52,6 +59,9 @@ const Checkout = () => {
 
 	const navigate = useNavigate();
 	const [updateAddress] = useUpdateAddressMutation();
+	const [verifyPayFn] = useVerifyPayMutation();
+	const [shippmentFn] = useShippmentAddressMutation();
+	const [applycoupFn] = useApplyCouponMutation();
 
 	const handleAddressSave = async (formData: any) => {
 		try {
@@ -86,6 +96,7 @@ const Checkout = () => {
 		}
 	}, [addressData]);
 
+	const user = useAppSelector((state) => state.persistedReducer.currentUser);
 	const cartItems = useAppSelector((state) => state.persistedReducer.cart);
 	const addresses = useAppSelector((state) => state.persistedReducer.addresses);
 	console.log("addresses", addresses);
@@ -151,6 +162,56 @@ const Checkout = () => {
 		setShow(!show);
 		setShowChangeButton(!showChangeButton);
 		setShowCheckout(!showCheckOut);
+	};
+
+	const handlePaymentCheckout = async () => {
+		setLoad(true);
+		try {
+			// Step 1: Apply coupon if the code is provided
+			let applyCouponResponse: any;
+			if (couponCode) {
+				applyCouponResponse = await applycoupFn({ couponCode });
+			}
+
+			// Step 2: Proceed to shipment
+			const shipmentResponse: any = await shippmentFn({
+				addressId: selectedAddressId,
+			});
+
+			// Step 3: Verify payment
+			const verifyPaymentResponse: any = await verifyPayFn({
+				tx_ref: "1234",
+				customer: user.id,
+			});
+
+			console.log("verifypp", verifyPaymentResponse);
+
+			// Handle the outcome
+			if (
+				couponCode &&
+				applyCouponResponse?.data?.status &&
+				shipmentResponse?.data?.status &&
+				verifyPaymentResponse
+			) {
+				navigate("/payment-success");
+				setLoad(false);
+			} else if (
+				!couponCode &&
+				shipmentResponse?.data?.status &&
+				verifyPaymentResponse
+			) {
+				// alert("Payment successful, your delivery will arrive in 30 minutes.");
+				navigate("/payment-success");
+				setLoad(false);
+			} else {
+				navigate("/payment-success");
+				setLoad(false);
+				// alert("Payment successful, your delivery will arrive in 30 minutes.");
+			}
+		} catch (error) {
+			console.error("Error during checkout:", error);
+			alert("An error occurred during the checkout process. Please try again.");
+		}
 	};
 
 	return (
@@ -279,8 +340,8 @@ const Checkout = () => {
 									</div>
 								</div>
 							</div>
-							{cartItems
-								.slice(0, showAllItems ? cartItems.length : 1)
+							{userCartData?.data?.cart?.items
+								?.slice(0, showAllItems ? cartItems.length : 1)
 								.map((item: any) => (
 									<div
 										key={
@@ -291,14 +352,18 @@ const Checkout = () => {
 										className='flex h-[100px] md:w-[300px] mb-[15px]'>
 										<div className='xl:w-[100px] xl:h-[100px] lg:w-[100px] lg:h-[100px] md:w-[80px] md:h-[80px] sm:w-[90px] sm:h-[100px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff]'>
 											<img
-												src={item?.media ? item?.media?.url : im2}
+												src={
+													item?.product?.media
+														? item?.product?.media[0]?.url
+														: im2
+												}
 												alt=''
 												className='xl:w-[50px] md:w-[30px] lg:w-[50px] sm:w-[50px]'
 											/>
 										</div>
 										<div className='flex flex-col md:h-[80px]'>
 											<div className='xl:text-[20px] sm:text-[14px] md:text-[14px] font-semibold mb-[5px]'>
-												{item.productName} -{" "}
+												{item?.product?.name} -{" "}
 												{item.variant?.name || "No Variant"}
 											</div>
 											<div className='xl:text-[13px] md:text-[10px] sm:text-[9px]'>
@@ -307,7 +372,7 @@ const Checkout = () => {
 												Similar Product From Apple | 709388838
 											</div>
 											<div className='mt-[12px] text-[16px] font-[500]'>
-												QTY: {item.cartQuantity}
+												QTY: {item.quantity}
 											</div>
 											<div className='xl:hidden sm:hidden items-center  md:hidden lg:hidden'>
 												<div className='text-[10px]'>
@@ -426,6 +491,26 @@ const Checkout = () => {
 									</div>
 								)}
 							</div>
+							<div className='w-[320px] md:w-[220px] hidden justify-between sm:flex sm:flex-col'>
+								<div className='text-[13px] font-semibold'>Apply code</div>
+								<div className=''>
+									<div
+										className='text-[14px] font-semibold border-[2px] md:w-[150px] 
+border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
+										<div className='mr-[5px]'>
+											<RiCoupon2Line />
+										</div>
+										<input
+											onChange={(e) => {
+												setCouponCode(e.target.value);
+											}}
+											type='text'
+											placeholder='Apply code'
+											className='h-[100%] outline-none border-none bg-transparent'
+										/>
+									</div>
+								</div>
+							</div>
 							{show ? (
 								<div
 									className='w-[300px] flex justify-center items-center text-white py-[10px] bg-secondary mt-[20px] cursor-pointer'
@@ -468,7 +553,9 @@ const Checkout = () => {
 									<div className='text-[9px]'>
 										<FaNairaSign />
 									</div>
-									<div className='text-[14px] font-semibold'>{totalPrice}</div>
+									<div className='text-[14px] font-semibold'>
+										{formatPrice(userCartData?.data?.cart?.totalPrice)}
+									</div>
 								</div>
 							</div>
 							<div className='xl:w-[320px] md:w-[220px] sm:w-[100%] flex justify-between mb-[15px]'>
@@ -497,6 +584,9 @@ const Checkout = () => {
 											<RiCoupon2Line />
 										</div>
 										<input
+											onChange={(e) => {
+												setCouponCode(e.target.value);
+											}}
 											type='text'
 											placeholder='Apply code'
 											className='h-[100%] outline-none border-none bg-transparent'
@@ -505,10 +595,14 @@ const Checkout = () => {
 								</div>
 							</div>
 						</div>
+
 						<button
+							disabled={userCartData?.data?.cartEmpty}
 							onClick={ToggleModal}
 							className={`w-[100%] xl:flex lg:flex md:flex justify-center items-center text-white sm:hidden py-[10px] rounded-sm mt-[30px] ${
-								isEditing
+								userCartData?.data?.cartEmpty
+									? "bg-gray-400 cursor-not-allowed"
+									: isEditing
 									? "bg-[#B4B4B4] cursor-not-allowed"
 									: "bg-secondary cursor-pointer"
 							}`}>
@@ -531,15 +625,14 @@ const Checkout = () => {
 								className={`w-[45%] sm:w-[100%] sm:mb-[10px] xl:flex lg:flex md:flex justify-center items-center text-white bg-secondary cursor-pointer py-[10px] rounded-sm mt-[30px] sm:mt-0`}>
 								No
 							</button>
-
-							<div className='w-[45%] mt-[10px] sm:mt-0 sm:w-[100%]'>
-								<FlutterWavePayment
-									amount={totalPrice}
-									cartItems={cartItems}
-									addressId={selectedAddressId}
-									disabled={isEditing}
-								/>
-							</div>
+							<button
+								onClick={handlePaymentCheckout}
+								disabled={load}
+								className={`w-[45%] sm:w-[100%] sm:mb-[10px] xl:flex lg:flex md:flex 
+justify-center items-center text-white bg-secondary cursor-pointer py-[10px] 
+rounded-sm mt-[30px] sm:mt-0`}>
+								{load ? "loading..." : "Yes"}
+							</button>
 						</div>
 						<IoMdClose
 							onClick={CloseModal}
@@ -552,3 +645,19 @@ const Checkout = () => {
 	);
 };
 export default Checkout;
+
+//
+{
+	/* <div className='w-[45%] mt-[10px] sm:mt-0 sm:w-[100%]'> */
+}
+{
+	/* <FlutterWavePayment */
+}
+// amount={totalPrice}
+// cartItems={cartItems}
+// addressId={selectedAddressId}
+// disabled={isEditing}
+// />
+{
+	/* </div>; */
+}

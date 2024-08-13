@@ -1,7 +1,5 @@
 import { useGetAllAdminCategoryQuery } from "@/services/apiSlice";
 import CategoriesCard from "../commons/CategoriesCard";
-import myData from "@/components/json/CategoriesData.json";
-import ProductSkeleton from "../skeleton/ProductSkeleton";
 import BrandsCompSkeleton from "../skeleton/BrandCompSkeleton";
 
 const CategoriesData = () => {

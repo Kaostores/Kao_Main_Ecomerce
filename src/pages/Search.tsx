@@ -9,8 +9,6 @@ import { IoFilterSharp } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import FilterBar from "@/components/FilterBar";
 import BrandData from "@/components/reuse/BrandData";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import EmptyData from "@/components/reuse/EmptyData";
 import { useSearchParams } from "react-router-dom";
 
@@ -20,7 +18,6 @@ const SearchPage = () => {
 		isLoading: isAllLoading,
 		isFetching: isAllFetching,
 	} = useViewAllProductsQuery({});
-	const dispatch = useDispatch();
 
 	// const { query, categoryID, subCategoryID } = useSelector(
 	// (state: any) => state?.persistedReducer,
@@ -40,7 +37,7 @@ const SearchPage = () => {
 
 	const {
 		data: searchData,
-		error: searchError,
+		// error: searchError,
 		isLoading: isSearchLoading,
 		isFetching: isSearchFetching,
 	} = useSearchProductQuery({

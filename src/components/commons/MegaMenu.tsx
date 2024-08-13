@@ -3,17 +3,12 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { MdOutlineClear } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
-import {
-	useGetAllAdminCategoryAndSubCategoryQuery,
-	useGetAllAdminCategoryQuery,
-} from "@/services/apiSlice";
-import { useDispatch } from "react-redux";
+
+import { useGetAllAdminCategoryAndSubCategoryQuery } from "@/services/apiSlice";
+
 import useUpdateUrlParams from "../SearchRoute";
 
 const MegaMenu = ({ setShowMegaMenu }: any) => {
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const updateUrlParams = useUpdateUrlParams();
 
 	const {

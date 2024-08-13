@@ -10,7 +10,9 @@ import CardComp from "@/components/commons/CardComp";
 import BrandsComp from "@/components/commons/BrandsComp";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+	useAddCartCustomerMutation,
 	useAddNewBookmarkMutation,
+	useRemoveCartCustomerMutation,
 	useViewAProductQuery,
 	useViewAllProductsQuery,
 	useViewProductReviewsQuery,
@@ -21,11 +23,12 @@ import { addToCart, removeFromCart } from "@/services/reducers";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IoMdClose } from "react-icons/io";
-import { getColorFromCode } from "@/helpers/ColorCode";
+
 import { decodeHTMLEntities, formatPrice } from "@/helpers";
 import ReviewComponent from "@/components/Reviews/ReviewsComp";
 import { AccordionDemo } from "@/components/reuse/ProductSummaryAccordion";
 import ReviewPage from "./Dashboard/Subpages/ReviewPage";
+import TextSanitizer from "@/helpers/TextSanitizer";
 
 const ProductDetails = () => {
 	const navigate = useNavigate();
@@ -40,8 +43,12 @@ const ProductDetails = () => {
 		useViewAllProductsQuery({});
 	const [selectedId, setSelectedId] = useState("");
 	const [imageLoading, setImageLoading] = useState(true);
+	const user = useSelector(
+		(state: any) => state?.persistedReducer?.currentUser,
+	);
 
-	console.log("this is product data", productData);
+	const [addCartFn, { isLoading: loadingCart }] = useAddCartCustomerMutation();
+	const [removeCartFn] = useRemoveCartCustomerMutation();
 
 	const dispatch = UseAppDispach();
 	const globalstate = useSelector(
@@ -126,6 +133,32 @@ const ProductDetails = () => {
 			toast.error("Already bookmarked");
 		}
 	};
+
+	const handleAddToCartUser = async (props: any) => {
+		const response: any = await addCartFn({
+			product: props?.product_id,
+			quantity: 1,
+			variant: props?.variantID ? props?.variantID : null,
+		});
+
+		if (response?.data?.success) {
+			toast.success("Added to Cart successfully");
+		}
+
+		console.log("this is response to adding cart", response);
+	};
+
+	const handleRemoveCartUser = async (props: any) => {
+		const response: any = await removeCartFn({
+			product_id: props?.product_id,
+		});
+		if (response?.data?.success) {
+			toast.success("Removed from Cart successfully");
+		}
+		console.log("this is response to remove cart", response);
+	};
+
+	console.log("prrrrrrrrr", productData);
 
 	// const overallRating = 4.0;
 	// const totalReviews = 1;
@@ -216,9 +249,10 @@ const ProductDetails = () => {
 										<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[500px] mb-[10px] rounded-full'></div>
 									</div>
 								) : (
-									<div className='text-[13px] my-[10px]'>
-										{decodeHTMLEntities(productData?.data.description)}
-									</div>
+									<TextSanitizer
+										description={productData?.data.description}
+										showImages={false}
+									/>
 								)}
 							</div>
 							{isProductLoading ? (
@@ -314,17 +348,38 @@ const ProductDetails = () => {
 																		</div>
 																	</div>
 
-																	<div
-																		onClick={() => handleDecrement(variant)}
-																		className='flex items-center'>
-																		<div className='w-[30px] h-[30px] sm:w-[20px]  sm:h-[20px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
+																	<div className='flex items-center'>
+																		<div
+																			onClick={() => {
+																				if (user?.id) {
+																					handleRemoveCartUser({
+																						product_id: productData?.data?.id,
+																						product: productData?.data?.id,
+																						variantID: variant.id,
+																						quantity: 1,
+																					});
+																				} else {
+																					handleDecrement(variant);
+																				}
+																			}}
+																			className='w-[30px] h-[30px] sm:w-[20px]  sm:h-[20px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
 																			-
 																		</div>
 																		<div className='w-[30px] h-[30px] rounded-sm flex justify-center items-center mr-[10px]'>
 																			{findQuantity(variant.id)}
 																		</div>
 																		<div
-																			onClick={() => handleIncrement(variant)}
+																			onClick={() => {
+																				if (user?.id) {
+																					handleAddToCartUser({
+																						product_id: productData?.data?.id,
+																						variantID: variant.id,
+																						quantity: 1,
+																					});
+																				} else {
+																					handleIncrement(variant);
+																				}
+																			}}
 																			className='w-[30px] h-[30px] sm:w-[20px] sm:h-[20px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
 																			+
 																		</div>
@@ -365,25 +420,37 @@ const ProductDetails = () => {
 
 								<div
 									onClick={() => {
-										if (productData?.data?.proVariants?.length > 0) {
-											setShowVariant(true); // Show variant selection popup if variants exist
+										if (user?.id) {
+											if (productData?.data?.proVariants?.length > 0) {
+												setShowVariant(true);
+											} else {
+												handleAddToCartUser({
+													product_id: productData?.data?.id,
+													variantID: null,
+													quantity: 1,
+												});
+											}
 										} else {
-											// If no variants, directly add the product to the cart
-											dispatch(
-												addToCart({
-													productName: productData?.data?.name,
-													productID: productData?.data?.id,
-													variant: null, // No variants, so set to null
-													price: productData?.data?.discountPrice,
-													media: productData?.data?.media[0], // Use the main image of the product
-													cartQuantity: 1, // Setting initial cart quantity
-												}),
-											);
-											toast.success("Added to Cart successfully"); // Show success message
+											if (productData?.data?.proVariants?.length > 0) {
+												setShowVariant(true); // Show variant selection popup if variants exist
+											} else {
+												// If no variants, directly add the product to the cart
+												dispatch(
+													addToCart({
+														productName: productData?.data?.name,
+														productID: productData?.data?.id,
+														variant: null, // No variants, so set to null
+														price: productData?.data?.discountPrice,
+														media: productData?.data?.media[0], // Use the main image of the product
+														cartQuantity: 1, // Setting initial cart quantity
+													}),
+												);
+												toast.success("Added to Cart successfully"); // Show success message
+											}
 										}
 									}}
 									className='xl:w-[300px] xxl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'>
-									<div>Add to cart</div>
+									<div>{loadingCart ? "loading..." : "Add to cart"}</div>
 								</div>
 
 								<div className='flex items-center mb-[20px]'>
@@ -481,7 +548,7 @@ const ProductDetails = () => {
 
 						{toggleType === "description" && (
 							<div className='mt-[15px] text-[14px] '>
-								<div>{decodeHTMLEntities(productData?.data?.description)}</div>
+								<TextSanitizer description={productData?.data.description} />
 							</div>
 						)}
 

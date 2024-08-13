@@ -18,12 +18,6 @@ export interface AddressType {
 	city?: string;
 }
 
-interface SearchState {
-	query: string;
-	categoryID: string;
-	subCategoryID: string;
-}
-
 const initialState = {
 	currentUser: {} as UserDetails | any,
 	cart: [] as Array<any>,
