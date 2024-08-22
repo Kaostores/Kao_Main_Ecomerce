@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import { BsStarFill } from "react-icons/bs";
 import { IoStarOutline } from "react-icons/io5";
 import { useGetAllAdminCategoryQuery } from "@/services/apiSlice";
@@ -60,7 +59,6 @@ const FilterSection: React.FC<FilterSectionProps> = ({
 			</>
 		) : (
 			<div className='animate-pulse'>
-				{" "}
 				<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-40 mb-4'></div>
 				<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-40 mb-4'></div>
 				<div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-40 mb-4'></div>
@@ -103,7 +101,7 @@ const RatingOption: React.FC<RatingOptionProps> = ({
 					))}
 				</div>
 			</div>
-			<div className='text-[13px] ml-[2px]'>& Above</div>
+			<div className='text-[13px] ml-[2px]'></div>
 		</div>
 	</div>
 );
@@ -119,12 +117,12 @@ const RatingSection: React.FC<RatingSectionProps> = ({
 }) => (
 	<div className='flex flex-col items-start'>
 		<div className='text-[17px] font-bold mb-[5px]'>Rating</div>
-		{[4, 3, 2, 1].map((stars) => (
+		{[5, 4, 3, 2, 1].map((stars) => (
 			<RatingOption
 				key={stars}
 				stars={stars}
-				isChecked={activeOption === `opt${stars + 11}`}
-				onChange={() => onChange(`opt${stars + 11}`)}
+				isChecked={activeOption === `${stars}`}
+				onChange={() => onChange(`${stars}`)}
 			/>
 		))}
 	</div>
@@ -134,9 +132,9 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 	const [searchParams] = useSearchParams();
 	const activeCategoryID = searchParams.get("category_id") || "";
 
-	const [isActive2, setIsActive2] = useState<string>("opt4");
-	const [isActive3, setIsActive3] = useState<string>("opt9");
-	const [isActive4, setIsActive4] = useState<string>("opt12");
+	const [isActive2, setIsActive2] = useState<string>("");
+	const [isActive3, setIsActive3] = useState<string>("");
+	const [isActive4, setIsActive4] = useState<string>("");
 
 	const { data: catData } = useGetAllAdminCategoryQuery({});
 
@@ -149,24 +147,79 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 			: null;
 
 	const priceOptions = [
-		{ label: "NGN 1,000 - NGN 10,000", value: "opt4" },
-		{ label: "NGN 10,000 - NGN 20,000", value: "opt5" },
-		{ label: "NGN 30,000 - NGN 40,000", value: "opt6" },
-		{ label: "NGN 40,000 - NGN 50,000", value: "opt7" },
-		{ label: "NGN 50,000 - NGN 60,000", value: "opt8" },
+		{
+			label: "NGN 1,000 - NGN 10,000",
+			value: "opt4",
+			minPrice: 1000,
+			maxPrice: 10000,
+		},
+		{
+			label: "NGN 10,000 - NGN 20,000",
+			value: "opt5",
+			minPrice: 10000,
+			maxPrice: 20000,
+		},
+		{
+			label: "NGN 20,000 - NGN 30,000",
+			value: "opt6",
+			minPrice: 20000,
+			maxPrice: 30000,
+		},
+		{
+			label: "NGN 30,000 - NGN 40,000",
+			value: "opt7",
+			minPrice: 30000,
+			maxPrice: 40000,
+		},
+		{
+			label: "NGN 40,000 - NGN 50,000",
+			value: "opt8",
+			minPrice: 40000,
+			maxPrice: 50000,
+		},
 	];
 
 	const genderOptions = [
-		{ label: "Male", value: "opt9" },
-		{ label: "Female", value: "opt10" },
-		{ label: "Unisex", value: "opt11" },
+		{ label: "Male", value: "male" },
+		{ label: "Female", value: "female" },
+		{ label: "Unisex", value: "unisex" },
 	];
 
 	const updateUrlParams = useUpdateUrlParams();
 
 	const handleCategoryChange = (value: string) => {
-		console.log("Selected Category:", value);
 		updateUrlParams({ category_id: value });
+	};
+
+	const handlePriceChange = (value: string) => {
+		const selectedOption = priceOptions.find(
+			(option) => option.value === value,
+		);
+		if (selectedOption) {
+			updateUrlParams({
+				filter: "", // To ensure filter parameter is included
+				minPrice: selectedOption.minPrice,
+				maxPrice: selectedOption.maxPrice,
+			});
+		}
+		setIsActive2(value);
+	};
+
+	const handleGenderChange = (value: string) => {
+		updateUrlParams({
+			// filter: "",
+			gender: value,
+		});
+		setIsActive3(value);
+	};
+
+	const handleRatingChange = (value: string) => {
+		console.log(value);
+		updateUrlParams({
+			// filter: "",
+			rating: value,
+		});
+		setIsActive4(value);
 	};
 
 	return (
@@ -182,15 +235,15 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 				title='Price Range'
 				options={priceOptions}
 				activeOption={isActive2}
-				onChange={setIsActive2}
+				onChange={handlePriceChange}
 			/>
 			<FilterSection
 				title='Gender'
 				options={genderOptions}
 				activeOption={isActive3}
-				onChange={setIsActive3}
+				onChange={handleGenderChange}
 			/>
-			<RatingSection activeOption={isActive4} onChange={setIsActive4} />
+			<RatingSection activeOption={isActive4} onChange={handleRatingChange} />
 		</div>
 	);
 };

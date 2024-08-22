@@ -6,10 +6,33 @@ const useUpdateUrlParams = () => {
 
 	const updateUrlParams = (params: any) => {
 		const searchParams = new URLSearchParams(location.search);
+
+		// If minPrice and maxPrice are provided, combine them in the filter
+		if (params.minPrice && params.maxPrice) {
+			searchParams.set("filter", "");
+		} else {
+			searchParams.set("filter", ""); // Ensure filter is included even if empty
+		}
+
+		searchParams.set("minPrice", params.minPrice || "");
+		searchParams.set("maxPrice", params.maxPrice || "");
+
+		// Update or remove other parameters
 		Object.keys(params).forEach((key) => {
-			searchParams.set(key, params[key]);
+			if (key !== "filter" && key !== "minPrice" && key !== "maxPrice") {
+				if (params[key] !== undefined && params[key] !== "") {
+					searchParams.set(key, params[key]);
+				} else {
+					searchParams.delete(key);
+				}
+			}
 		});
-		navigate(`/search?${searchParams.toString()}`);
+
+		// Construct the new URL
+		const newUrl = `/search?${searchParams.toString()}`;
+
+		// Navigate to the updated URL
+		navigate(newUrl, { replace: true });
 	};
 
 	return updateUrlParams;

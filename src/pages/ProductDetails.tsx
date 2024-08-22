@@ -14,6 +14,7 @@ import {
 	useAddNewBookmarkMutation,
 	useRemoveCartCustomerMutation,
 	useViewAProductQuery,
+	useViewAllCartCustomerQuery,
 	useViewAllProductsQuery,
 	useViewProductReviewsQuery,
 } from "@/services/apiSlice";
@@ -29,6 +30,7 @@ import ReviewComponent from "@/components/Reviews/ReviewsComp";
 import { AccordionDemo } from "@/components/reuse/ProductSummaryAccordion";
 import ReviewPage from "./Dashboard/Subpages/ReviewPage";
 import TextSanitizer from "@/helpers/TextSanitizer";
+import { LoadingSpinner } from "@/components/reuse/Spinner";
 
 const ProductDetails = () => {
 	const navigate = useNavigate();
@@ -43,12 +45,19 @@ const ProductDetails = () => {
 		useViewAllProductsQuery({});
 	const [selectedId, setSelectedId] = useState("");
 	const [imageLoading, setImageLoading] = useState(true);
+	const {
+		data: userCartData,
+		isLoading: isUserCartLoading,
+		isFetching,
+	} = useViewAllCartCustomerQuery({});
 	const user = useSelector(
 		(state: any) => state?.persistedReducer?.currentUser,
 	);
 
-	const [addCartFn, { isLoading: loadingCart }] = useAddCartCustomerMutation();
-	const [removeCartFn] = useRemoveCartCustomerMutation();
+	const [addCartFn, { isLoading: loadingIncrease }] =
+		useAddCartCustomerMutation();
+	const [removeCartFn, { isLoading: loadingDecrease }] =
+		useRemoveCartCustomerMutation();
 
 	const dispatch = UseAppDispach();
 	const globalstate = useSelector(
@@ -59,11 +68,21 @@ const ProductDetails = () => {
 		// First, ensure the global state and the items array are not null.
 		if (!globalstate || !variantId) return 0;
 
-		const item = globalstate?.find(
+		const nonUserCart = globalstate?.find(
 			(item: any) => item?.variant?.id === variantId,
 		);
-		console.log(item);
-		return item ? item?.cartQuantity : 0;
+
+		const checkCart = userCartData?.data?.cart?.items?.find(
+			(el: any) => el.variant?.id === variantId,
+		);
+
+		console.log("checkiiii", checkCart);
+		// console.log(item);
+		return nonUserCart
+			? nonUserCart?.cartQuantity
+			: 0 || (user && checkCart?.variant?.id === variantId)
+			? checkCart?.quantity
+			: 0;
 	};
 
 	const handleIncrement = (variant: any) => {
@@ -366,7 +385,13 @@ const ProductDetails = () => {
 																			-
 																		</div>
 																		<div className='w-[30px] h-[30px] rounded-sm flex justify-center items-center mr-[10px]'>
-																			{findQuantity(variant.id)}
+																			{loadingIncrease ||
+																			loadingDecrease ||
+																			isFetching ? (
+																				<LoadingSpinner />
+																			) : (
+																				<>{findQuantity(variant.id)}</>
+																			)}
 																		</div>
 																		<div
 																			onClick={() => {
@@ -450,7 +475,7 @@ const ProductDetails = () => {
 										}
 									}}
 									className='xl:w-[300px] xxl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'>
-									<div>{loadingCart ? "loading..." : "Add to cart"}</div>
+									<div>{loadingIncrease ? "loading..." : "Add to cart"}</div>
 								</div>
 
 								<div className='flex items-center mb-[20px]'>
@@ -680,7 +705,7 @@ const ProductDetails = () => {
 								</div>
 							</div>
 						) : (
-							<div className='grid grid-cols-3 gap-4  sm:justify-center sm:grid sm:items-center sm:grid-cols-2 md:grid-cols-2 sm:flex-col flex-1 '>
+							<div className='grid grid-cols-4 gap-4  sm:justify-center sm:grid sm:items-center sm:grid-cols-2 md:grid-cols-2 sm:flex-col flex-1 '>
 								{allProductsData?.data.slice(0, 4).map((props: any) => (
 									<CardComp
 										key={props.id}
