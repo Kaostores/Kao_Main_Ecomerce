@@ -81,7 +81,7 @@ const PublicRoute = ({
 			children: [
 				{
 					index: true,
-					element: <Dashboardhome />,
+					element: <Account />,
 				},
 				{
 					path: "account",

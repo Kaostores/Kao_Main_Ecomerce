@@ -19,31 +19,42 @@ const SearchPage = () => {
 		isFetching: isAllFetching,
 	} = useViewAllProductsQuery({});
 
-	// const { query, categoryID, subCategoryID } = useSelector(
-	// (state: any) => state?.persistedReducer,
-	// );
-
 	const [searchParams] = useSearchParams();
 
 	const query = searchParams.get("search") || "";
 	const categoryID = searchParams.get("category_id") || "";
 	const subCategoryID = searchParams.get("sub_category_id") || "";
+	const minPrice = searchParams.get("minPrice") || "";
+	const maxPrice = searchParams.get("maxPrice") || "";
+	const rating = searchParams.get("rating") || "";
+	const gender = searchParams.get("gender") || "";
 
 	useEffect(() => {
-		if (query || categoryID) {
+		if (
+			query ||
+			categoryID ||
+			subCategoryID ||
+			minPrice ||
+			maxPrice ||
+			rating ||
+			gender
+		) {
 			// dispatch(fetchProducts({ query, categoryID }));
 		}
-	}, [query, categoryID]);
+	}, [query, categoryID, subCategoryID, minPrice, maxPrice, rating, gender]);
 
 	const {
 		data: searchData,
-		// error: searchError,
 		isLoading: isSearchLoading,
 		isFetching: isSearchFetching,
 	} = useSearchProductQuery({
 		query,
 		categoryID,
 		subCategoryID,
+		minPrice,
+		maxPrice,
+		rating,
+		gender,
 	});
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +63,17 @@ const SearchPage = () => {
 		setIsOpen(!isOpen);
 	};
 
-	const isSearching = query?.length > 0;
+	console.log("you searched", searchData);
+
+	// Update isSearching to reflect the presence of any search parameters
+	const isSearching =
+		query?.length > 0 ||
+		categoryID?.length > 0 ||
+		subCategoryID?.length > 0 ||
+		minPrice?.length > 0 ||
+		rating?.length > 0 ||
+		gender?.length > 0 ||
+		maxPrice?.length > 0;
 	const isLoading = isAllLoading || (isSearching && isSearchLoading);
 	const isFetching = isAllFetching || (isSearching && isSearchFetching);
 	const products = isSearching ? searchData?.data : allProducts?.data;

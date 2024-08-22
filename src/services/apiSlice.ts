@@ -151,8 +151,17 @@ export const api = createApi({
 		}),
 
 		SearchProduct: builder.query({
-			query: (body) =>
-				`/customer/product/search?search=${body.query}&category_id=${body.categoryID}&sub_category_id=${body.subCategoryID}`,
+			query: (body) => {
+				const minPrice = Number(body.minPrice) || "";
+				const maxPrice = Number(body.maxPrice) || "";
+				const rating = Number(body.rating) || "";
+				const search = encodeURIComponent(body.query || "");
+				const gender = encodeURIComponent(body.gender || "");
+				const categoryID = encodeURIComponent(body.categoryID || "");
+				const subCategoryID = encodeURIComponent(body.subCategoryID || "");
+
+				return `/customer/product/search?search=${search}&category_id=${categoryID}&sub_category_id=${subCategoryID}&filter=&minPrice=${minPrice}&maxPrice=${maxPrice}&rating=${rating}&gender=${gender}`;
+			},
 		}),
 
 		AddCartCustomer: builder.mutation({
