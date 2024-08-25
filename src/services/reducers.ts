@@ -11,11 +11,14 @@ interface UserDetails {
 
 export interface AddressType {
 	id?: string;
-	fullname: string;
-	phone: string;
+	fullname?: string;
+	phone?: string;
 	address: string;
 	state?: string;
 	city?: string;
+	street?: string; //required
+	postalCode?: string; //required
+	country?: string; //required
 }
 
 const initialState = {

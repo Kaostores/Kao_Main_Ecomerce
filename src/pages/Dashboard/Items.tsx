@@ -52,25 +52,21 @@ const Items = () => {
 				</div>
 			) : (
 				<>
-					{data?.data?.length >= 1 ? (
+					{data?.data?.favorites?.length >= 1 ? (
 						<>
 							<br />
-							{data?.data?.map((props: any) => (
+							{data?.data?.favorites?.map((props: any) => (
 								<div className='w-[100%] mb-7 sm:w-[90%] md:w-[85%] flex justify-between md:mt-[40px] sm:mt-[40px]'>
 									<div className='flex items-center'>
 										<div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
 											<img
-												src={
-													props?.product?.media && props?.product?.media[0]?.url
-												}
+												src={props?.media && props?.media[0]?.url}
 												alt=''
 												className='h-[60px]'
 											/>
 										</div>
 										<div className='flex flex-col ml-[15px]'>
-											<h3 className='text-[15px] font-[600]'>
-												{props?.product?.name}
-											</h3>
+											<h3 className='text-[15px] font-[600]'>{props?.name}</h3>
 											<div className='flex items-center mt-[12px] sm:flex-wrap'>
 												<p className='text-iconGray text-[13px]'>Brand:</p>
 												<p className='text-[13px] font-[500] ml-[4px] sm:ml-0 sm:text-[11px]'>
@@ -84,14 +80,14 @@ const Items = () => {
 													<div className='items-center hidden sm:flex ml-[3px]'>
 														<p className='text-[11px] font-[700]'>NGN</p>{" "}
 														<h4 className='text-[12px] font-[600] ml-[3px]'>
-															{props?.product?.price?.toLocaleString()}
+															{props?.discountPrice?.toLocaleString()}
 														</h4>
 													</div>
 												</div>
 												<div className='flex items-center'>
 													<div
 														onClick={() => {
-															handleDeleteBookMark(props?.product?.id);
+															handleDeleteBookMark(props?.id);
 														}}
 														className='flex items-center cursor-pointer'>
 														<div className='text-primary text-[20px] sm:text-[16px]'>
@@ -103,7 +99,7 @@ const Items = () => {
 															Remove
 														</p>
 													</div>
-													<Link to={`/product-details/${props?.product?.id}`}>
+													<Link to={`/product-details/${props?.id}`}>
 														<div className='flex items-center cursor-pointer ml-[13px]'>
 															<div className='text-primary text-[20px] sm:text-[16px]'>
 																<RiShoppingCartLine />
@@ -122,7 +118,7 @@ const Items = () => {
 									<div className='flex items-center sm:hidden'>
 										<p className='text-[10px] font-[700]'>₦</p>{" "}
 										<h4 className='text-[17px] font-[600] ml-[3px]'>
-											{props?.product?.discountPrice?.toLocaleString()}
+											{props?.discountPrice?.toLocaleString()}
 										</h4>
 									</div>
 								</div>

@@ -35,9 +35,25 @@ const Sidebar = () => {
 				onClick={() => {
 					navigate("/dashboard");
 				}}
+				className={`w-full min-h-[45px] flex justify-start  items-center pl-[20px] mb-[5px]
+cursor-pointer
+  ${active === "/dashboard" ? "bg-[#0333ae] text-[#fff]" : "text-[#757575]"}
+  }
+  `}>
+				<div className='text-[20px]  font-bold'>
+					<IoWalletOutline />
+				</div>
+
+				<div className='font-medium  text-[15px] ml-[20px] '>Wallet</div>
+			</div>
+
+			<div
+				onClick={() => {
+					navigate("/dashboard/account");
+				}}
 				className={`w-full min-h-[45px] flex justify-start  items-center pl-[20px] mb-[5px] cursor-pointer 
              ${
-								active === "/dashboard"
+								active === "/dashboard/account"
 									? "bg-[#0333ae] text-[#fff]"
 									: "text-[#757575]"
 							}
@@ -174,30 +190,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-//
-//  <div
-// onClick={() => {
-// navigate("/dashboard");
-// }}
-// className={`w-full min-h-[45px] flex justify-start  items-center pl-[20px] mb-[5px]
-// cursor-pointer
-//   ${
-// active === "/dashboard" ? "bg-[#0333ae] text-[#fff]" : "text-[#757575]"
-// }
-//   }
-//   `}>
-{
-	/* <div className='text-[20px]  font-bold'> */
-}
-{
-	/* <IoWalletOutline /> */
-}
-{
-	/* </div> */
-}
-{
-	/* <div className='font-medium  text-[15px] ml-[20px] '>Wallet</div> */
-}
-{
-	/* </div> */
-}

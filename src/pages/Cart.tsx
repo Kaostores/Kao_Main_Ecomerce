@@ -100,7 +100,7 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 		console.log("this is response to remove cart", response);
 	};
 
-	console.log("here is the cart items", cartItems);
+	console.log("here is the cart items", userCartData);
 
 	return (
 		<>
@@ -227,7 +227,7 @@ cursor-pointer'>
 																		if (isAuthenticated) {
 																			handleAddToCartUser({
 																				product_id: product?.product?.id,
-																				variantID: product.variant,
+																				variantID: product.variant?.id,
 																				quantity: 1,
 																			});
 																		} else {
@@ -334,7 +334,7 @@ justify-center items-center'>
 																					if (isAuthenticated) {
 																						handleAddToCartUser({
 																							product_id: product?.product?.id,
-																							variantID: product.variant,
+																							variantID: product.variant?.id,
 																							quantity: 1,
 																						});
 																					} else {

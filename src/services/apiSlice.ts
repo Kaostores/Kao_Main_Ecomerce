@@ -26,12 +26,12 @@ export const api = createApi({
 	],
 	endpoints: (builder) => ({
 		viewAllProducts: builder.query({
-			query: () => `/customer/home`,
+			query: () => `/products`,
 			providesTags: ["products"],
 		}),
 
 		viewAProduct: builder.query({
-			query: (id: any) => `/customer/products/${id}`,
+			query: (id: any) => `/products/${id}`,
 			providesTags: ["product"],
 		}),
 
@@ -45,23 +45,23 @@ export const api = createApi({
 		}),
 
 		fetchOrders: builder.query({
-			query: () => "/customer/orders",
+			query: () => "/orders/user",
 			providesTags: ["Orders"],
 		}),
 
 		fetchOrderById: builder.query({
-			query: (orderId: any) => `/customer/orders/${orderId}`,
+			query: (orderId: any) => `/orders/details//${orderId}`,
 			providesTags: ["Orders"],
 		}),
 
 		ViewAllAddress: builder.query({
-			query: () => "/customer/profile/address",
+			query: () => "/user/address",
 			providesTags: ["Addresses"],
 		}),
 
 		updateAddress: builder.mutation({
 			query: (body) => ({
-				url: `/customer/profile/address/${body.addressId}/update`,
+				url: `/user/update/address/${body.addressId}`,
 				method: "PATCH",
 				body,
 			}),
@@ -70,7 +70,7 @@ export const api = createApi({
 
 		createNewAddress: builder.mutation({
 			query: (body) => ({
-				url: "/customer/profile/address/create",
+				url: "/user/create/address",
 				method: "POST",
 				body: body,
 			}),
@@ -78,11 +78,11 @@ export const api = createApi({
 		}),
 
 		getUserData: builder.query({
-			query: () => "/customer/userdata",
+			query: () => "/user/userdata",
 		}),
 
 		fetchAddressById: builder.query({
-			query: (addressId) => `/customer/profile/address/${addressId}`,
+			query: (addressId) => `/user/address/${addressId}`,
 		}),
 
 		getBrandsSpootlight: builder.query({
@@ -93,11 +93,11 @@ export const api = createApi({
 			query: () => "/categories",
 		}),
 		getAllAdminCategory: builder.query({
-			query: () => "/admin/category",
+			query: () => "/categories",
 		}),
 
 		getAllSubCategory: builder.query({
-			query: (categoryId) => `/sub/category?category=${parseInt(categoryId)}`,
+			query: (categoryId) => `/category/subcategories/${categoryId}`,
 		}),
 
 		getHotSales: builder.query({
@@ -105,12 +105,12 @@ export const api = createApi({
 		}),
 
 		getAllAdminCategoryAndSubCategory: builder.query({
-			query: () => "/admin/category/subs",
+			query: () => "/categories/with/subcategories",
 		}),
 
 		AddNewBookmark: builder.mutation({
 			query: (body) => ({
-				url: `/customer/product/bookmark/add/${body.product_id}`,
+				url: `/bookmarks/create/${body.product_id}`,
 				method: "POST",
 				body: body,
 			}),
@@ -119,7 +119,7 @@ export const api = createApi({
 
 		DeleteNewBookmark: builder.mutation({
 			query: (body) => ({
-				url: `/customer/product/bookmark/remove/${body.product_id}`,
+				url: `/bookmarks/delete/${body.product_id}`,
 				method: "DELETE",
 				body: body,
 			}),
@@ -127,18 +127,18 @@ export const api = createApi({
 		}),
 
 		ViewAllBookmarks: builder.query({
-			query: () => "/customer/bookmarks",
+			query: () => "/bookmarks",
 			providesTags: ["bookmark"],
 		}),
 
 		ViewAllMyReviews: builder.query({
-			query: () => "/customer/reviews",
+			query: () => "/reviews",
 			providesTags: ["reviews"],
 		}),
 
 		DropReview: builder.mutation({
 			query: (body) => ({
-				url: `/customer/product/${body.product_id}/reviews/add`,
+				url: `/reviews/create/${body.product_id}`,
 				method: "POST",
 				body: body,
 			}),
@@ -146,7 +146,7 @@ export const api = createApi({
 		}),
 
 		viewProductReviews: builder.query({
-			query: (body) => `/customer/product/${body.product_id}/reviews`,
+			query: (body) => `/reviews/product/${body.product_id}`,
 			providesTags: ["reviews"],
 		}),
 
@@ -160,13 +160,13 @@ export const api = createApi({
 				const categoryID = encodeURIComponent(body.categoryID || "");
 				const subCategoryID = encodeURIComponent(body.subCategoryID || "");
 
-				return `/customer/product/search?search=${search}&category_id=${categoryID}&sub_category_id=${subCategoryID}&filter=&minPrice=${minPrice}&maxPrice=${maxPrice}&rating=${rating}&gender=${gender}`;
+				return `/products/search/all?search=${search}&category_id=${categoryID}&sub_category_id=${subCategoryID}&filter=&minPrice=${minPrice}&maxPrice=${maxPrice}&rating=${rating}&gender=${gender}`;
 			},
 		}),
 
 		AddCartCustomer: builder.mutation({
 			query: (body) => ({
-				url: `/customer/cart/add`,
+				url: `/carts/add/product`,
 				method: "POST",
 				body: body,
 			}),
@@ -174,7 +174,7 @@ export const api = createApi({
 		}),
 		RemoveCartCustomer: builder.mutation({
 			query: (body) => ({
-				url: `/customer/cart/remove/${body.product_id}`,
+				url: `/carts/remove/product/${body.product_id}`,
 				method: "DELETE",
 				body: body,
 			}),
@@ -183,7 +183,7 @@ export const api = createApi({
 
 		UpdateCartCustomer: builder.mutation({
 			query: (body) => ({
-				url: `/customer/cart/update`,
+				url: `/carts/update/product`,
 				method: "POST",
 				body: body,
 			}),
@@ -191,13 +191,13 @@ export const api = createApi({
 		}),
 
 		ViewAllCartCustomer: builder.query({
-			query: () => "/customer/cart",
+			query: () => "/carts",
 			providesTags: ["cart"],
 		}),
 
 		ApplyCoupon: builder.mutation({
 			query: (body) => ({
-				url: `/customer/cart/apply/coupon`,
+				url: `/carts/apply/coupon`,
 				method: "POST",
 				body: body,
 			}),
@@ -206,7 +206,7 @@ export const api = createApi({
 
 		verifyPay: builder.mutation({
 			query: (body) => ({
-				url: `/customer/cart/payment/verify`,
+				url: `/carts/payment/verify`,
 				method: "POST",
 				body: body,
 			}),
@@ -215,7 +215,7 @@ export const api = createApi({
 
 		ShippmentAddress: builder.mutation({
 			query: (body) => ({
-				url: `/customer/cart/shipping/address`,
+				url: `/carts/update/address`,
 				method: "POST",
 				body: body,
 			}),
