@@ -16,7 +16,7 @@ const Home = () => {
 	const { data, isLoading } = useViewAllProductsQuery({});
 	const { data: HotData, isLoading: isHotLoading } = useGetHotSalesQuery({});
 
-	console.log("hot salessss", HotData);
+	console.log("products", data);
 
 	return (
 		<div className='overflow-hidden'>

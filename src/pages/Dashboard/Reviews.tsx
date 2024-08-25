@@ -125,7 +125,7 @@ const Reviews = () => {
 																	<img
 																		src={
 																			props?.product?.media &&
-																			props?.product?.media[0]?.link
+																			props?.product?.media[0]?.url
 																		}
 																		alt=''
 																		className='h-[60px]'

@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
 	useAddCartCustomerMutation,
 	useAddNewBookmarkMutation,
+	// useDeleteNewBookmarkMutation,
 	useRemoveCartCustomerMutation,
 	useViewAProductQuery,
 	useViewAllCartCustomerQuery,
@@ -47,7 +48,7 @@ const ProductDetails = () => {
 	const [imageLoading, setImageLoading] = useState(true);
 	const {
 		data: userCartData,
-		isLoading: isUserCartLoading,
+		// isLoading: isUserCartLoading,
 		isFetching,
 	} = useViewAllCartCustomerQuery({});
 	const user = useSelector(
@@ -58,6 +59,18 @@ const ProductDetails = () => {
 		useAddCartCustomerMutation();
 	const [removeCartFn, { isLoading: loadingDecrease }] =
 		useRemoveCartCustomerMutation();
+
+	// const [removeBookMark, { data: removeBookMarkData }] =
+	// useDeleteNewBookmarkMutation();
+	// console.log("boooookmark", newBookMarkData);
+	// const handleDeleteBookMark = () => {
+	// if (!removeBookMarkData) {
+	// removeBookMark({ product_id: id });
+	// toast.success("Bookmarked Removed successfully");
+	// } else {
+	// toast.error("Already bookmarked");
+	// }
+	// };
 
 	const dispatch = UseAppDispach();
 	const globalstate = useSelector(
@@ -246,6 +259,10 @@ const ProductDetails = () => {
 							}`}
 							onClick={() => {
 								if (!productData?.data?.isBookmarked) {
+									handleNewBookMark();
+									loveBtn();
+								} else {
+									// handleDeleteBookMark();
 									handleNewBookMark();
 									loveBtn();
 								}

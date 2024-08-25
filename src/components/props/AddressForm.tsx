@@ -24,7 +24,27 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 		address: "",
 		state: "",
 		city: "",
+		street: "", //required
+		postalCode: "", //required
+		country: "", //required
 	});
+
+	const [countries, setCountries] = useState([]);
+
+	// Fetch the list of countries from the API
+	useEffect(() => {
+		const fetchCountries = async () => {
+			try {
+				const response = await fetch("https://restcountries.com/v3.1/all");
+				const data = await response.json();
+				setCountries(data);
+			} catch (error) {
+				console.error("Error fetching countries:", error);
+			}
+		};
+
+		fetchCountries();
+	}, []);
 
 	const [editForm, setEditForm] = useState({
 		fullname: addrData?.fullname || "",
@@ -32,6 +52,9 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 		address: addrData?.address || "",
 		state: addrData?.state || "",
 		city: addrData?.city || "",
+		street: addrData?.street || "",
+		postalCode: addrData?.postalCode || "",
+		country: addrData?.country || "",
 	});
 	useEffect(() => {
 		setEditForm({
@@ -40,10 +63,15 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 			address: addrData?.address || "",
 			state: addrData?.state || "",
 			city: addrData?.city || "",
+			street: addrData?.street || "",
+			postalCode: addrData?.postalCode || "",
+			country: addrData?.country || "",
 		});
 	}, [addrData]);
 
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (
+		event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+	) => {
 		if (actionType === "new") {
 			setFormData({ ...formData, [event.target.name]: event.target.value });
 		} else {
@@ -51,7 +79,8 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 		}
 	};
 
-	const [updateAddressMutation, {isLoading: updateLoad}] = useUpdateAddressMutation();
+	const [updateAddressMutation, { isLoading: updateLoad }] =
+		useUpdateAddressMutation();
 	const [newAddress, { isLoading: newLoading }] = useCreateNewAddressMutation();
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -63,7 +92,8 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 				ShowToast(true, "Address Added Successfully");
 				togleBtn();
 			} else {
-				togleBtn();
+				ShowToast(false, response?.data?.message);
+				// togleBtn();
 			}
 		} catch (error) {
 			console.error("Error adding address:", error);
@@ -204,11 +234,80 @@ dark:text-white'>
 							required
 						/>
 					</div>
+					<div className='mb-5'>
+						<label
+							htmlFor='text'
+							className='block mb-[5px] text-[12px] font-medium 
+text-gray-900 dark:text-white'>
+							Street
+						</label>
+						<input
+							name='street'
+							value={editForm.street}
+							onChange={handleChange}
+							type='text'
+							id='password'
+							className='bg-gray-50 border border-gray-300 text-gray-900 
+text-sm rounded-lg 
+focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+dark:focus:ring-blue-500 dark:focus:border-blue-500'
+							required
+						/>
+					</div>
+					<div className='mb-5'>
+						<label
+							htmlFor='text'
+							className='block mb-[5px] text-[12px] font-medium 
+text-gray-900 dark:text-white'>
+							PostalCode
+						</label>
+						<input
+							name='postalCode'
+							value={editForm.postalCode}
+							onChange={handleChange}
+							type='text'
+							id='password'
+							className='bg-gray-50 border border-gray-300 text-gray-900 
+text-sm rounded-lg 
+focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+dark:focus:ring-blue-500 dark:focus:border-blue-500'
+							required
+						/>
+					</div>
+					<div className='mb-5'>
+						<label
+							htmlFor='text'
+							className='block mb-[5px] text-[12px] font-medium 
+text-gray-900 dark:text-white'>
+							country
+						</label>
+						<select
+							name='country'
+							value={editForm.country}
+							onChange={handleChange}
+							// type='text'
+							id='password'
+							className='bg-gray-50 border border-gray-300 text-gray-900 
+text-sm rounded-lg 
+focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+dark:focus:ring-blue-500 dark:focus:border-blue-500'
+							required>
+							<option value=''>--Select a country--</option>
+							{countries.map((country: any) => (
+								<option key={country.cca3} value={country.name.common}>
+									{country.name.common}
+								</option>
+							))}
+						</select>
+					</div>
 					<div className='flex items-start mb-5'>
 						<div className='flex items-center h-5'></div>
 					</div>
 					{updateLoad ? (
-						<LoadingButton w = {'100%'} />
+						<LoadingButton w={"100%"} />
 					) : (
 						<button
 							type='submit'
@@ -318,8 +417,7 @@ dark:focus:ring-blue-500 dark:focus:border-blue-500'
 					<div className='mb-5'>
 						<label
 							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900
-dark:text-white'>
+							className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
 							City
 						</label>
 						<input
@@ -328,12 +426,72 @@ dark:text-white'>
 							onChange={handleChange}
 							type='text'
 							id='password'
-							className='bg-gray-50 border border-gray-300
-text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+							required
+						/>
+					</div>
+					<div className='mb-5'>
+						<label
+							htmlFor='text'
+							className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
+							Street
+						</label>
+						<input
+							name='street'
+							value={formData.street}
+							onChange={handleChange}
+							type='text'
+							id='password'
+							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
 							required
 						/>
+					</div>
+					<div className='mb-5'>
+						<label
+							htmlFor='text'
+							className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
+							PostalCode
+						</label>
+						<input
+							name='postalCode'
+							value={formData.postalCode}
+							onChange={handleChange}
+							type='text'
+							id='password'
+							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+dark:focus:ring-blue-500 dark:focus:border-blue-500'
+							required
+						/>
+					</div>
+					<div className='mb-5'>
+						<label
+							htmlFor='text'
+							className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
+							country
+						</label>
+						<select
+							name='country'
+							value={formData.country}
+							onChange={handleChange}
+							// type='text'
+							id='password'
+							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+dark:focus:ring-blue-500 dark:focus:border-blue-500'
+							required>
+							<option value=''>--Select a country--</option>
+							{countries.map((country: any) => (
+								<option key={country.cca3} value={country.name.common}>
+									{country.name.common}
+								</option>
+							))}
+						</select>
 					</div>
 					<div className='flex items-start mb-5'>
 						<div className='flex items-center h-5'></div>
