@@ -77,6 +77,24 @@ export const api = createApi({
 			invalidatesTags: ["Addresses"],
 		}),
 
+		CancelOrder: builder.mutation({
+			query: (body) => ({
+				url: `/orders/cancel/${body.order_uuid}`,
+				method: "DELETE",
+				body: body,
+			}),
+			invalidatesTags: ["Orders"],
+		}),
+
+		RemoveRating: builder.mutation({
+			query: (body) => ({
+				url: `/reviews/delete/${body.review_uuid}`,
+				method: "DELETE",
+				body: body,
+			}),
+			invalidatesTags: ["reviews"],
+		}),
+
 		getUserData: builder.query({
 			query: () => "/user/userdata",
 		}),
@@ -100,6 +118,9 @@ export const api = createApi({
 			query: (categoryId) => `/category/subcategories/${categoryId}`,
 		}),
 
+		getSingleCategory: builder.query({
+			query: (body) => `/categories/${body.categoryID}`,
+		}),
 		getHotSales: builder.query({
 			query: () => "/settings/home/hot/sales",
 		}),
@@ -159,6 +180,8 @@ export const api = createApi({
 				const gender = encodeURIComponent(body.gender || "");
 				const categoryID = encodeURIComponent(body.categoryID || "");
 				const subCategoryID = encodeURIComponent(body.subCategoryID || "");
+
+				console.log("checking", typeof rating);
 
 				return `/products/search/all?search=${search}&category_id=${categoryID}&sub_category_id=${subCategoryID}&filter=&minPrice=${minPrice}&maxPrice=${maxPrice}&rating=${rating}&gender=${gender}`;
 			},
@@ -221,6 +244,21 @@ export const api = createApi({
 			}),
 			invalidatesTags: ["cart"],
 		}),
+
+		viewAllSpotlight: builder.query({
+			query: () => "/posters",
+			// providesTags: [""],
+		}),
+
+		viewAllPosters: builder.query({
+			query: () => "/posters",
+			// providesTags: [""],
+		}),
+
+		GetAllCopoun: builder.query({
+			query: () => "/coupons?type=",
+			// providesTags: [""],
+		}),
 	}),
 });
 
@@ -255,4 +293,10 @@ export const {
 	useApplyCouponMutation,
 	useVerifyPayMutation,
 	useShippmentAddressMutation,
+	useCancelOrderMutation,
+	useViewAllSpotlightQuery,
+	useGetSingleCategoryQuery,
+	useRemoveRatingMutation,
+	useViewAllPostersQuery,
+	useGetAllCopounQuery,
 } = api;

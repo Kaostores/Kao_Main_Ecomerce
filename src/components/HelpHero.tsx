@@ -1,8 +1,7 @@
-
 import { IoSearchOutline } from "react-icons/io5";
 import img from "../assets/frame.png";
 
-const HelpHero = () => {
+const HelpHero = ({ handleSearch }: any) => {
 	return (
 		<div
 			className='w-full pt-[170px] sm:pt-[100px] pb-[170px] sm:pb-[100px] relative  
@@ -24,6 +23,7 @@ flex justify-center items-center md:mt-[70px] sm:mt-[60px]'>
 						placeholder='Search the knowledge base'
 						type='text'
 						className='placeholder-primary::placeholder text-[14px] text-primary flex-1 h-[100%] outline-none pl-[10px]'
+						onChange={(e) => handleSearch(e.target.value)}
 					/>
 				</div>
 			</div>

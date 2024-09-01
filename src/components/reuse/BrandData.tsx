@@ -1,10 +1,11 @@
 import BrandsCompSkeleton from "../skeleton/BrandCompSkeleton";
-import { useGetBrandsSpootlightQuery } from "@/services/apiSlice";
+import { useViewAllSpotlightQuery } from "@/services/apiSlice";
 import BrandsComp from "../commons/BrandsComp";
 
 const BrandData = () => {
 	const { data: brandData, isLoading: isLoadingBrand } =
-		useGetBrandsSpootlightQuery({});
+		useViewAllSpotlightQuery({});
+	console.log("fgtjrk", brandData);
 	return (
 		<div>
 			{isLoadingBrand && !brandData ? (

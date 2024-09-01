@@ -17,16 +17,16 @@ const FilterOption: React.FC<FilterOptionProps> = ({
 	onChange,
 }) => (
 	<div className='flex justify-center items-center mb-[3px]'>
-		<div className='mr-[5px]'>
+		<div className='mr-[5px] '>
 			<input
-				type='radio'
+				type='checkbox' // Changed from 'radio' to 'checkbox'
 				checked={isChecked}
 				onChange={onChange}
-				className='form-radio cursor-pointer'
+				className='form-checkbox cursor-pointer'
 				aria-label={label}
 			/>
 		</div>
-		<div className='text-[13px] text-[#535353]'>{label}</div>
+		<div className='text-[13px] sm:text-[16px] text-[#535353]'>{label}</div>
 	</div>
 );
 
@@ -45,7 +45,6 @@ const FilterSection: React.FC<FilterSectionProps> = ({
 }) => (
 	<div className='flex flex-col items-start mb-[20px]'>
 		<div className='text-[17px] font-bold mb-[5px]'>{title}</div>
-
 		{options?.length > 0 ? (
 			<>
 				{options.map((option) => (
@@ -83,10 +82,10 @@ const RatingOption: React.FC<RatingOptionProps> = ({
 	<div className='flex justify-center items-center mb-[3px]'>
 		<div className='mr-[5px]'>
 			<input
-				type='radio'
+				type='checkbox' // Changed from 'radio' to 'checkbox'
 				checked={isChecked}
 				onChange={onChange}
-				className='form-radio cursor-pointer'
+				className='form-checkbox cursor-pointer'
 				aria-label={`${stars} stars and above`}
 			/>
 		</div>
@@ -188,43 +187,65 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 	const updateUrlParams = useUpdateUrlParams();
 
 	const handleCategoryChange = (value: string) => {
-		updateUrlParams({ category_id: value });
+		if (activeCategoryID === value) {
+			updateUrlParams({ category_id: "" }); // Uncheck: clear the parameter
+		} else {
+			updateUrlParams({ category_id: value });
+		}
 	};
 
 	const handlePriceChange = (value: string) => {
 		const selectedOption = priceOptions.find(
 			(option) => option.value === value,
 		);
-		if (selectedOption) {
+		if (isActive2 === value) {
 			updateUrlParams({
-				filter: "", // To ensure filter parameter is included
+				filter: "",
+				minPrice: "",
+				maxPrice: "",
+			});
+			setIsActive2("");
+		} else if (selectedOption) {
+			updateUrlParams({
+				filter: "",
 				minPrice: selectedOption.minPrice,
 				maxPrice: selectedOption.maxPrice,
 			});
+			setIsActive2(value);
 		}
-		setIsActive2(value);
 	};
 
 	const handleGenderChange = (value: string) => {
-		updateUrlParams({
-			// filter: "",
-			gender: value,
-		});
-		setIsActive3(value);
+		if (isActive3 === value) {
+			updateUrlParams({
+				gender: "",
+			});
+			setIsActive3("");
+		} else {
+			updateUrlParams({
+				gender: value,
+			});
+			setIsActive3(value);
+		}
 	};
 
 	const handleRatingChange = (value: string) => {
-		console.log(value);
-		updateUrlParams({
-			// filter: "",
-			rating: value,
-		});
-		setIsActive4(value);
+		if (isActive4 === value) {
+			updateUrlParams({
+				rating: "",
+			});
+			setIsActive4("");
+		} else {
+			updateUrlParams({
+				rating: value,
+			});
+			setIsActive4(value);
+		}
 	};
 
 	return (
 		<div
-			className={`flex flex-col ${classNames} mr-5 md:w-[32%] lg:w-[20%] xl:min-w-[17%]`}>
+			className={`flex flex-col ${classNames} mr-5 md:w-[32%] lg:w-[20%] xl:min-w-[17%] `}>
 			<FilterSection
 				title='Category'
 				options={categoryOptions}

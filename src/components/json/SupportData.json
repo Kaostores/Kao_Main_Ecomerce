@@ -1,0 +1,127 @@
+{
+	"sections": [
+		{
+			"id": "payment",
+			"title": "Payment Methods",
+			"items": [
+				{
+					"subId": "credit-cards",
+					"subTitle": "What payment method(s) is used on KAO?",
+					"content": "The number of ways in which merchants can collect payments from their customers, for example, credit cards, digital wallets, direct debit, offline payment, etc. In a store, perhaps you use cash, credit cards, or mobile payment options like Apple Pay."
+				}
+			]
+		},
+		{
+			"id": "shipping",
+			"title": "Shipping Information",
+			"items": [
+				{
+					"subId": "domestic",
+					"subTitle": "How is domestic shipping handled on KAO?",
+					"content": "Shipping is managed through several partners, offering domestic options. Customers can choose their preferred shipping method at checkout."
+				},
+				{
+					"subId": "international",
+					"subTitle": "How is international shipping handled on KAO?",
+					"content": "International shipping options are available. Additional charges may apply based on the destination country and shipping method selected."
+				}
+			]
+		},
+		{
+			"id": "agent",
+			"title": "Agent Information",
+			"items": [
+				{
+					"subId": "agent-setup",
+					"subTitle": "How do I become an agent on KAO?",
+					"content": "Becoming an agent on KAO requires registration through our online platform. You'll need to provide identification and complete a background check."
+				},
+				{
+					"subId": "agent-commissions",
+					"subTitle": "What are the commission rates for agents?",
+					"content": "Agents earn commissions based on sales volume. Commission rates vary by product category and are paid out monthly."
+				}
+			]
+		},
+		{
+			"id": "voucher",
+			"title": "Voucher Information",
+			"items": [
+				{
+					"subId": "voucher-use",
+					"subTitle": "How do I use a voucher on KAO?",
+					"content": "To use a voucher, enter the voucher code at checkout. The discount will be applied to your order total."
+				},
+				{
+					"subId": "voucher-terms",
+					"subTitle": "What are the terms and conditions for vouchers?",
+					"content": "Vouchers are subject to terms and conditions, including expiry dates and specific usage criteria. Please refer to the voucher details for more information."
+				}
+			]
+		},
+		{
+			"id": "sell",
+			"title": "Selling on KAO",
+			"items": [
+				{
+					"subId": "how-to-sell",
+					"subTitle": "How can I start selling on KAO?",
+					"content": "To start selling on KAO, sign up as a merchant, list your products, and set your prices. Our platform provides tools to manage your inventory and track sales."
+				},
+				{
+					"subId": "seller-fees",
+					"subTitle": "What are the fees for selling on KAO?",
+					"content": "KAO charges a small commission on each sale. The fee structure is transparent, and there are no hidden costs. Details can be found in the seller agreement."
+				}
+			]
+		},
+		{
+			"id": "returns",
+			"title": "Returns and Refunds",
+			"items": [
+				{
+					"subId": "return-policy",
+					"subTitle": "What is the return policy on KAO?",
+					"content": "Customers can return products within 30 days of purchase if they meet the return conditions. Please refer to our return policy for more details."
+				},
+				{
+					"subId": "refund-process",
+					"subTitle": "How does the refund process work?",
+					"content": "Refunds are processed after returned items are inspected. Refunds are issued to the original payment method and typically take 5-7 business days."
+				}
+			]
+		},
+		{
+			"id": "delivery",
+			"title": "Delivery Information",
+			"items": [
+				{
+					"subId": "delivery-times",
+					"subTitle": "What are the delivery times for orders?",
+					"content": "Delivery times vary depending on the shipping method chosen at checkout. Standard delivery takes 3-5 business days, while express delivery takes 1-2 business days."
+				},
+				{
+					"subId": "tracking-orders",
+					"subTitle": "How can I track my order?",
+					"content": "Orders can be tracked through the KAO website. Log in to your account and go to the 'Orders' section to view tracking information."
+				}
+			]
+		},
+		{
+			"id": "accounts",
+			"title": "Account Management",
+			"items": [
+				{
+					"subId": "update-info",
+					"subTitle": "How do I update my account information?",
+					"content": "Account information can be updated by logging into your KAO account and navigating to the 'Account Settings' section. Make sure to save any changes."
+				},
+				{
+					"subId": "reset-password",
+					"subTitle": "How can I reset my password?",
+					"content": "To reset your password, click on the 'Forgot Password' link on the login page and follow the instructions to reset your password via email."
+				}
+			]
+		}
+	]
+}

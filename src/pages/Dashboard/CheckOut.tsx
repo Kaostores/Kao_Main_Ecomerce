@@ -528,7 +528,7 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 						</div>
 					</div>
 				) : (
-					<div>
+					<div className='w-[100%] mr-7 sm:mr-0'>
 						<UserForm
 							togleBtn={toggleBtn}
 							initialFormData={addressFormData} // Pass the address form data

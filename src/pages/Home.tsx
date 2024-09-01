@@ -9,6 +9,7 @@ import CategoriesData from "@/components/reuse/CategoriesData";
 import ProductSkeleton from "@/components/skeleton/ProductSkeleton";
 import {
 	useGetHotSalesQuery,
+	useViewAllPostersQuery,
 	useViewAllProductsQuery,
 } from "@/services/apiSlice";
 
@@ -16,7 +17,10 @@ const Home = () => {
 	const { data, isLoading } = useViewAllProductsQuery({});
 	const { data: HotData, isLoading: isHotLoading } = useGetHotSalesQuery({});
 
-	console.log("products", data);
+	const { data: posterData } = useViewAllPostersQuery({});
+	console.log("fgtjrk", posterData);
+
+	// console.log("spootlight", HotData);
 
 	return (
 		<div className='overflow-hidden'>
@@ -48,7 +52,7 @@ const Home = () => {
 
 			<div>
 				<div className='flex gap-5 mb-5'>
-					<AdvertComp />
+					<AdvertComp data={posterData?.data[0]?.image} />
 					<AdvertComp />
 				</div>
 				<AdvertComp />

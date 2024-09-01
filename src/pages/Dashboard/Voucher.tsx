@@ -4,14 +4,18 @@ import { IoCopyOutline } from "react-icons/io5";
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/services/store";
+import { useGetAllCopounQuery } from "@/services/apiSlice";
+import EmptyData from "@/components/reuse/EmptyData";
+import { FormatDate } from "@/helpers/DateFormater";
 
 const Voucher = () => {
 	const Navigate = useNavigate();
 	const [show, setShow] = useState(true);
 	const [show2, setShow2] = useState(false);
 	const user = useAppSelector((state) => state.persistedReducer.currentUser);
+	const { data: coupData } = useGetAllCopounQuery({});
 
-	console.log(user);
+	console.log(coupData);
 
 	const Toggle2 = () => {
 		setShow2(true);
@@ -60,28 +64,70 @@ const Voucher = () => {
 			<div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[2px]'></div>
 
 			{show ? (
-				<div className='w-[100%] sm:w-[90%] h-[100%] flex items-center sm:items-start justify-center sm:justify-normal pt-[80px] sm:pt-[20px] pb-[80px] flex-col'>
-					<div className='w-[60px] h-[60px] rounded-full bg-[#de801c5e] flex justify-center items-center'>
-						<img src={img} alt='' className='h-[40px]' />
-					</div>
-					<h3 className='text-primary font-[600] text-[15px] mt-[12px]'>
-						Hi, {user?.firstname} this is your current voucher
-					</h3>
-
-					<div className='flex items-center text-secondary'>
-						<h3 className='font-[600]'>DISCOUNT50</h3>
-						<div className='text-[10px] ml-[5px]'>
-							<IoCopyOutline />
+				<>
+					{coupData?.data[0]?.status === "active" && (
+						<div
+							className='w-[100%] sm:w-[90%] h-[100%] flex items-center sm:items-start justify-center 
+sm:justify-normal pt-[80px] sm:pt-[20px] pb-[80px] flex-col'>
+							<div className='w-[60px] h-[60px] rounded-full bg-[#de801c5e] flex justify-center items-center'>
+								<img src={img} alt='' className='h-[40px]' />
+							</div>
+							<h3 className='text-primary font-[600] text-[15px] mt-[12px]'>
+								Hi, {user?.firstname} this is your current voucher
+							</h3>
+							<div className='flex items-center text-secondary'>
+								<h3 className='font-[600]'>{coupData?.data[0]?.couponCode}</h3>
+								<div className='text-[10px] ml-[5px]'>
+									<IoCopyOutline />
+								</div>
+							</div>
+							<div className='flex items-center text-primary text-[13px] font-[600] mt-[7px] whitespace-nowrap'>
+								<span className='text-iconGray text-[13px] mr-[3px]'>
+									Expires:
+								</span>{" "}
+								{FormatDate(coupData?.data[0]?.endDate)}
+							</div>
 						</div>
-					</div>
-					<div className='flex items-center text-primary text-[13px] font-[600] mt-[7px]'>
-						<span className='text-iconGray text-[13px] mr-[3px]'>Expires:</span>{" "}
-						03/02/2024 <p className='font-[600] ml-[4px]'>08:00AM</p>
-					</div>
-				</div>
+					)}
+
+					{coupData?.data[0]?.status !== "active" && (
+						<EmptyData title='No Active Coupoun' />
+					)}
+				</>
 			) : null}
 
-			{show2 ? <div></div> : null}
+			{show2 ? (
+				<div>
+					{coupData?.data[0]?.status === "inactive" && (
+						<div
+							className='w-[100%] sm:w-[90%] h-[100%] flex items-center sm:items-start justify-center 
+sm:justify-normal pt-[80px] sm:pt-[20px] pb-[80px] flex-col'>
+							<div className='w-[60px] h-[60px] rounded-full bg-[#de801c5e] flex justify-center items-center'>
+								<img src={img} alt='' className='h-[40px]' />
+							</div>
+							<h3 className='text-primary font-[600] text-[15px] mt-[12px]'>
+								Hi, {user?.firstname} this is your current voucher
+							</h3>
+							<div className='flex items-center text-secondary'>
+								<h3 className='font-[600]'>{coupData?.data[0]?.couponCode}</h3>
+								<div className='text-[10px] ml-[5px]'>
+									<IoCopyOutline />
+								</div>
+							</div>
+							<div className='flex items-center text-primary text-[13px] font-[600] mt-[7px] whitespace-nowrap'>
+								<span className='text-iconGray text-[13px] mr-[3px]'>
+									Expires:
+								</span>{" "}
+								{FormatDate(coupData?.data[0]?.endDate)}
+							</div>
+						</div>
+					)}
+
+					{coupData?.data[0]?.status !== "inactive" && (
+						<EmptyData title='No In-active Coupoun' />
+					)}
+				</div>
+			) : null}
 		</div>
 	);
 };
