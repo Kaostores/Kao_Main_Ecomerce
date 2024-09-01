@@ -1,9 +1,9 @@
 import pic1 from "@/assets/icons/iconoir_send-mail.svg";
 import pic2 from "@/assets/icons/bi_phone.svg";
-import pic3 from '@/assets/icons/ion_logo-google-playstore.svg'
-import pic4 from '@/assets/icons/Vector (3).svg'
-import pic5 from '@/assets/icons/playBlue.svg'
-import pic6 from '@/assets/icons/appBlue.svg'
+import pic3 from "@/assets/icons/ion_logo-google-playstore.svg";
+import pic4 from "@/assets/icons/Vector (3).svg";
+import pic5 from "@/assets/icons/playBlue.svg";
+import pic6 from "@/assets/icons/appBlue.svg";
 import { FaFacebookF } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa";
@@ -11,9 +11,9 @@ import { FaThreads } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 	return (
-		<div className='w-full mt-10'>
+		<div className='w-full mt-10 sm:mt-5'>
 			<div className='min-h-[70px]   w-full bg-ascentGray flex items-center justify-center'>
 				<div className='w-[85%] sm:w-[90%] flex justify-between '>
 					<div className='flex gap-3 items-center sm:flex-1'>
@@ -49,7 +49,9 @@ const Footer = () => {
 				<div className='justify-between text-white flex w-[85%] '>
 					<div className='text-[15px] md:text-[13px]'>
 						<div className='font-bold mb-2'>ABOUT US</div>
-						<div onClick={()=> navigate('/contact')} className='mb-1 cursor-pointer hover:underline transition ease-in-out delay-150'>
+						<div
+							onClick={() => navigate("/contact")}
+							className='mb-1 cursor-pointer hover:underline transition ease-in-out delay-150'>
 							Contact Us
 						</div>
 						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>

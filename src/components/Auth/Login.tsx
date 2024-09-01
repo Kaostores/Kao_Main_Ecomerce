@@ -112,7 +112,11 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 									<FormItem>
 										<FormLabel>Password</FormLabel>
 										<FormControl>
-											<Input placeholder='input your password' {...field} />
+											<Input
+												type='password'
+												placeholder='input your password'
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage style={{ color: "red" }} />
 									</FormItem>

@@ -1,16 +1,21 @@
 import { IoIosArrowBack } from "react-icons/io";
 import { useState } from "react";
-import img from "../../assets/watch.png";
 import TrackSteps from "./Subpages/TrackSteps";
 import OrderDetails from "./Subpages/OrderDetails";
 import Recomended from "./Subpages/Recomended";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useFetchOrdersQuery } from "@/services/apiSlice";
+import {
+	useCancelOrderMutation,
+	useFetchOrdersQuery,
+} from "@/services/apiSlice";
 import moment from "moment";
 import NoOngoingOrders from "./Subpages/NoOngoingOrders";
 import NoCompletedOrders from "./Subpages/NoCompletedOrders";
 import NoCancelledOrders from "./Subpages/NoCancelledOrders";
 import { formatPrice } from "@/helpers";
+import AreYouSure from "@/components/AreYouSure";
+import ShowToast from "@/components/reuse/ShowToast";
+import LoaderComponent from "@/components/reuse/LoadingComponent";
 
 const Order = () => {
 	const [show, setShow] = useState(true);
@@ -20,11 +25,40 @@ const Order = () => {
 	const [track, setTrack] = useState(false);
 	const [details, setDetails] = useState(false);
 	const [orderDetail, setOrderDetail] = useState<any>();
+	const [selectedOrderID, setSelectedOrderID] = useState<any>("");
 
 	const { data: orders, isLoading } = useFetchOrdersQuery({});
 	console.log("getting orders", orders);
+	const [cancelingOrder, { isLoading: isCancelLoading }] =
+		useCancelOrderMutation();
+
+	console.log("selectedOrderID:", selectedOrderID);
 
 	const Navigate = useNavigate();
+
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const handleOpenModal = () => {
+		setIsModalOpen(true);
+	};
+
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+	};
+
+	const handleConfirmAction = async () => {
+		const response: any = await cancelingOrder({
+			order_uuid: selectedOrderID,
+		});
+		if (response?.data?.success) {
+			ShowToast(true, "Order cancelled successfully");
+			// Navigate(-1);
+		}
+		// Perform the action you want to confirm
+		console.log("Confirmed action!", response);
+		// Close the modal after the action
+		handleCloseModal();
+	};
 
 	const orderDetails = () => {
 		setDetails(true);
@@ -62,8 +96,16 @@ const Order = () => {
 		setShow2(false);
 		setShow3(true);
 	};
+
+	if (isCancelLoading) return <LoaderComponent />;
 	return (
 		<>
+			<AreYouSure
+				open={isModalOpen}
+				close={handleCloseModal}
+				action={handleConfirmAction}
+				text='Are you sure you want to Cancel this order?'
+			/>
 			{view ? (
 				<div className='w-[100%] flex flex-col md:items-center sm:items-center'>
 					<div className='flex-1 md:w-[100%] sm:w-[100%] sm:items-center flex-col p-[15px] md:p-0 sm:p-0 bg-[#F4F4F4] sm:bg-white md:bg-white ml-[15px] md:ml-0 rounded-[8px] sm:ml-0'>
@@ -156,7 +198,7 @@ const Order = () => {
 																		<div
 																			key={item.id}
 																			className='flex items-center sm:w-[100%] flex-col'>
-																			<div className='flex items-center w-full justify-between'>
+																			<div className='flex items-center w-full justify-between  sm:flex-col  sm:border-b'>
 																				<NavLink
 																					to={`/dashboard/orderdetails/${order.id}`}>
 																					<div className='flex'>
@@ -175,7 +217,7 @@ const Order = () => {
 																								{item?.product?.name}
 																							</h3>
 
-																							<div className='flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap'>
+																							<div className='flex items-center mt-[12px] sm:w-[100%]  sm:mt-[2px] sm:whitespace-nowrap sm:w-[250px] sm:overflow-hidden'>
 																								<p className='text-iconGray text-[13px]'>
 																									Brand:
 																								</p>
@@ -207,14 +249,27 @@ const Order = () => {
 																						</div>
 																					</div>
 																				</NavLink>
-																				<h4
-																					onClick={() => {
-																						TrackView(item, order);
-																						// setOrderStatus(order);
-																					}}
-																					className='text-primary text-[14px] cursor-pointer font-[600] sm:hidden'>
-																					Track delivery
-																				</h4>
+
+																				<div>
+																					<h4
+																						onClick={() => {
+																							TrackView(item, order);
+																							// setOrderStatus(order);
+																						}}
+																						className='text-primary text-[14px] cursor-pointer font-[600] sm:hidden mb-10'>
+																						Track delivery
+																					</h4>
+																					<div
+																						className=' text-[14px] cursor-pointer font-[600]  '
+																						onClick={() => {
+																							handleOpenModal();
+																							setSelectedOrderID(order?.id);
+
+																							console.log("here is it", item);
+																						}}>
+																						Cancel Order
+																					</div>
+																				</div>
 																			</div>
 																			<div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[18px] mb-[18px] md:hidden sm:hidden'></div>
 																		</div>
@@ -274,7 +329,9 @@ const Order = () => {
 																					<div className='flex'>
 																						<div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
 																							<img
-																								src={img}
+																								src={
+																									item?.product?.media[0]?.url
+																								}
 																								alt=''
 																								className='h-[60px]'
 																							/>
@@ -383,7 +440,7 @@ const Order = () => {
 																				<div className='flex'>
 																					<div className='w-[90px] h-[90px] flex justify-center items-center border border-primary'>
 																						<img
-																							src={img}
+																							src={item?.product?.media[0]?.url}
 																							alt=''
 																							className='h-[60px]'
 																						/>
@@ -391,7 +448,7 @@ const Order = () => {
 
 																					<div className='flex flex-col ml-[15px] sm:flex-1'>
 																						<h3 className='text-[15px] font-[600]'>
-																							{item?.variant?.title}
+																							{item?.product?.name}
 																						</h3>
 
 																						<div className='flex items-center mt-[12px] sm:w-[100%] sm:flex-wrap'>

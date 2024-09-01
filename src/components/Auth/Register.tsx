@@ -230,6 +230,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 										<FormLabel>Phone Number</FormLabel>
 										<FormControl>
 											<PhoneInput
+												limitMaxLength={true}
 												className='flex h-10  w-full rounded-md border outline-none border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none  disabled:cursor-not-allowed disabled:opacity-50'
 												{...field}
 												placeholder='Enter phone number'
@@ -249,7 +250,11 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 									<FormItem>
 										<FormLabel>Password</FormLabel>
 										<FormControl>
-											<Input placeholder='input your password' {...field} />
+											<Input
+												type='password'
+												placeholder='input your password'
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage style={{ color: "red" }} />
 									</FormItem>

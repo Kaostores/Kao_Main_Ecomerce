@@ -1,5 +1,6 @@
 import CardComp from "@/components/commons/CardComp";
 import {
+	useGetSingleCategoryQuery,
 	useSearchProductQuery,
 	useViewAllProductsQuery,
 } from "@/services/apiSlice";
@@ -28,6 +29,12 @@ const SearchPage = () => {
 	const maxPrice = searchParams.get("maxPrice") || "";
 	const rating = searchParams.get("rating") || "";
 	const gender = searchParams.get("gender") || "";
+
+	const { data: catData } = useGetSingleCategoryQuery({
+		categoryID: categoryID,
+	});
+
+	console.log("cvhvjj", catData);
 
 	useEffect(() => {
 		if (
@@ -88,7 +95,7 @@ const SearchPage = () => {
 							<IoFilterSharp />
 						</div>
 						<div className='h-[40px] justify-center items-center flex w-full bg-primary rounded-md text-white font-bold'>
-							Electronics
+							{catData?.data?.name ? catData?.data?.name : "General"}
 						</div>
 					</div>
 					<div className='w-[100%] flex justify-between'>

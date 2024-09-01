@@ -379,7 +379,7 @@ justify-center items-center'>
 														</div>
 													</div>
 												))}
-												<div className='flex flex-col text-[14px] mb-10'>
+												<div className='flex flex-col text-[14px] mb-10 sm:mb-1'>
 													<div
 														className='w-[100%]  flex justify-between items-center text-primary 
 py-[10px] px-[5px] bg-ascentGray rounded-md mt-[50px] mb-5 font-semibold'>
@@ -454,7 +454,7 @@ py-[10px] px-[5px] bg-ascentGray rounded-md mt-[50px] mb-5 font-semibold'>
 				</div>
 			</div>
 
-			<div className='xl:flex flex-col mb-20 sm:hidden'>
+			<div className='xl:flex flex-col mb-20 sm:mb-10 '>
 				{data?.data?.length > 0 && (
 					<h3 className='mt-[50px] font-bold mb-3'>Saved items</h3>
 				)}

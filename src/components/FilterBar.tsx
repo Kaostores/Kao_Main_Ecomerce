@@ -17,7 +17,9 @@ const FilterBar = ({ isOpen, toggleSidebar }: any) => {
 					<div>Filter</div>
 				</h5>
 
-				<FilterComponent />
+				<div onClick={toggleSidebar} className=''>
+					<FilterComponent />
+				</div>
 			</div>
 		</div>
 	);

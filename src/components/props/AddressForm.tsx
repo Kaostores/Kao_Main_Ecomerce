@@ -122,9 +122,7 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 	return (
 		<>
 			{actionType === "edit" && (
-				<form
-					onSubmit={handleSubmitEdit}
-					className='xl:w-[400px] md:w-[350px] sm:w-[100%] mx-auto'>
+				<form onSubmit={handleSubmitEdit} className='w-full  '>
 					<div className='flex mb-[20px] items-center'>
 						<div onClick={togleBtn} className='text-[20px] mr-5 cursor-pointer'>
 							<IoMdArrowBack />
@@ -136,172 +134,178 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 							Edit Delivery address
 						</div>
 					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='fullname'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900
+					<div className='flex  flex-row gap-4  w-full sm:flex-col '>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='fullname'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900
           dark:text-white'>
-							Full Name
-						</label>
-						<input
-							value={editForm.fullname}
-							onChange={handleChange}
-							required
-							type='text'
-							id='fullname'
-							name='fullname'
-							className='bg-gray-50 border border-gray-300 text-gray-900
-			text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
+								Full Name
+							</label>
+							<input
+								value={editForm.fullname}
+								onChange={handleChange}
+								required
+								type='text'
+								id='fullname'
+								name='fullname'
+								className='bg-gray-50 border border-gray-300 text-gray-900
+			text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5
 			dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-			dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							placeholder='name@flowbite.com'
-						/>
-					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='number'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900
+			dark:focus:ring-blue-500 dark:focus:border-blue-500  w-full '
+								placeholder='name@flowbite.com'
+							/>
+						</div>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='number'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900
 dark:text-white'>
-							Phone Number
-						</label>
-						<input
-							onChange={handleChange}
-							value={editForm.phone}
-							name='phone'
-							type='text'
-							id='number'
-							className='bg-gray-50 border border-gray-300
+								Phone Number
+							</label>
+							<input
+								onChange={handleChange}
+								value={editForm.phone}
+								name='phone'
+								type='text'
+								id='number'
+								className='bg-gray-50 border border-gray-300
 			text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
 			dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
 			dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
+								required
+							/>
+						</div>
 					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900
-dark:text-white'>
-							Delivery Address
-						</label>
-						<input
-							value={editForm.address}
-							onChange={handleChange}
-							name='address'
-							type='text'
-							id='address'
-							className='bg-gray-50 border border-gray-300
+					<div className='flex  flex-row gap-4  w-full sm:flex-col '>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
+								Delivery Address
+							</label>
+							<input
+								value={editForm.address}
+								onChange={handleChange}
+								name='address'
+								type='text'
+								id='address'
+								className='bg-gray-50 border border-gray-300
+text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5
+dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+dark:focus:ring-blue-500 dark:focus:border-blue-500 w-full'
+								required
+							/>
+						</div>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
+								State
+							</label>
+							<input
+								name='state'
+								value={editForm.state}
+								onChange={handleChange}
+								type='text'
+								id='password'
+								className='bg-gray-50 border border-gray-300
 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
+								required
+							/>
+						</div>
 					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900
+					<div className='flex  flex-row gap-4  w-full sm:flex-col '>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900
 dark:text-white'>
-							State
-						</label>
-						<input
-							name='state'
-							value={editForm.state}
-							onChange={handleChange}
-							type='text'
-							id='password'
-							className='bg-gray-50 border border-gray-300
-text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
-					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900
-dark:text-white'>
-							City
-						</label>
-						<input
-							name='city'
-							value={editForm.city}
-							onChange={handleChange}
-							type='text'
-							id='password'
-							className='bg-gray-50 border border-gray-300text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-whitedark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
-					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium 
+								City
+							</label>
+							<input
+								name='city'
+								value={editForm.city}
+								onChange={handleChange}
+								type='text'
+								id='password'
+								className='bg-gray-50 border border-gray-300text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-whitedark:focus:ring-blue-500 dark:focus:border-blue-500'
+								required
+							/>
+						</div>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium 
 text-gray-900 dark:text-white'>
-							Street
-						</label>
-						<input
-							name='street'
-							value={editForm.street}
-							onChange={handleChange}
-							type='text'
-							id='password'
-							className='bg-gray-50 border border-gray-300 text-gray-900 
+								Street
+							</label>
+							<input
+								name='street'
+								value={editForm.street}
+								onChange={handleChange}
+								type='text'
+								id='password'
+								className='bg-gray-50 border border-gray-300 text-gray-900 
 text-sm rounded-lg 
 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
+								required
+							/>
+						</div>
 					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium 
+					<div className='flex  flex-row gap-4  w-full sm:flex-col '>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium 
 text-gray-900 dark:text-white'>
-							PostalCode
-						</label>
-						<input
-							name='postalCode'
-							value={editForm.postalCode}
-							onChange={handleChange}
-							type='text'
-							id='password'
-							className='bg-gray-50 border border-gray-300 text-gray-900 
+								PostalCode
+							</label>
+							<input
+								name='postalCode'
+								value={editForm.postalCode}
+								onChange={handleChange}
+								type='text'
+								id='password'
+								className='bg-gray-50 border border-gray-300 text-gray-900 
 text-sm rounded-lg 
 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
-					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium 
+								required
+							/>
+						</div>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium 
 text-gray-900 dark:text-white'>
-							country
-						</label>
-						<select
-							name='country'
-							value={editForm.country}
-							onChange={handleChange}
-							// type='text'
-							id='password'
-							className='bg-gray-50 border border-gray-300 text-gray-900 
+								country
+							</label>
+							<select
+								name='country'
+								value={editForm.country}
+								onChange={handleChange}
+								// type='text'
+								id='password'
+								className='bg-gray-50 border border-gray-300 text-gray-900 
 text-sm rounded-lg 
 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required>
-							<option value=''>--Select a country--</option>
-							{countries.map((country: any) => (
-								<option key={country.cca3} value={country.name.common}>
-									{country.name.common}
-								</option>
-							))}
-						</select>
+								required>
+								<option value=''>--Select a country--</option>
+								{countries.map((country: any) => (
+									<option key={country.cca3} value={country.name.common}>
+										{country.name.common}
+									</option>
+								))}
+							</select>
+						</div>
 					</div>
 					<div className='flex items-start mb-5'>
 						<div className='flex items-center h-5'></div>
@@ -319,10 +323,8 @@ dark:focus:ring-blue-500 dark:focus:border-blue-500'
 			)}
 
 			{actionType === "new" && (
-				<form
-					onSubmit={handleSubmit}
-					className='xl:w-[400px] md:w-[350px] sm:w-[100%] mx-auto'>
-					<div className='flex mb-[20px] items-center'>
+				<form onSubmit={handleSubmit} className=''>
+					<div className='flex mb-[20px] '>
 						<div onClick={togleBtn} className='text-[20px] mr-5 cursor-pointer'>
 							<IoMdArrowBack />
 						</div>
@@ -333,165 +335,179 @@ dark:focus:ring-blue-500 dark:focus:border-blue-500'
 							Delivery address
 						</div>
 					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='fullname'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900
+					<div className='flex  flex-row gap-4  w-full sm:flex-col '>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='fullname'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900
           dark:text-white'>
-							Full Name
-						</label>
-						<input
-							value={formData.fullname}
-							onChange={handleChange}
-							required
-							type='text'
-							id='fullname'
-							name='fullname'
-							className='bg-gray-50 border border-gray-300 text-gray-900
+								Full Name
+							</label>
+							<input
+								value={formData.fullname}
+								onChange={handleChange}
+								required
+								type='text'
+								id='fullname'
+								name='fullname'
+								className='bg-gray-50 border border-gray-300 text-gray-900
 			text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
 			dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
 			dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							placeholder='name@flowbite.com'
-						/>
-					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='number'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900
+								placeholder='john doe'
+							/>
+						</div>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='number'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900
 dark:text-white'>
-							Phone Number
-						</label>
-						<input
-							onChange={handleChange}
-							value={formData.phone}
-							name='phone'
-							type='text'
-							id='number'
-							className='bg-gray-50 border border-gray-300
+								Phone Number
+							</label>
+							<input
+								onChange={handleChange}
+								value={formData.phone}
+								name='phone'
+								type='text'
+								id='number'
+								className='bg-gray-50 border border-gray-300
 			text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
 			dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
 			dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
+								required
+								placeholder='9037264736383'
+							/>
+						</div>
 					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900
+					<div className='flex  flex-row gap-4  w-full sm:flex-col '>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900
 dark:text-white'>
-							Delivery Address
-						</label>
-						<input
-							value={formData.address}
-							onChange={handleChange}
-							name='address'
-							type='text'
-							id='address'
-							className='bg-gray-50 border border-gray-300
+								Delivery Address
+							</label>
+							<input
+								value={formData.address}
+								onChange={handleChange}
+								name='address'
+								type='text'
+								id='address'
+								className='bg-gray-50 border border-gray-300
 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
-					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900
+								required
+								placeholder='123 Maple Street'
+							/>
+						</div>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900
 dark:text-white'>
-							State
-						</label>
-						<input
-							name='state'
-							value={formData.state}
-							onChange={handleChange}
-							type='text'
-							id='password'
-							className='bg-gray-50 border border-gray-300
+								State
+							</label>
+							<input
+								name='state'
+								value={formData.state}
+								onChange={handleChange}
+								type='text'
+								id='password'
+								className='bg-gray-50 border border-gray-300
 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
+								required
+								placeholder='Lagos'
+							/>
+						</div>
 					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
-							City
-						</label>
-						<input
-							name='city'
-							value={formData.city}
-							onChange={handleChange}
-							type='text'
-							id='password'
-							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
-					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
-							Street
-						</label>
-						<input
-							name='street'
-							value={formData.street}
-							onChange={handleChange}
-							type='text'
-							id='password'
-							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+					<div className='flex  flex-row gap-4  w-full sm:flex-col '>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
+								City
+							</label>
+							<input
+								name='city'
+								value={formData.city}
+								onChange={handleChange}
+								type='text'
+								id='password'
+								className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+								required
+								placeholder='Ajeromi ifelodun'
+							/>
+						</div>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
+								Street
+							</label>
+							<input
+								name='street'
+								value={formData.street}
+								onChange={handleChange}
+								type='text'
+								id='password'
+								className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
+								required
+								placeholder=' Maple'
+							/>
+						</div>
 					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
-							PostalCode
-						</label>
-						<input
-							name='postalCode'
-							value={formData.postalCode}
-							onChange={handleChange}
-							type='text'
-							id='password'
-							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+					<div className='flex  flex-row gap-4  w-full sm:flex-col '>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
+								PostalCode
+							</label>
+							<input
+								name='postalCode'
+								value={formData.postalCode}
+								onChange={handleChange}
+								type='text'
+								id='password'
+								className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required
-						/>
-					</div>
-					<div className='mb-5'>
-						<label
-							htmlFor='text'
-							className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
-							country
-						</label>
-						<select
-							name='country'
-							value={formData.country}
-							onChange={handleChange}
-							// type='text'
-							id='password'
-							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+								required
+								placeholder='10001'
+							/>
+						</div>
+						<div className='mb-5 flex-1'>
+							<label
+								htmlFor='text'
+								className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
+								country
+							</label>
+							<select
+								name='country'
+								value={formData.country}
+								onChange={handleChange}
+								// type='text'
+								id='password'
+								className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							required>
-							<option value=''>--Select a country--</option>
-							{countries.map((country: any) => (
-								<option key={country.cca3} value={country.name.common}>
-									{country.name.common}
-								</option>
-							))}
-						</select>
+								required>
+								<option value=''>--Select a country--</option>
+								{countries.map((country: any) => (
+									<option key={country.cca3} value={country.name.common}>
+										{country.name.common}
+									</option>
+								))}
+							</select>
+						</div>
 					</div>
 					<div className='flex items-start mb-5'>
 						<div className='flex items-center h-5'></div>

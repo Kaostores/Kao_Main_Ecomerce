@@ -4,9 +4,15 @@ import { IoIosArrowBack } from "react-icons/io";
 import ReviewPage from "./Subpages/ReviewPage";
 import Recomended from "./Subpages/Recomended";
 import { useNavigate } from "react-router-dom";
-import { useViewAllMyReviewsQuery } from "@/services/apiSlice";
+import {
+	useRemoveRatingMutation,
+	useViewAllMyReviewsQuery,
+} from "@/services/apiSlice";
 import ReviewSkeleton from "@/components/skeleton/ReviewsSkeleton";
 import EmptyData from "@/components/reuse/EmptyData";
+import ShowToast from "@/components/reuse/ShowToast";
+import AreYouSure from "@/components/AreYouSure";
+import LoaderComponent from "@/components/reuse/LoadingComponent";
 
 const Reviews = () => {
 	const [show, setShow] = useState(false);
@@ -15,8 +21,32 @@ const Reviews = () => {
 	const [review, setReview] = useState(false);
 
 	const { data, isLoading, isFetching } = useViewAllMyReviewsQuery({});
+	const [, setEditingReviewId] = useState<string | null>(null);
+	const [selectedReviewID, setSelectedReviewID] = useState<any>("");
+	const [cancelReview, { isLoading: isCancelLoading }] =
+		useRemoveRatingMutation();
 
 	console.log("this is my review", data);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const handleOpenModal = () => {
+		setIsModalOpen(true);
+	};
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+	};
+	const handleConfirmAction = async () => {
+		const response: any = await cancelReview({
+			review_uuid: selectedReviewID,
+		});
+		if (response?.data?.success) {
+			ShowToast(true, "Review Deleted successfully");
+			Navigate(-1);
+		}
+		// Perform the action you want to confirm
+		console.log("Confirmed action!", response);
+		// Close the modal after the action
+		handleCloseModal();
+	};
 
 	const Navigate = useNavigate();
 
@@ -33,8 +63,16 @@ const Reviews = () => {
 		setShow2(true);
 	};
 
+	if (isCancelLoading) return <LoaderComponent />;
+
 	return (
 		<>
+			<AreYouSure
+				open={isModalOpen}
+				close={handleCloseModal}
+				action={handleConfirmAction}
+				text='Are you sure you want to Delete this Review?'
+			/>
 			<div className='w-[100%] flex flex-col md:items-center sm:items-center bg-[#F4F4F4] md:bg-white sm:bg-white ml-[15px] md:ml-0 sm:ml-0 rounded-[8px]'>
 				{pending ? (
 					<div className='w-[100%] flex flex-col p-[15px] md:p-0 sm:p-0 md:items-center sm:items-center'>
@@ -157,7 +195,9 @@ const Reviews = () => {
 																	</div>
 																</div>
 															</div>
-															<div className='flex flex-col items-end sm:hidden'>
+															<div
+																onClick={() => setEditingReviewId("yes")}
+																className='flex flex-col items-end sm:hidden'>
 																<p className='text-primary text-[14px] font-[600] cursor-pointer'>
 																	Edit review
 																</p>
@@ -190,9 +230,15 @@ const Reviews = () => {
 															{props?.message}
 														</p>
 													</div>
-													<div className='flex-col hidden sm:flex mt-[15px]'>
+													<div
+														onClick={() => {
+															handleOpenModal();
+															setSelectedReviewID(props?.id);
+															console.log("here is it", props);
+														}}
+														className='flex-col hidden sm:flex mt-[15px]'>
 														<p className='text-primary text-[14px] font-[600] cursor-pointer underline'>
-															Edit review
+															Delete review
 														</p>
 													</div>
 												</div>
