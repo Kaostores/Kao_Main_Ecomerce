@@ -23,6 +23,7 @@ export const api = createApi({
 		"bookmark",
 		"reviews",
 		"cart",
+		"chats",
 	],
 	endpoints: (builder) => ({
 		viewAllProducts: builder.query({
@@ -42,6 +43,20 @@ export const api = createApi({
 				body: orderData,
 			}),
 			invalidatesTags: ["Orders"],
+		}),
+
+		PostMessages: builder.mutation({
+			query: (body) => ({
+				url: `/messages/send/${body.store_uuid}`,
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["chats"],
+		}),
+
+		fetchMessages: builder.query({
+			query: (body) => `/messages/get/${body.vendor_uuid}`,
+			providesTags: ["chats"],
 		}),
 
 		fetchOrders: builder.query({
@@ -180,10 +195,11 @@ export const api = createApi({
 				const gender = encodeURIComponent(body.gender || "");
 				const categoryID = encodeURIComponent(body.categoryID || "");
 				const subCategoryID = encodeURIComponent(body.subCategoryID || "");
+				const brand_id = encodeURIComponent(body.brand_id || "");
 
 				console.log("checking", typeof rating);
 
-				return `/products/search/all?search=${search}&category_id=${categoryID}&sub_category_id=${subCategoryID}&filter=&minPrice=${minPrice}&maxPrice=${maxPrice}&rating=${rating}&gender=${gender}`;
+				return `/products/search/all?search=${search}&category_id=${categoryID}&sub_category_id=${subCategoryID}&filter=&minPrice=${minPrice}&maxPrice=${maxPrice}&rating=${rating}&gender=${gender}&brand_id=${brand_id}`;
 			},
 		}),
 
@@ -246,7 +262,7 @@ export const api = createApi({
 		}),
 
 		viewAllSpotlight: builder.query({
-			query: () => "/posters",
+			query: () => "/brands",
 			// providesTags: [""],
 		}),
 
@@ -299,4 +315,6 @@ export const {
 	useRemoveRatingMutation,
 	useViewAllPostersQuery,
 	useGetAllCopounQuery,
+	usePostMessagesMutation,
+	useFetchMessagesQuery,
 } = api;

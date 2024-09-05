@@ -29,6 +29,7 @@ const SearchPage = () => {
 	const maxPrice = searchParams.get("maxPrice") || "";
 	const rating = searchParams.get("rating") || "";
 	const gender = searchParams.get("gender") || "";
+	const brand_id = searchParams.get("brand_id") || "";
 
 	const { data: catData } = useGetSingleCategoryQuery({
 		categoryID: categoryID,
@@ -44,11 +45,21 @@ const SearchPage = () => {
 			minPrice ||
 			maxPrice ||
 			rating ||
+			brand_id ||
 			gender
 		) {
 			// dispatch(fetchProducts({ query, categoryID }));
 		}
-	}, [query, categoryID, subCategoryID, minPrice, maxPrice, rating, gender]);
+	}, [
+		query,
+		categoryID,
+		subCategoryID,
+		minPrice,
+		maxPrice,
+		rating,
+		gender,
+		brand_id,
+	]);
 
 	const {
 		data: searchData,
@@ -62,6 +73,7 @@ const SearchPage = () => {
 		maxPrice,
 		rating,
 		gender,
+		brand_id,
 	});
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -80,6 +92,7 @@ const SearchPage = () => {
 		minPrice?.length > 0 ||
 		rating?.length > 0 ||
 		gender?.length > 0 ||
+		brand_id?.length > 0 ||
 		maxPrice?.length > 0;
 	const isLoading = isAllLoading || (isSearching && isSearchLoading);
 	const isFetching = isAllFetching || (isSearching && isSearchFetching);

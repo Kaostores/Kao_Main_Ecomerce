@@ -16,6 +16,7 @@ import Contact from "@/pages/Contact";
 import SearchPage from "@/pages/Search";
 import OrderDetails from "@/pages/Dashboard/Subpages/OrderDetails";
 import PaymentSuccess from "@/pages/Dashboard/PaymentSuccess";
+import Messaging from "@/pages/Dashboard/Messaging";
 
 type PublicRouteProps = {
 	openLoginDialog: () => void;
@@ -75,6 +76,7 @@ const PublicRoute = ({
 				},
 			],
 		},
+
 		{
 			path: "/dashboard",
 			element: <DashboardLayout />,
@@ -110,6 +112,10 @@ const PublicRoute = ({
 				{
 					path: "inbox",
 					element: <Inbox />,
+				},
+				{
+					path: "messaging",
+					element: <Messaging />,
 				},
 			],
 		},

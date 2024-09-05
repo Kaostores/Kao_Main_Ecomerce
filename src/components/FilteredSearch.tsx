@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { BsStarFill } from "react-icons/bs";
 import { IoStarOutline } from "react-icons/io5";
-import { useGetAllAdminCategoryQuery } from "@/services/apiSlice";
+import {
+	useGetAllAdminCategoryQuery,
+	useViewAllSpotlightQuery,
+} from "@/services/apiSlice";
 import { useSearchParams } from "react-router-dom";
 import useUpdateUrlParams from "./SearchRoute";
 
@@ -134,8 +137,10 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 	const [isActive2, setIsActive2] = useState<string>("");
 	const [isActive3, setIsActive3] = useState<string>("");
 	const [isActive4, setIsActive4] = useState<string>("");
+	const [isActive5, setIsActive5] = useState<string>("");
 
 	const { data: catData } = useGetAllAdminCategoryQuery({});
+	const { data: brandData } = useViewAllSpotlightQuery({});
 
 	const categoryOptions =
 		catData?.data?.length > 0
@@ -144,6 +149,16 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 					value: key?.id,
 			  }))
 			: null;
+
+	const brandOptions =
+		brandData?.data?.length > 0
+			? brandData?.data?.map((key: any) => ({
+					label: key?.name,
+					value: key?.id,
+			  }))
+			: null;
+
+	console.log("brrand", brandOptions);
 
 	const priceOptions = [
 		{
@@ -243,6 +258,20 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 		}
 	};
 
+	const handleBrandChange = (value: string) => {
+		if (isActive5 === value) {
+			updateUrlParams({
+				brand_id: "",
+			});
+			setIsActive5("");
+		} else {
+			updateUrlParams({
+				brand_id: value,
+			});
+			setIsActive5(value);
+		}
+	};
+
 	return (
 		<div
 			className={`flex flex-col ${classNames} mr-5 md:w-[32%] lg:w-[20%] xl:min-w-[17%] `}>
@@ -257,6 +286,12 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 				options={priceOptions}
 				activeOption={isActive2}
 				onChange={handlePriceChange}
+			/>
+			<FilterSection
+				title='Brands'
+				options={brandOptions}
+				activeOption={isActive5}
+				onChange={handleBrandChange}
 			/>
 			<FilterSection
 				title='Gender'

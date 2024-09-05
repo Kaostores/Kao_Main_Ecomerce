@@ -5,7 +5,7 @@ import BrandsComp from "../commons/BrandsComp";
 const BrandData = () => {
 	const { data: brandData, isLoading: isLoadingBrand } =
 		useViewAllSpotlightQuery({});
-	console.log("fgtjrk", brandData);
+	console.log("brand spootlight", brandData);
 	return (
 		<div>
 			{isLoadingBrand && !brandData ? (
