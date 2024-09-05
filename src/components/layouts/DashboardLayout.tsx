@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom"
-import Sidebar from "../blocks/Sidebar"
-import Footer from "../blocks/Footer"
-import Header from "../blocks/Header"
-import ScrollToTop from "@/utils/ScrollToTop"
+import { Outlet } from "react-router-dom";
+import Sidebar from "../blocks/Sidebar";
+import Footer from "../blocks/Footer";
+import Header from "../blocks/Header";
+import ScrollToTop from "@/utils/ScrollToTop";
 
 const DashboardLayout = () => {
-  return (
+	return (
 		<ScrollToTop>
 			<div className='w-full h-screen'>
 				<Header />
@@ -22,6 +22,6 @@ const DashboardLayout = () => {
 			</div>
 		</ScrollToTop>
 	);
-}
+};
 
-export default DashboardLayout
+export default DashboardLayout;

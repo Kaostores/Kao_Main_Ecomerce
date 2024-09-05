@@ -78,9 +78,9 @@
 	body {
 		/* @apply bg-background text-foreground; */
 		font-family: "Poppins", sans-serif;
+		/* width: 100%; */
 	}
 }
-
 
 ::-webkit-scrollbar {
 	width: 15px;
@@ -103,4 +103,3 @@
 
 	box-shadow: inset 0px 10px 0px 10px rgba(0, 0, 0, 0.3);
 }
-

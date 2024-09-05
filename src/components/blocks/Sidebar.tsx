@@ -10,6 +10,7 @@ import { logoutUser } from "@/services/reducers";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaRocketchat } from "react-icons/fa";
 
 const Sidebar = () => {
 	const location = useLocation();
@@ -135,6 +136,24 @@ cursor-pointer
 					<RiCouponLine />
 				</div>
 				<div className='font-medium  text-[15px] ml-[20px] '>Voucher</div>
+			</div>
+
+			<div
+				onClick={() => {
+					navigate("/dashboard/messaging");
+				}}
+				className={`w-full min-h-[45px] flex justify-start  items-center pl-[20px] mb-[5px] cursor-pointer 
+ ${
+		active === "/dashboard/messaging"
+			? "bg-[#0333ae] text-[#fff]"
+			: "text-[#757575]"
+ }
+ }
+ `}>
+				<div className='text-[20px]  font-bold'>
+					<FaRocketchat />
+				</div>
+				<div className='font-medium  text-[15px] ml-[20px] '>Messaging</div>
 			</div>
 
 			<div

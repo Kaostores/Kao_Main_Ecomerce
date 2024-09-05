@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Instance } from "./AxiosConfig";
 
 export const Register = async (data: any) => {
