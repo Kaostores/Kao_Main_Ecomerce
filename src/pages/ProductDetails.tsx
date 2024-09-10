@@ -536,15 +536,15 @@ const ProductDetails = () => {
 						</div>
 					</div>
 					<div className='xl:flex flex-col sm:mt-[10px]'>
-						<div className='flex  items-center sm:hidden '>
+						<div className='flex  items-center sm:mb-5 '>
 							<div className='w-[25px] h-[25px] text-[14px] mr-[10px] rounded-[50%] bg-[#c03434] flex justify-center items-center text-white'>
-								O
+								{productData?.data?.store?.name?.charAt(0)}
 							</div>
 							<div className='text-[15px] text-[#535353] mr-[10px]'>
 								Sold by
 							</div>
 							<div className='text-[15px] font-semibold underline text-primary mr-[5px]'>
-								{productData?.data?.store?.vendor?.name}
+								{productData?.data?.store?.name}
 							</div>
 							<div className='w-[25px] h-[25px] text-[16px] mr-[10px] rounded-[50%] bg-[#0000ff77] flex justify-center items-center text-primary'>
 								<BiCheck />

@@ -9,7 +9,7 @@ import { IoReturnUpBack } from "react-icons/io5";
 import { FaRocketchat } from "react-icons/fa";
 import Cookies from "universal-cookie";
 import { useSelector } from "react-redux";
-import axios from "axios";
+// import axios from "axios";
 import io from "socket.io-client";
 import ShowToast from "@/components/reuse/ShowToast";
 
@@ -28,7 +28,7 @@ const Messaging = () => {
 	const { data: messageData } = useFetchMessagesQuery({
 		vendor_uuid: selectedChat?.store?.vendor,
 	});
-	const { data: orders, isLoading } = useFetchOrdersQuery({});
+	const { data: orders } = useFetchOrdersQuery({});
 	const [message, setMessage] = useState("");
 	const [addMessage, { isLoading: loadingChat }] = usePostMessagesMutation();
 	//
@@ -44,9 +44,6 @@ const Messaging = () => {
 
 		setMessage("");
 	};
-
-	console.log("this is message", messageData);
-	console.log("this is orders", orders);
 
 	const [messages, setMessages] = useState<any>([]);
 

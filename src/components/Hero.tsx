@@ -35,6 +35,7 @@ const Hero = () => {
 					<img
 						style={{
 							objectFit: "contain",
+							width: "100%",
 						}}
 						className='object-contain'
 						src={pic3}
