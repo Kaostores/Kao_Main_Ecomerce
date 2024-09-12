@@ -171,7 +171,7 @@ cursor-pointer
 				<div className='text-[20px]  font-bold'>
 					<FaRegBell />
 				</div>
-				<div className='font-medium  text-[15px] ml-[20px] '>Inbox</div>
+				<div className='font-medium  text-[15px] ml-[20px] '>Notifications</div>
 			</div>
 
 			<div

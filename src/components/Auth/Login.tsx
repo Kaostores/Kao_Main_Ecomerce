@@ -29,6 +29,8 @@ import Cookies from "universal-cookie";
 import { useDispatch } from "react-redux";
 import { updateUserDetails } from "@/services/reducers";
 import { useState } from "react";
+import { useAddCartCustomerMutation } from "@/services/apiSlice";
+import { useAppSelector } from "@/services/store";
 
 const formSchema = z.object({
 	email: z.string().min(2, {
@@ -48,29 +50,74 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 		},
 	});
 
+	const cart = useAppSelector((state) => state.persistedReducer.cart);
+	console.log("there is cat data", cart);
+	//
+	const [addCartFn] = useAddCartCustomerMutation();
+	//
+	const handleAddToCartUser = async (props: any) => {
+		try {
+			const response: any = await addCartFn({
+				product: props?.product_id,
+				quantity: 1,
+				variant: props?.variantID ? props?.variantID : null,
+			});
+			console.log("cart added", response);
+			if (response?.data?.success) {
+				// toast.success("cart added");
+			} else {
+				toast.error("Failed to add item to Cart");
+			}
+			console.log("Response from adding to cart:", response);
+		} catch (error) {
+			toast.error("An error occurred while adding to the cart");
+			console.error("Error adding cart item:", error);
+		}
+	};
+
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		setLoad(true);
 		try {
+			// Perform login first
 			const response: any = await LogIn(values);
+			console.log("Login response:", response);
 
-			console.log("reeee", response);
-
-			if (response?.status === 201) {
+			// Handle successful login
+			if (response?.status === 200) {
 				toast.success("Login Successful");
+
+				// Set cookie after login success
 				cookies.set("Kao_cookie_user", response?.data?.token, {
 					expires: expiryDate,
 					path: "/",
 				});
+
+				// Dispatch user details to the store
 				dispatch(updateUserDetails(response?.data.data));
+
+				// After successful login, add cart items
+				if (cart.length > 0) {
+					for (const cartItem of cart) {
+						// Sequentially add each cart item
+						await handleAddToCartUser({
+							product_id: cartItem.productID,
+							variantID: cartItem.variant ? cartItem.variant.id : null,
+						});
+					}
+				}
+
+				// Close the modal after login and cart addition
 				onClose();
 			} else if (response?.status === 500) {
 				ShowToast(false, "Details do not match");
 			} else if (response?.response?.status === 401) {
 				ShowToast(false, "Invalid Credentials");
 			}
+
 			setLoad(false);
 		} catch (error) {
 			toast.info("An error occurred. Please try again.");
+			console.error("Error during login:", error);
 			setLoad(false);
 		}
 	}

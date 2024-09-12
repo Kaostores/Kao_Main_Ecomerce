@@ -160,11 +160,15 @@ const ProductDetails = () => {
 	// console.log("boooookmark", newBookMarkData);
 
 	const handleNewBookMark = () => {
-		if (!newBookMarkData) {
-			newBookMark({ product_id: productData?.data?.id });
-			toast.success("Bookmarked successfully");
+		if (user?.id) {
+			if (!newBookMarkData) {
+				newBookMark({ product_id: productData?.data?.id });
+				toast.success("Bookmarked successfully");
+			} else {
+				toast.error("Already bookmarked");
+			}
 		} else {
-			toast.error("Already bookmarked");
+			toast.error("Please login to bookmark products");
 		}
 	};
 
@@ -206,6 +210,8 @@ const ProductDetails = () => {
 	// comment: "Good",
 	// },
 	// ];
+
+	console.log("user", user);
 
 	useEffect(() => {}, [selectedId, productData]);
 	return (
@@ -265,7 +271,9 @@ const ProductDetails = () => {
 						<div className='flex-1 flex  justify-center'>
 							<div
 								className={`mr-[50px] xxl:ml-[10px] xl:w-[35px] xxl:w-[45px] xxl:h-[45px] xl:h-[35px] lg:w-[35px] lg:h-[35px] md:w-[30px] md:h-[30px] bg-[#b1b0b098] rounded-[50%] xl:flex xxl:flex md:flex lg:flex justify-center items-center text-[18px] xxl:text-[24px] md:text-[15px] cursor-pointer sm:hidden ${
-									productData?.data?.isBookmarked === false
+									isProductLoading
+										? "text-white"
+										: productData?.data?.isBookmarked === false
 										? "text-white"
 										: "text-[red]"
 								}`}
@@ -536,15 +544,15 @@ const ProductDetails = () => {
 						</div>
 					</div>
 					<div className='xl:flex flex-col sm:mt-[10px]'>
-						<div className='flex  items-center sm:hidden '>
+						<div className='flex  items-center sm:mb-5 '>
 							<div className='w-[25px] h-[25px] text-[14px] mr-[10px] rounded-[50%] bg-[#c03434] flex justify-center items-center text-white'>
-								O
+								{productData?.data?.store?.name?.charAt(0)}
 							</div>
 							<div className='text-[15px] text-[#535353] mr-[10px]'>
 								Sold by
 							</div>
 							<div className='text-[15px] font-semibold underline text-primary mr-[5px]'>
-								{productData?.data?.store?.vendor?.name}
+								{productData?.data?.store?.name}
 							</div>
 							<div className='w-[25px] h-[25px] text-[16px] mr-[10px] rounded-[50%] bg-[#0000ff77] flex justify-center items-center text-primary'>
 								<BiCheck />

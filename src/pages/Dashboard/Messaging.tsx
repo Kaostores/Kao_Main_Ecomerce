@@ -9,7 +9,7 @@ import { IoReturnUpBack } from "react-icons/io5";
 import { FaRocketchat } from "react-icons/fa";
 import Cookies from "universal-cookie";
 import { useSelector } from "react-redux";
-import axios from "axios";
+// import axios from "axios";
 import io from "socket.io-client";
 import ShowToast from "@/components/reuse/ShowToast";
 
@@ -28,7 +28,7 @@ const Messaging = () => {
 	const { data: messageData } = useFetchMessagesQuery({
 		vendor_uuid: selectedChat?.store?.vendor,
 	});
-	const { data: orders, isLoading } = useFetchOrdersQuery({});
+	const { data: orders } = useFetchOrdersQuery({});
 	const [message, setMessage] = useState("");
 	const [addMessage, { isLoading: loadingChat }] = usePostMessagesMutation();
 	//
@@ -44,9 +44,6 @@ const Messaging = () => {
 
 		setMessage("");
 	};
-
-	console.log("this is message", messageData);
-	console.log("this is orders", orders);
 
 	const [messages, setMessages] = useState<any>([]);
 
@@ -107,8 +104,8 @@ const Messaging = () => {
 					isMobile && mobileShow ? "hidden" : "block"
 				}    bg-white border-r border-gray-300 `}>
 				{/* header */}
-				<header className='p-4 border-b border-gray-300 flex justify-between items-center bg-indigo-600 text-white '>
-					<h1 className='text-2xl font-semibold'>KAO Chat</h1>
+				<header className='p-4 border-b border-gray-300 flex justify-between items-center bg-primary text-white '>
+					<h1 className='text-2xl font-semibold font-poppins'>KAO Chat</h1>
 					<div className='relative'>
 						<button id='menuButton' className='focus:outline-none'>
 							<svg
@@ -263,15 +260,14 @@ const Messaging = () => {
 								sendMessage();
 							}}
 							className='flex items-center '>
-							<input
+							<textarea
 								value={message}
 								onChange={(e) => {
 									setMessage(e.target.value);
 								}}
 								required
-								type='text'
 								placeholder='Type a message...'
-								className='w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500'
+								className='w-full p-2 rounded-md border border-gray-400 focus:outline-none focus:border-blue-500 h-[45px] resize-none'
 							/>
 							{loadingChat ? (
 								<button

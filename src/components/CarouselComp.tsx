@@ -1,8 +1,9 @@
-
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import pic4 from "@/assets/hero2.png";
+import pic5 from "@/assets/caro2.jpg";
+import pic6 from "@/assets/caro3.jpg";
 
 const CarouselComp = () => {
 	const settings = {
@@ -12,8 +13,7 @@ const CarouselComp = () => {
 		slidesToShow: 1,
 		slidesToScroll: 1,
 		autoplay: true,
-		autoplaySpeed: 3000,
-		
+		autoplaySpeed: 7000,
 
 		responsive: [
 			{
@@ -42,17 +42,23 @@ const CarouselComp = () => {
 			<Slider {...settings}>
 				<div>
 					<img
-					className="h-[400px] object-cover sm:h-[250px]"
+						className='h-[400px] object-cover sm:h-[250px]'
 						src={pic4}
 						alt='Slide 1'
-						
 					/>
 				</div>
 				<div>
 					<img
-						src='https://via.placeholder.com/1920x600'
+						src={pic5}
 						alt='Slide 2'
-						className="h-[400px] object-cover sm:h-[250px]"
+						className='h-[400px] object-cover sm:h-[250px] w-full'
+					/>
+				</div>
+				<div>
+					<img
+						src={pic6}
+						alt='Slide 3'
+						className='h-[400px] object-cover sm:h-[250px] w-full'
 					/>
 				</div>
 			</Slider>
@@ -98,7 +104,6 @@ const NextArrow = (props: any) => {
 				transform: "translateY(-50%)",
 				right: "20px",
 				zIndex: 1,
-				
 			}}
 			onClick={onClick}
 		/>
