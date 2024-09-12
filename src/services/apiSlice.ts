@@ -150,7 +150,7 @@ export const api = createApi({
 				method: "POST",
 				body: body,
 			}),
-			invalidatesTags: ["bookmark"],
+			invalidatesTags: ["bookmark", "product"],
 		}),
 
 		DeleteNewBookmark: builder.mutation({
@@ -159,7 +159,7 @@ export const api = createApi({
 				method: "DELETE",
 				body: body,
 			}),
-			invalidatesTags: ["bookmark"],
+			invalidatesTags: ["bookmark", "products", "product"],
 		}),
 
 		ViewAllBookmarks: builder.query({

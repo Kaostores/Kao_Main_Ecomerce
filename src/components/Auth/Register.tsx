@@ -30,6 +30,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import CurrencySelector from "../currency/CurrencySelector";
+import { useAddCartCustomerMutation } from "@/services/apiSlice";
+import { useAppSelector } from "@/services/store";
 // import { useAddCartCustomerMutation } from "@/services/apiSlice";
 // import { useAppSelector } from "@/services/store";
 //
@@ -62,69 +64,39 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 			password: "",
 		},
 	});
+	//
+	const cart = useAppSelector((state) => state.persistedReducer.cart);
+	console.log("there is cat data", cart);
+	//
+	const [addCartFn] = useAddCartCustomerMutation();
+	//
+	const handleAddToCartUser = async (props: any) => {
+		try {
+			const response: any = await addCartFn({
+				product: props?.product_id,
+				quantity: 1,
+				variant: props?.variantID ? props?.variantID : null,
+			});
 
-	// const cart = useAppSelector((state: any) => state.persistedReducer.cart);
+			console.log("cart added", response);
 
-	// const [addCartFn, { isLoading: loadingCart }] = useAddCartCustomerMutation();
+			if (response?.data?.success) {
+				// toast.success("cart added");
+			} else {
+				toast.error("Failed to add item to Cart");
+			}
 
-	// const handleAddToCartUser = async (props: any) => {
-	// try {
-	// const response: any = await addCartFn({
-	// product: props?.product_id,
-	// quantity: 1,
-	// variant: props?.variantID ? props?.variantID : null,
-	// });
-	//
-	// if (response?.data?.success) {
-	// } else {
-	// toast.error("Failed to add item to Cart");
-	// }
-	//
-	// console.log("Response from adding to cart:", response);
-	// } catch (error) {
-	// toast.error("An error occurred while adding to the cart");
-	// console.error("Error adding cart item:", error);
-	// }
-	// };
-	//
-	// async function onSubmit(values: z.infer<typeof formSchema>) {
-	// setLoad(true);
-	// try {
-	// const response: any = await Register(values);
-	//
-	// if (response?.status === 201) {
-	// cookies.set("Kao_cookie_user", response?.data?.token, {
-	// expires: expiryDate,
-	// path: "/",
-	// });
-	// dispatch(updateUserDetails(response?.data.data));
-	//
-	// if (cart.length > 0) {
-	// for (const cartItem of cart) {
-	// await handleAddToCartUser({
-	// product_id: cartItem.id,
-	// variantID: cartItem.variant ? cartItem.variant.id : null,
-	// });
-	// }
-	// }
-	//
-	// onClose();
-	// toast.success("Registration Successful");
-	// } else if (response?.status === 500) {
-	// toast.info("Account already exists");
-	// }
-	// setLoad(false);
-	// } catch (error) {
-	// toast.error("An error occurred. Please try again.");
-	// setLoad(false);
-	// }
-	// }
-	const [selectedCurrency, setSelectedCurrency] = useState("");
-	const [selectedCountry, setSelectedCountry] = useState("");
+			console.log("Response from adding to cart:", response);
+		} catch (error) {
+			toast.error("An error occurred while adding to the cart");
+			console.error("Error adding cart item:", error);
+		}
+	};
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		setLoad(true);
 		try {
+			// Perform registration first
 			const response: any = await Register({
 				...values,
 				currency: selectedCurrency,
@@ -132,8 +104,31 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 				country: selectedCountry,
 			});
 
-			if (response?.status >= 200 && response?.status < 300) {
-				toast.success(response?.data?.message);
+			// Handle successful registration
+			if (response?.status === 200) {
+				// Set cookies after registration success
+				cookies.set("Kao_cookie_user", response?.data?.token, {
+					expires: expiryDate,
+					path: "/",
+				});
+
+				// Dispatch user details to the store
+				dispatch(updateUserDetails(response?.data.data));
+
+				// Now proceed to handle the cart after registration
+				if (cart.length > 0) {
+					for (const cartItem of cart) {
+						// Sequentially add each cart item
+						await handleAddToCartUser({
+							product_id: cartItem.productID,
+							variantID: cartItem.variant ? cartItem.variant.id : null,
+						});
+					}
+				}
+
+				// Close the modal and show success toast
+				onClose();
+				toast.success("Registration and cart items added successfully");
 			} else if (response?.status >= 300 && response?.status < 400) {
 				toast.info(response?.data?.message);
 			} else if (response?.status >= 400 && response?.status < 500) {
@@ -142,22 +137,54 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 				toast.error(response?.data?.message);
 			}
 
-			// Additional specific status checks and handling
-			if (response?.status === 200) {
-				cookies.set("Kao_cookie_user", response?.data?.token, {
-					expires: expiryDate,
-					path: "/",
-				});
-				dispatch(updateUserDetails(response?.data.data));
-				onClose();
-			}
-
 			setLoad(false);
 		} catch (error) {
-			toast.error("An error occurred. Please try again.");
+			// Handle error case
+			toast.error("An error occurred during registration. Please try again.");
+			console.error("Error during registration:", error);
 			setLoad(false);
 		}
 	}
+
+	const [selectedCurrency, setSelectedCurrency] = useState("");
+	const [selectedCountry, setSelectedCountry] = useState("");
+
+	// async function onSubmit(values: z.infer<typeof formSchema>) {
+	// setLoad(true);
+	// try {
+	// const response: any = await Register({
+	// ...values,
+	// currency: selectedCurrency,
+	// role: "user",
+	// country: selectedCountry,
+	// });
+
+	// if (response?.status >= 200 && response?.status < 300) {
+	// toast.success(response?.data?.message);
+	// } else if (response?.status >= 300 && response?.status < 400) {
+	// toast.info(response?.data?.message);
+	// } else if (response?.status >= 400 && response?.status < 500) {
+	// toast.error(response?.data?.message);
+	// } else if (response?.status >= 500 && response?.status < 600) {
+	// toast.error(response?.data?.message);
+	// }
+
+	// Additional specific status checks and handling
+	// if (response?.status === 200) {
+	// cookies.set("Kao_cookie_user", response?.data?.token, {
+	// expires: expiryDate,
+	// path: "/",
+	// });
+	// dispatch(updateUserDetails(response?.data.data));
+	// onClose();
+	// }
+
+	// setLoad(false);
+	// } catch (error) {
+	// toast.error("An error occurred. Please try again.");
+	// setLoad(false);
+	// }
+	// }
 
 	const cookies = new Cookies();
 	const dispatch = useDispatch();
