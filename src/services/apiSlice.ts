@@ -275,6 +275,15 @@ export const api = createApi({
 			query: () => "/coupons?type=",
 			// providesTags: [""],
 		}),
+
+		ChangeCustomerPassword: builder.mutation({
+			query: (body) => ({
+				url: `/user/password/update`,
+				method: "POST",
+				body: body,
+			}),
+			// invalidatesTags: ["cart"],
+		}),
 	}),
 });
 
@@ -317,4 +326,5 @@ export const {
 	useGetAllCopounQuery,
 	usePostMessagesMutation,
 	useFetchMessagesQuery,
+	useChangeCustomerPasswordMutation,
 } = api;

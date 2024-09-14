@@ -8,10 +8,12 @@ import {
 	useGetUserDataQuery,
 	useViewAllAddressQuery,
 	useUpdateAddressMutation,
+	useChangeCustomerPasswordMutation,
 } from "@/services/apiSlice";
 import { AddressType } from "@/services/reducers";
 import LoadingButton from "@/components/reuse/LoadingButton";
 import ShowToast from "@/components/reuse/ShowToast";
+// import { toast } from "react-toastify";
 
 const Account = () => {
 	const [show, setShow] = useState(true);
@@ -21,6 +23,9 @@ const Account = () => {
 	const [editAddress, setEditAddress] = useState(false);
 	const [captureAddress, setCaptureAddress] = useState<any>(null);
 	const Navigate = useNavigate();
+	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+	const [oldPass, setOldPass] = useState("");
 	const [formData, setFormData] = useState<AddressType>({
 		fullname: "",
 		phone: "",
@@ -62,6 +67,8 @@ const Account = () => {
 	const { data: userData, isLoading } = useGetUserDataQuery({});
 	console.log("userData", userData);
 	const [newAddress, { isLoading: newLoading }] = useCreateNewAddressMutation();
+	const [newPass, { isLoading: newPassLoading }] =
+		useChangeCustomerPasswordMutation();
 
 	const Toggle = () => {
 		setShow(true);
@@ -130,6 +137,44 @@ const Account = () => {
 			ShowToast(true, "Address Updated Successfully");
 		} catch (error) {
 			console.error("Error updating address:", error);
+		}
+	};
+
+	const UpdatePassword = async () => {
+		try {
+			if (confirmPassword !== password)
+				ShowToast(false, "password didn't match");
+
+			const response: any = await newPass({
+				email: userData?.data?.email,
+				password: password,
+				current_password: oldPass,
+			});
+			console.log("response", response);
+			// ShowToast(true, "Address Updated Successfully");
+
+			if (
+				(response?.status >= 200 && response?.status < 400) ||
+				response?.data?.success === true
+			) {
+				ShowToast(true, response?.data?.message);
+				setOldPass("");
+				setPassword("");
+				setConfirmPassword("");
+				// setChangePassword(false);
+			} else if (
+				response?.error?.status >= 400 &&
+				response?.error?.status < 500
+			) {
+				ShowToast(false, response?.error?.data?.message);
+			} else if (
+				response?.error?.status >= 500 &&
+				response?.error?.status < 600
+			) {
+				ShowToast(false, response?.error?.data?.message);
+			}
+		} catch (error) {
+			ShowToast(false, "Error updating address:");
 		}
 	};
 
@@ -491,18 +536,31 @@ const Account = () => {
 
 						<div className='w-[100%] h-[2px] bg-[#E6E6E6] mt-[4px] sm:mt-0'></div>
 
-						<div className='flex flex-col items-center w-[43%] sm:w-[90%] mt-[30px] mb-[50px]'>
+						<form
+							onSubmit={(e) => {
+								e.preventDefault();
+								UpdatePassword();
+							}}
+							className='flex flex-col items-center w-[43%] sm:w-[90%] mt-[30px] mb-[50px]'>
 							<div className='flex flex-col w-[100%]'>
 								<h3 className='text-[14px] font-[400]'>Old Password</h3>
 								<input
+									required
 									placeholder='****************'
 									type='password'
+									onChange={(e) => {
+										setOldPass(e.target.value);
+									}}
 									className='w-[100%] h-[40px] rounded-sm border border-[#AEAEAE] bg-transparent mt-[5px] outline-none pl-[7px] text-[14px]'
 								/>
 							</div>
 							<div className='flex flex-col w-[100%] mt-[20px]'>
 								<h3 className='text-[14px] font-[400]'>New Password</h3>
 								<input
+									onChange={(e) => {
+										setPassword(e.target.value);
+									}}
+									required
 									placeholder='****************'
 									type='password'
 									className='w-[100%] h-[40px] rounded-sm border border-[#AEAEAE] bg-transparent mt-[5px] outline-none pl-[7px] text-[14px]'
@@ -511,15 +569,29 @@ const Account = () => {
 							<div className='flex flex-col w-[100%] mt-[20px]'>
 								<h3 className='text-[14px] font-[400]'>Confirm Password</h3>
 								<input
+									onChange={(e) => {
+										setConfirmPassword(e.target.value);
+									}}
+									required
 									placeholder='****************'
 									type='password'
 									className='w-[100%] h-[40px] rounded-sm border border-[#AEAEAE] bg-transparent mt-[5px] outline-none pl-[7px] text-[14px]'
 								/>
 							</div>
-							<button className='w-[100%] h-[43px] flex justify-center items-center text-[white] bg-secondary mt-[45px] text-[14px] rounded-sm'>
-								Save Password
-							</button>
-						</div>
+							{newPassLoading ? (
+								<div className='mt-[45px] w-[100%]'>
+									{" "}
+									<LoadingButton w={"100%"} />
+								</div>
+							) : (
+								<button
+									className='w-[100%] h-[43px] flex justify-center 
+items-center text-[white] bg-secondary mt-[45px] text-[14px] 
+rounded-sm'>
+									Save Password
+								</button>
+							)}
+						</form>
 					</div>
 				</div>
 			) : null}
