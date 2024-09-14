@@ -32,6 +32,7 @@ import ReviewPage from "./Dashboard/Subpages/ReviewPage";
 import TextSanitizer from "@/helpers/TextSanitizer";
 import { LoadingSpinner } from "@/components/reuse/Spinner";
 import ImagePreviewModal from "@/components/ImagePreviewModal";
+import { Helmet } from "react-helmet";
 
 const ProductDetails = () => {
 	const navigate = useNavigate();
@@ -211,11 +212,44 @@ const ProductDetails = () => {
 	// },
 	// ];
 
+	const title = `${decodeHTMLEntities(productData?.data?.name)}`;
+	// const description = `${productData?.data.description}`;
+	const imageUrl = `${productData?.data?.media[0]?.url}`;
+
+	const currentUrl = window.location.href; // Get the current page URL to share
+
+	const shareOnFacebook = () => {
+		const url = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
+		window.open(url, "_blank");
+	};
+
+	const shareOnTwitter = () => {
+		const url = `https://twitter.com/intent/tweet?url=${currentUrl}&text=${encodeURIComponent(
+			title,
+		)}`;
+		window.open(url, "_blank");
+	};
+
+	const shareOnWhatsApp = () => {
+		const message = `${title}\n\n${currentUrl}`;
+		window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
+	};
+
 	console.log("user", user);
 
 	useEffect(() => {}, [selectedId, productData]);
 	return (
 		<>
+			<Helmet>
+				{/* Open Graph meta tags */}
+				<meta property='og:title' content={title} />
+				<meta property='og:image' content={imageUrl} />
+
+				{/* Twitter Card meta tags */}
+				<meta name='twitter:card' content='summary_large_image' />
+				<meta name='twitter:title' content={title} />
+				<meta name='twitter:image' content={imageUrl} />
+			</Helmet>
 			{isModalOpen && (
 				<ImagePreviewModal
 					images={productData?.data?.media}
@@ -528,13 +562,19 @@ const ProductDetails = () => {
 									<div className=''>
 										<div className='text-[13px]'>Share With Friends</div>
 										<div className='flex items-center mt-[10px]'>
-											<div className='w-[25px] h-[25px] rounded-[50%] flex justify-center items-center text-primary border mr-[20px]'>
+											<div
+												onClick={shareOnFacebook}
+												className='w-[25px] h-[25px] rounded-[50%] flex justify-center items-center text-primary border mr-[20px] cursor-pointer'>
 												<CgFacebook />
 											</div>
-											<div className='w-[25px] h-[25px] rounded-[50%] flex justify-center items-center text-black border mr-[20px]'>
+											<div
+												onClick={shareOnTwitter}
+												className='w-[25px] h-[25px] rounded-[50%] flex justify-center items-center text-black border mr-[20px] cursor-pointer'>
 												<BsTwitterX />
 											</div>
-											<div className='w-[25px] h-[25px] rounded-[50%] flex justify-center items-center text-[#00ff00] border'>
+											<div
+												onClick={shareOnWhatsApp}
+												className='w-[25px] h-[25px] rounded-[50%] flex justify-center items-center text-[#00ff00] border cursor-pointer'>
 												<FaWhatsapp />
 											</div>
 										</div>
@@ -561,7 +601,7 @@ const ProductDetails = () => {
 						<div className='hidden sm:block md:block'>
 							<AccordionDemo />
 						</div>
-						<div className='xl:flex hidden flex-col my-[20px]  '>
+						<div className='xl:flex lg:flex hidden flex-col my-[20px]  '>
 							<div className='flex text-[16px] gap-10 sm:flex-col'>
 								<div
 									onClick={() => setToggleType("productdetails")}

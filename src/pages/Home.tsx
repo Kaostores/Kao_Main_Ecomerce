@@ -61,9 +61,9 @@ const Home = () => {
 			<div>
 				<div className='flex gap-5 mb-5'>
 					<AdvertComp data={posterData?.data[0]?.image} />
-					<AdvertComp />
+					<AdvertComp data={posterData?.data[2]?.image} />
 				</div>
-				<AdvertComp />
+				<AdvertComp data={posterData?.data[1]?.image} />
 			</div>
 
 			<h3 className='mt-7 font-bold mb-3'>Electronics/Appliances</h3>
