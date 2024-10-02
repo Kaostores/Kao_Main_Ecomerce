@@ -35,8 +35,6 @@ const SearchPage = () => {
 		categoryID: categoryID,
 	});
 
-	console.log("cvhvjj", catData);
-
 	useEffect(() => {
 		if (
 			query ||
@@ -81,8 +79,6 @@ const SearchPage = () => {
 	const toggleSidebar = () => {
 		setIsOpen(!isOpen);
 	};
-
-	console.log("you searched", searchData);
 
 	// Update isSearching to reflect the presence of any search parameters
 	const isSearching =

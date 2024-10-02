@@ -6,13 +6,14 @@ import CardComp from "@/components/commons/CardComp";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { UseAppDispach, useAppSelector } from "@/services/store";
-import { addToCart, removeFromCart } from "@/services/reducers";
+import { addToCart, clearCart, removeFromCart } from "@/services/reducers";
 import { useEffect, useReducer } from "react";
 import EmpyCart from "./EmpyCart";
 import {
 	useAddCartCustomerMutation,
 	useRemoveCartCustomerMutation,
 	useUpdateCartCustomerMutation,
+	useViewAllBookmarksQuery,
 	useViewAllCartCustomerQuery,
 	useViewAllProductsQuery,
 } from "@/services/apiSlice";
@@ -44,7 +45,9 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 
 	const { data: userCartData, isLoading: isUserCartLoading } =
 		useViewAllCartCustomerQuery({});
-	const { data, isLoading: isProductDataLoading } = useViewAllProductsQuery({});
+	const { data, isLoading: isProductDataLoading } = useViewAllBookmarksQuery(
+		{},
+	);
 
 	const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
@@ -75,21 +78,17 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 		if (response?.data?.success) {
 			toast.success("Added to Cart successfully");
 		}
-		console.log("this is response to adding cart", response);
 	};
 	const handleRemoveCartUser = async (props: any) => {
-		console.log(props);
 		const response: any = await removeCartFn({
 			product_id: props?.product_id,
 		});
 		if (response?.data?.success) {
 			toast.success("Removed from Cart successfully");
 		}
-		console.log("this is response to remove cart", response);
 	};
 
 	const handleUpdateCartUser = async (props: any) => {
-		console.log(props);
 		const response: any = await updateCartFn({
 			productId: props?.product_id,
 			quantity: 1,
@@ -97,10 +96,7 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 		if (response?.data?.success) {
 			toast.success("Removed from Cart successfully");
 		}
-		console.log("this is response to remove cart", response);
 	};
-
-	console.log("here is the cart items", userCartData);
 
 	return (
 		<>
@@ -125,7 +121,7 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 												<div
 													key={product.id}
 													className='w-[100%] flex flex-col h-[100%] sm:hidden'>
-													<div className='flex h-[100px] sm:hidden md:w-[300px] mb-[30px]'>
+													<div className='flex h-[100px] sm:hidden md:w-[300px] mb-[50px] '>
 														<div
 															className='xl:w-[100px] xl:h-[100px] lg:w-[100px] lg:h-[100px] 
 md:w-[80px] md:h-[80px] sm:w-[60px] sm:h-[60px] mr-[10px] 
@@ -141,10 +137,8 @@ items-center border-[2px] border-[#0000ff]'>
 																className='xl:w-[50px] md:w-[30px] lg:w-[50px] sm:w-[30px]'
 															/>
 														</div>
-														<div
-															className='flex  max-w-[350px] flex-col justify-between md:h-
-[80px]'>
-															<div className='xl:text-[20px] md:text-[14px] font-semibold'>
+														<div className='flex  max-w-[370px] flex-col justify-between  '>
+															<div className='xl:text-[15px] md:text-[14px] font-semibold'>
 																{product.productName || product?.product?.name}{" "}
 																-{" "}
 																{product.variant?.name ||
@@ -156,7 +150,6 @@ items-center border-[2px] border-[#0000ff]'>
 																<span className='text-primary font-bold'>
 																	Apple
 																</span>{" "}
-																| Similar Product From Apple | 709388838
 															</div>
 															<div
 																onClick={() => {
@@ -205,13 +198,7 @@ md:w-[150px] flex justify-between items-center bg-ascentGray'>
 																				product_id: product?.product?.id,
 																			});
 																		} else {
-																			dispatch(
-																				removeFromCart(
-																					product.variant
-																						? product.variant.id
-																						: product.id,
-																				),
-																			);
+																			dispatch(removeFromCart(product));
 																		}
 																	}}
 																	className='w-[20px] h-[20px] rounded-[50%] bg-primary 
@@ -254,11 +241,11 @@ cursor-pointer'>
 												{cartItems.map((product: any) => (
 													<div
 														key={product.id}
-														className='flex h-[100px] mb-[18px] gap-3'>
+														className='flex min-h-[100px] mb-[18px] gap-3'>
 														<div
-															className='md:w-[80px] md:h-[80px] sm:w-[80px] sm:h-[100px] mr-
+															className='md:w-[80px] md:h-[80px] sm:w-[80px] sm:min-h-[100px] mr-
 [10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center 
-items-center border-[2px] border-[#0000ff]'>
+items-center border-[2px] border-[#0000ff] w-[200px]'>
 															<img
 																src={
 																	product?.media?.url || // If product.media.url exists, use it
@@ -269,7 +256,7 @@ items-center border-[2px] border-[#0000ff]'>
 																className='md:w-[50px] sm:w-[40px]'
 															/>
 														</div>
-														<div className='flex flex-col justify-between items-start'>
+														<div className='flex flex-col justify-between items-start flex-1'>
 															<div className='font-semibold text-[14px]'>
 																{product.productName || product?.product?.name}{" "}
 																-{" "}
@@ -311,13 +298,7 @@ justify-between items-center bg-ascentGray'>
 																							product_id: product?.product?.id,
 																						});
 																					} else {
-																						dispatch(
-																							removeFromCart(
-																								product.variant
-																									? product.variant.id
-																									: product.id,
-																							),
-																						);
+																						dispatch(removeFromCart(product));
 																					}
 																				}}
 																				className='w-[14px] h-[14px] rounded-[50%] 
@@ -398,7 +379,7 @@ py-[10px] px-[5px] bg-ascentGray rounded-md mt-[50px] mb-5 font-semibold'>
 													</div>
 													<Button
 														onClick={() => {
-															navigate("/cart/checkout");
+															handleCheckout();
 														}}
 														variant='secondary'
 														className='w-full bg-secondary text-white'
@@ -454,8 +435,17 @@ py-[10px] px-[5px] bg-ascentGray rounded-md mt-[50px] mb-5 font-semibold'>
 				</div>
 			</div>
 
+			{!isAuthenticated && cartItems?.length > 0 ? (
+				<button
+					onClick={() => {
+						dispatch(clearCart());
+					}}>
+					Clear cart
+				</button>
+			) : null}
+
 			<div className='xl:flex flex-col mb-20 sm:mb-10 '>
-				{data?.data?.length > 0 && (
+				{data?.data?.favorites?.length > 0 && (
 					<h3 className='mt-[50px] font-bold mb-3'>Saved items</h3>
 				)}
 				<div className='w-[100%]'>
@@ -573,10 +563,8 @@ mb-4'></div>
 							</div>
 						</div>
 					) : (
-						<div
-							className='grid grid-cols-4 gap-4  sm:justify-center sm:grid sm:items-center 
-sm:grid-cols-2 md:grid-cols-2 sm:flex-col flex-1 '>
-							{data?.data.slice(0, 4).map((props: any) => (
+						<div className='grid grid-cols-4 gap-4  sm:justify-center sm:grid sm:items-center sm:grid-cols-2 md:grid-cols-2 sm:flex-col flex-1 '>
+							{data?.data?.favorites?.slice(0, 4).map((props: any) => (
 								<CardComp
 									key={props.id}
 									deal={true}

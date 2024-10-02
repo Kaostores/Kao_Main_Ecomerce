@@ -26,7 +26,6 @@ const Reviews = () => {
 	const [cancelReview, { isLoading: isCancelLoading }] =
 		useRemoveRatingMutation();
 
-	console.log("this is my review", data);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const handleOpenModal = () => {
 		setIsModalOpen(true);
@@ -43,7 +42,7 @@ const Reviews = () => {
 			Navigate(-1);
 		}
 		// Perform the action you want to confirm
-		console.log("Confirmed action!", response);
+
 		// Close the modal after the action
 		handleCloseModal();
 	};
@@ -234,7 +233,6 @@ const Reviews = () => {
 														onClick={() => {
 															handleOpenModal();
 															setSelectedReviewID(props?.id);
-															console.log("here is it", props);
 														}}
 														className='flex-col hidden sm:flex mt-[15px]'>
 														<p className='text-primary text-[14px] font-[600] cursor-pointer underline'>

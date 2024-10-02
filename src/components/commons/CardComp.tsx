@@ -4,8 +4,38 @@ import StarRating from "../StarRating";
 import { Link } from "react-router-dom";
 import pic3 from "../../assets/lenovo.png";
 import { decodeHTMLEntities } from "@/helpers";
+import { convertCurrency } from "@/utils/CurrencyConveter";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "@/services/store";
 
 const CardComp = ({ deal, productId, isLoading, ...props }: any) => {
+	const selectedCurrency = useAppSelector(
+		(state) => state.persistedReducer.selectedCurrency,
+	);
+
+	// Start with the product's base currency
+	const [convertedOriginalPrice, setConvertedOriginalPrice] = useState(
+		props.originalPrice,
+	);
+	const [convertedDiscountPrice, setConvertedDiscountPrice] = useState(
+		props.discountPrice,
+	);
+
+	useEffect(() => {
+		const priceInSelectedCurrency = convertCurrency(
+			props.originalPrice,
+			props.currency,
+			selectedCurrency,
+		);
+		const priceInSelectedCurrency2 = convertCurrency(
+			props.discountPrice,
+			props.currency,
+			selectedCurrency,
+		);
+		setConvertedOriginalPrice(priceInSelectedCurrency);
+		setConvertedDiscountPrice(priceInSelectedCurrency2);
+	}, [selectedCurrency, props.originalPrice, props.currency]);
+
 	return (
 		<div className='h-[370px]  sm:w-[100%]  pb-3  flex-shrink-0  bg-ascentBlue rounded-sm'>
 			<Link to={`/product-details/${productId ? productId : props.id}`}>
@@ -51,16 +81,18 @@ const CardComp = ({ deal, productId, isLoading, ...props }: any) => {
 					<div
 						className='flex justify-between sm:flex-col sm:pb-3
 				  '>
-						<StarRating id={props?.id} />
+						<StarRating id={props?.totalRatings?.sumOfRatings || 0} />
 						{/* <Rating  size={10}   initialValue={ratingValue} /> */}
 
 						<div className='text-right  '>
 							<div className='flex font-bold'>
-								<div className='text-[10px] mt-2 mr-2 sm:mt-1 '>NGN </div>
-								{props.discountPrice?.toLocaleString()}
+								<div className='text-[10px] mt-2 mr-2 sm:mt-1 '>
+									{selectedCurrency}{" "}
+								</div>
+								{convertedDiscountPrice?.toLocaleString()}
 							</div>
 							<div className='line-through text-[12px] text-cardBrown font-bold'>
-								{props.originalPrice?.toLocaleString()}
+								{convertedOriginalPrice.toLocaleString()}
 							</div>
 						</div>
 					</div>

@@ -4,9 +4,13 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { MdOutlineClear } from "react-icons/md";
 
-import { useGetAllAdminCategoryAndSubCategoryQuery } from "@/services/apiSlice";
+import {
+	useGetAllAdminCategoryAndSubCategoryQuery,
+	useViewAllCartCustomerQuery,
+} from "@/services/apiSlice";
 
 import useUpdateUrlParams from "../SearchRoute";
+import { useAppSelector } from "@/services/store";
 
 const MegaMenu = ({ setShowMegaMenu }: any) => {
 	const updateUrlParams = useUpdateUrlParams();
@@ -16,6 +20,17 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 
 		isLoading,
 	} = useGetAllAdminCategoryAndSubCategoryQuery({});
+	const cart = useAppSelector((state) => state.persistedReducer.cart);
+
+	const currentUser = useAppSelector(
+		(state) => state.persistedReducer.currentUser,
+	);
+	const isAuthenticated =
+		currentUser && Object.keys(currentUser || {}).length !== 0;
+	const { data: userCartData } = useViewAllCartCustomerQuery({});
+	const cartItems = isAuthenticated
+		? userCartData?.data?.cart?.items || []
+		: cart;
 
 	// const { data: adminCategory } = useGetAllAdminCategoryQuery({});
 
@@ -60,7 +75,7 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 							<MdOutlineShoppingCart />
 						</div>
 						<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
-							0
+							{cartItems?.length || 0}
 						</span>
 					</div>
 					<div className='flex items-center cursor-pointer sm:hidden'>
@@ -70,15 +85,15 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 						<div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
 					</div>
 					<div className='hidden sm:flex gap-3 items-center'>
-						<div className='text-primary'>
-							<FaRegUser />
-						</div>
+						{/* <div className='text-primary'> */}
+						{/* <FaRegUser /> */}
+						{/* </div> */}
 						<div className='relative inline-block '>
 							<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>
 								<MdOutlineShoppingCart />
 							</div>
 							<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
-								0
+								{cartItems?.length || 0}
 							</span>
 						</div>
 					</div>

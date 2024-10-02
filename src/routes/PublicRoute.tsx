@@ -17,6 +17,7 @@ import SearchPage from "@/pages/Search";
 import OrderDetails from "@/pages/Dashboard/Subpages/OrderDetails";
 import PaymentSuccess from "@/pages/Dashboard/PaymentSuccess";
 import Messaging from "@/pages/Dashboard/Messaging";
+import CheckOutSuccess from "@/pages/Dashboard/CheckoutSuccess";
 
 type PublicRouteProps = {
 	openLoginDialog: () => void;
@@ -123,6 +124,11 @@ const PublicRoute = ({
 		{
 			path: "/payment-success",
 			element: <PaymentSuccess />,
+		},
+
+		{
+			path: "/checkout-success",
+			element: <CheckOutSuccess />,
 		},
 	];
 };

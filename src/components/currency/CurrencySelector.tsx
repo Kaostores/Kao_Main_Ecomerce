@@ -27,9 +27,7 @@ const CurrencySelector = ({
 
 				setCurrencies(Object.keys(currencyMap).sort());
 				setCurrencyToCountryMap(currencyMap);
-			} catch (error) {
-				console.error("Error fetching countries:", error);
-			}
+			} catch (error) {}
 		};
 
 		fetchCurrencies();

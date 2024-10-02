@@ -38,9 +38,7 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 				const response = await fetch("https://restcountries.com/v3.1/all");
 				const data = await response.json();
 				setCountries(data);
-			} catch (error) {
-				console.error("Error fetching countries:", error);
-			}
+			} catch (error) {}
 		};
 
 		fetchCountries();
@@ -87,7 +85,7 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 		event.preventDefault();
 		try {
 			const response: any = await newAddress(formData);
-			console.log("new address", response);
+
 			if (response?.data?.success == true) {
 				ShowToast(true, "Address Added Successfully");
 				togleBtn();
@@ -95,9 +93,7 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 				ShowToast(false, response?.data?.message);
 				// togleBtn();
 			}
-		} catch (error) {
-			console.error("Error adding address:", error);
-		}
+		} catch (error) {}
 	};
 
 	const handleSubmitEdit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -114,9 +110,7 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 			} else {
 				togleBtn();
 			}
-		} catch (error) {
-			console.error("Error adding address:", error);
-		}
+		} catch (error) {}
 	};
 
 	return (

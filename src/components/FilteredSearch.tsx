@@ -158,8 +158,6 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 			  }))
 			: null;
 
-	console.log("brrand", brandOptions);
-
 	const priceOptions = [
 		{
 			label: "NGN 1,000 - NGN 10,000",

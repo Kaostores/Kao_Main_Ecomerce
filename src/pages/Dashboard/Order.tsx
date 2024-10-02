@@ -28,11 +28,9 @@ const Order = () => {
 	const [selectedOrderID, setSelectedOrderID] = useState<any>("");
 
 	const { data: orders, isLoading } = useFetchOrdersQuery({});
-	console.log("getting orders", orders);
+
 	const [cancelingOrder, { isLoading: isCancelLoading }] =
 		useCancelOrderMutation();
-
-	console.log("selectedOrderID:", selectedOrderID);
 
 	const Navigate = useNavigate();
 
@@ -55,7 +53,7 @@ const Order = () => {
 			// Navigate(-1);
 		}
 		// Perform the action you want to confirm
-		console.log("Confirmed action!", response);
+
 		// Close the modal after the action
 		handleCloseModal();
 	};
@@ -66,13 +64,13 @@ const Order = () => {
 		setView(false);
 	};
 	const TrackView = (variant: any, order: any) => {
-		console.log("ggggg", variant);
+		console.log(variant);
 		setTrack(true);
 		setView(false);
 		setDetails(false);
 		setOrderDetail(order);
 	};
-	console.log("Orderdetail", orderDetail);
+
 	const ToggleView = () => {
 		setView(true);
 		setTrack(false);
@@ -264,8 +262,6 @@ const Order = () => {
 																						onClick={() => {
 																							handleOpenModal();
 																							setSelectedOrderID(order?.id);
-
-																							console.log("here is it", item);
 																						}}>
 																						Cancel Order
 																					</div>

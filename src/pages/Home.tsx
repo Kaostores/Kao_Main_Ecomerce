@@ -8,17 +8,49 @@ import CategoriesData from "@/components/reuse/CategoriesData";
 
 import ProductSkeleton from "@/components/skeleton/ProductSkeleton";
 import {
+	useAddCartCustomerMutation,
 	useGetHotSalesQuery,
 	useViewAllPostersQuery,
 	useViewAllProductsQuery,
 } from "@/services/apiSlice";
+import { updateUserDetails } from "@/services/reducers";
+import { useAppSelector } from "@/services/store";
+import { Instance } from "@/utils/AxiosConfig";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import Cookies from "universal-cookie";
 
 const Home = () => {
 	const { data, isLoading } = useViewAllProductsQuery({});
 	const { data: HotData, isLoading: isHotLoading } = useGetHotSalesQuery({});
-
+	const cookies = new Cookies();
+	const dispatch = useDispatch();
 	const { data: posterData } = useViewAllPostersQuery({});
-	console.log("fgtjrk", posterData);
+	const expiryDate = new Date();
+	expiryDate.setDate(expiryDate.getDate() + 7);
+
+	const cart = useAppSelector((state) => state.persistedReducer.cart);
+	//
+	const [addCartFn] = useAddCartCustomerMutation();
+	//
+	const handleAddToCartUser = async (props: any) => {
+		try {
+			const response: any = await addCartFn({
+				product: props?.product_id,
+				quantity: 1,
+				variant: props?.variantID ? props?.variantID : null,
+			});
+			if (response?.data?.success) {
+				toast.success("cart added");
+			} else {
+				toast.error("Failed to add item to Cart");
+			}
+		} catch (error) {
+			toast.error("An error occurred while adding to the cart");
+		}
+	};
 
 	// const sortElectronics = data?.data?.sort((a:any, b:any)=>{
 	// return a.category['electronics'] - b.category['electronics']
@@ -27,8 +59,60 @@ const Home = () => {
 	const electronicsProducts = data?.data?.filter((product: any) => {
 		return product.proCategoryId.name.toLowerCase() === "electronics";
 	});
+	const location = useLocation();
+	useEffect(() => {
+		// Utility function to get query parameters
+		const getQueryParam = (param: any) => {
+			const urlParams = new URLSearchParams(location.search);
+			return urlParams.get(param);
+		};
 
-	console.log("electronics", electronicsProducts);
+		// Extract the "code" parameter
+		const code = getQueryParam("code");
+
+		if (code) {
+			exchangeCodeForToken(code);
+		}
+	}, [location]);
+	const exchangeCodeForToken = async (code: any) => {
+		try {
+			const response = await Instance.get(`/user/auth/google`, {
+				params: { code },
+			});
+
+			console.log("this is the response", response);
+			if (response.data.success) {
+				cookies.set("Kao_cookie_user", response?.data?.token, {
+					expires: expiryDate,
+					path: "/",
+				});
+				// Dispatch user details to the store
+				dispatch(updateUserDetails(response?.data?.data));
+
+				// Now proceed to handle the cart after registration
+				if (cart.length > 0) {
+					for (const cartItem of cart) {
+						// Sequentially add each cart item
+						await handleAddToCartUser({
+							product_id: cartItem.productID,
+							variantID: cartItem.variant ? cartItem.variant.id : null,
+							quantity: cartItem.quantity,
+						});
+					}
+				}
+				// Clear the URL query parameters (code)
+				window.history.replaceState({}, document.title, "/");
+				console.log("Token received:", response.data.token);
+				// Store token (e.g., localStorage) and redirect to protected route
+			} else {
+				console.error("Failed to get token");
+			}
+		} catch (error) {
+			console.error("Error exchanging code for token", error);
+		}
+	};
+
+	console.log("thissn sn", data);
 
 	return (
 		<div className='overflow-hidden'>

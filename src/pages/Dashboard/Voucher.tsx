@@ -15,8 +15,6 @@ const Voucher = () => {
 	const user = useAppSelector((state) => state.persistedReducer.currentUser);
 	const { data: coupData } = useGetAllCopounQuery({});
 
-	console.log(coupData);
-
 	const Toggle2 = () => {
 		setShow2(true);
 		setShow(false);

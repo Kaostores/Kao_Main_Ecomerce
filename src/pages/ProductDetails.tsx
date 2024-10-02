@@ -32,7 +32,9 @@ import ReviewPage from "./Dashboard/Subpages/ReviewPage";
 import TextSanitizer from "@/helpers/TextSanitizer";
 import { LoadingSpinner } from "@/components/reuse/Spinner";
 import ImagePreviewModal from "@/components/ImagePreviewModal";
-import { Helmet } from "react-helmet";
+import MetaTags from "@/components/MetaTags";
+import ShowToast from "@/components/reuse/ShowToast";
+import LoadingButton from "@/components/reuse/LoadingButton";
 
 const ProductDetails = () => {
 	const navigate = useNavigate();
@@ -78,29 +80,60 @@ const ProductDetails = () => {
 		(state: any) => state?.persistedReducer?.cart,
 	);
 
-	const findQuantity = (variantId: any) => {
-		// First, ensure the global state and the items array are not null.
-		if (!globalstate || !variantId) return 0;
+	console.log("user cart", userCartData);
 
-		const nonUserCart = globalstate?.find(
-			(item: any) => item?.variant?.id === variantId,
-		);
+	// const findQuantity = (variantId: any) => {
+	// First, ensure the global state and the items array are not null.
+	// if (!globalstate || !variantId) return 0;
 
-		const checkCart = userCartData?.data?.cart?.items?.find(
-			(el: any) => el.variant?.id === variantId,
-		);
+	// const nonUserCart = globalstate?.find(
+	// (item: any) => item?.variant?.id === variantId,
+	// );
 
-		console.log("checkiiii", checkCart);
-		// console.log(item);
-		return nonUserCart
-			? nonUserCart?.cartQuantity
-			: 0 || (user && checkCart?.variant?.id === variantId)
-			? checkCart?.quantity
-			: 0;
+	// const checkCart = userCartData?.data?.cart?.items?.find(
+	// (el: any) => el.variant?.id === variantId,
+	// );
+
+	// console.log(item);
+	// return nonUserCart
+	// ? nonUserCart?.cartQuantity
+	// : 0 || (user && checkCart?.variant?.id === variantId)
+	// ? checkCart?.quantity
+	// : 0;
+	// };
+
+	console.log("gloval", globalstate);
+
+	const findQuantity = (variantId: any, productId: any) => {
+		// Ensure the global state and the variant or product ID are not null.
+		if (!globalstate || (!variantId && !productId)) return 0;
+
+		// Check the global state for the variant or product, even without a user.
+		const nonUserCart = variantId
+			? globalstate?.find((item: any) => item?.variant === variantId)
+			: globalstate?.find((item: any) => item?.productID === productId);
+
+		// Check the user's cart if there is a logged-in user.
+		const checkCart = user?.firstname
+			? variantId
+				? userCartData?.data?.cart?.items?.find(
+						(el: any) => el.variant?.id === variantId,
+				  )
+				: userCartData?.data?.cart?.items?.find(
+						(el: any) => el.product?.id === productId,
+				  )
+			: null;
+
+		// If the user is logged in and their cart contains the item, return that quantity.
+		if (user && checkCart) {
+			return checkCart.quantity;
+		}
+
+		// Otherwise, return the quantity from the global state if it exists.
+		return nonUserCart ? nonUserCart.cartQuantity : 0;
 	};
 
 	const handleIncrement = (variant: any) => {
-		console.log("ccccccccc", productData);
 		dispatch(
 			addToCart({
 				id: variant.id,
@@ -112,12 +145,14 @@ const ProductDetails = () => {
 				quantity: 1, // This will be handled in the reducer
 			}),
 		);
-		toast.success("Added to Cart successfully");
+		ShowToast(true, "Added to Cart successfully");
 	};
 
 	const handleDecrement = (variantId: any) => {
+		console.log(variantId);
 		// Get the current quantity of the variant from Redux state
-		const quantity = findQuantity(variantId);
+		console.log(variantId);
+		const quantity = findQuantity(variantId, null);
 		// Only dispatch removeFromCart if quantity is greater than 1
 		if (quantity > 1) {
 			dispatch(removeFromCart(variantId));
@@ -144,8 +179,6 @@ const ProductDetails = () => {
 		useViewProductReviewsQuery({
 			product_id: id,
 		});
-
-	console.log("review", RatingData);
 
 	useEffect(() => {
 		if (productData?.data?.media?.length > 0) {
@@ -174,6 +207,7 @@ const ProductDetails = () => {
 	};
 
 	const handleAddToCartUser = async (props: any) => {
+		console.log("dfuhjgfn", props);
 		const response: any = await addCartFn({
 			product: props?.product_id,
 			quantity: 1,
@@ -183,8 +217,6 @@ const ProductDetails = () => {
 		if (response?.data?.success) {
 			toast.success("Added to Cart successfully");
 		}
-
-		console.log("this is response to adding cart", response);
 	};
 
 	const handleRemoveCartUser = async (props: any) => {
@@ -194,11 +226,9 @@ const ProductDetails = () => {
 		if (response?.data?.success) {
 			toast.success("Removed from Cart successfully");
 		}
-		console.log("this is response to remove cart", response);
 	};
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	console.log("prrrrrrrrr", productData);
 
 	// const overallRating = 4.0;
 	// const totalReviews = 1;
@@ -212,44 +242,96 @@ const ProductDetails = () => {
 	// },
 	// ];
 
+	// const shareOnFacebook = () => {
+	// const url = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
+	// window.open(url, "_blank");
+	// };
+
+	// const shareOnTwitter = () => {
+	// // const url = `https://twitter.com/intent/tweet?url=${currentUrl}&text=${encodeURIComponent(
+	// title,
+	// )}`;
+	// window.open(url, "_blank");
+	// };
+
+	// const shareOnWhatsApp = () => {
+	// const message = `${title}\n\n${currentUrl}`;
+	// window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
+	// };
+
+	useEffect(() => {
+		const meta = document.createElement("meta");
+		meta.name = "description";
+		meta.content = "Some description";
+		document.head.appendChild(meta);
+
+		return () => {
+			document.head.removeChild(meta);
+		};
+	}, []);
+
 	const title = `${decodeHTMLEntities(productData?.data?.name)}`;
-	// const description = `${productData?.data.description}`;
 	const imageUrl = `${productData?.data?.media[0]?.url}`;
+	// const currentUrl = window.location.href;
 
-	const currentUrl = window.location.href; // Get the current page URL to share
+	const updateMetaTags = (
+		title: string,
+		description: string,
+		imageUrl: string,
+	) => {
+		const ogTitle = document?.querySelector('meta[property="og:title"]');
+		const ogDescription = document?.querySelector(
+			'meta[property="og:description"]',
+		);
+		const ogImage = document?.querySelector('meta[property="og:image"]');
+		const twitterTitle = document?.querySelector('meta[name="twitter:title"]');
+		const twitterDescription = document?.querySelector(
+			'meta[name="twitter:description"]',
+		);
+		const twitterImage = document?.querySelector('meta[name="twitter:image"]');
 
+		if (ogTitle) ogTitle.setAttribute("content", title);
+		if (ogDescription) ogDescription.setAttribute("content", description);
+		if (ogImage) ogImage.setAttribute("content", imageUrl);
+		if (twitterTitle) twitterTitle.setAttribute("content", title);
+		if (twitterDescription)
+			twitterDescription.setAttribute("content", description);
+		if (twitterImage) twitterImage.setAttribute("content", imageUrl);
+	};
+
+	// Facebook share
 	const shareOnFacebook = () => {
+		updateMetaTags(title, "yoo", imageUrl); // Update meta tags before sharing
+		const currentUrl = window.location.href;
 		const url = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
 		window.open(url, "_blank");
 	};
 
+	// Twitter share
 	const shareOnTwitter = () => {
+		updateMetaTags(title, "yoo", imageUrl); // Update meta tags before sharing
+		const currentUrl = window.location.href;
 		const url = `https://twitter.com/intent/tweet?url=${currentUrl}&text=${encodeURIComponent(
 			title,
 		)}`;
 		window.open(url, "_blank");
 	};
 
+	// WhatsApp share
 	const shareOnWhatsApp = () => {
+		updateMetaTags(title, "yooo", imageUrl); // Update meta tags before sharing
+		const currentUrl = window.location.href;
 		const message = `${title}\n\n${currentUrl}`;
 		window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
 	};
 
-	console.log("user", user);
+	console.log("yeah", productData);
 
 	useEffect(() => {}, [selectedId, productData]);
 	return (
 		<>
-			<Helmet>
-				{/* Open Graph meta tags */}
-				<meta property='og:title' content={title} />
-				<meta property='og:image' content={imageUrl} />
+			<MetaTags title={title} image={imageUrl} name={title} />
 
-				{/* Twitter Card meta tags */}
-				<meta name='twitter:card' content='summary_large_image' />
-				<meta name='twitter:title' content={title} />
-				<meta name='twitter:image' content={imageUrl} />
-			</Helmet>
 			{isModalOpen && (
 				<ImagePreviewModal
 					images={productData?.data?.media}
@@ -276,7 +358,7 @@ const ProductDetails = () => {
 										}}>
 										<img
 											src={props?.url}
-											alt=''
+											alt='product-image'
 											className='xl:w-[50px] md:w-[50px] lg:w-[50px] sm:w-[30px]'
 										/>
 									</div>
@@ -294,7 +376,7 @@ const ProductDetails = () => {
 											? selectedImage?.url
 											: productData?.data?.media[0]?.url
 									}
-									alt=''
+									alt='product-image'
 									onLoad={() => setImageLoading(false)}
 									className={`xl:w-[300px] md:w-[250px] bg-black lg:w-[220px] sm:w-[170px] first-letter:sm:mb-[20px] ${
 										imageLoading ? "hidden" : "block"
@@ -367,12 +449,11 @@ const ProductDetails = () => {
 										</div>
 									</div>
 								</div> */}
-
 									{isProductLoading ? (
 										<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full mt-[5px]'></div>
 									) : (
 										<>
-											{productData?.data?.proVariants && (
+											{productData?.data?.proVariants?.length > 0 && (
 												<div className='mt-[15px] flex flex-col mb-[10px]'>
 													<div className='flex items-center'>
 														<p className='text-[14px]'>Variations</p>
@@ -396,7 +477,6 @@ const ProductDetails = () => {
 											)}
 										</>
 									)}
-
 									{isProductLoading ? (
 										<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full mt-[5px]'></div>
 									) : (
@@ -451,7 +531,7 @@ const ProductDetails = () => {
 																							quantity: 1,
 																						});
 																					} else {
-																						handleDecrement(variant);
+																						handleDecrement(variant?.id);
 																					}
 																				}}
 																				className='w-[30px] h-[30px] sm:w-[20px]  sm:h-[20px] bg-[#DE801C] shadow-lg rounded-sm flex justify-center items-center text-white mr-[10px] cursor-pointer'>
@@ -463,7 +543,7 @@ const ProductDetails = () => {
 																				isFetching ? (
 																					<LoadingSpinner />
 																				) : (
-																					<>{findQuantity(variant.id)}</>
+																					<>{findQuantity(variant.id, null)}</>
 																				)}
 																			</div>
 																			<div
@@ -474,6 +554,8 @@ const ProductDetails = () => {
 																							variantID: variant.id,
 																							quantity: 1,
 																						});
+
+																						console.log("hhhh", productData);
 																					} else {
 																						handleIncrement(variant);
 																					}
@@ -510,12 +592,12 @@ const ProductDetails = () => {
 											) : null}
 										</div>
 									)}
-
 									<div className='px-[10px] py-[5px] bg-[#8686863a] rounded-[5px] my-[10px] w-[200px]'>
 										<div className='text-[13px]'>Call us for Bulk Purchase</div>
-										<div className='text-[13px] text-primary'>0905729875</div>
+										<div className='text-[13px] text-primary'>
+											{productData?.data?.store?.phone}
+										</div>
 									</div>
-
 									<div
 										onClick={() => {
 											if (user?.id) {
@@ -547,8 +629,19 @@ const ProductDetails = () => {
 												}
 											}
 										}}
-										className='xl:w-[300px] xxl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer'>
-										<div>{loadingIncrease ? "loading..." : "Add to cart"}</div>
+										className='xl:w-[300px] xxl:w-[300px] sm:w-full bg-secondary text-white rounded-[5px] flex justify-center items-center py-[10px] my-[20px] cursor-pointer '>
+										<div>
+											{loadingIncrease ? (
+												<LoadingButton w={"100%"} />
+											) : (
+												"Add to cart"
+											)}
+										</div>
+										{findQuantity(null, productData?.data?.id) > 0 && (
+											<span className='ml-2 bold'>
+												({findQuantity(null, productData?.data?.id)})
+											</span>
+										)}
 									</div>
 
 									<div className='flex items-center mb-[20px]'>

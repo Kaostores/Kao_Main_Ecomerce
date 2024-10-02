@@ -1,9 +1,11 @@
+import { Button } from "../ui/button";
 
-import { Button } from '../ui/button';
-
-const LoadingButton = ({w}: { w: string }) => {
-  return (
-		<Button disabled className={`w-[${w}] h-[45px]  `} variant = 'secondary'>
+const LoadingButton = ({ w }: { w: string }) => {
+	return (
+		<Button
+			disabled
+			className={`w-[${w}] h-[30px] flex justify-center items-center `}
+			variant='secondary'>
 			<div role='status'>
 				<svg
 					aria-hidden='true'
@@ -24,6 +26,6 @@ const LoadingButton = ({w}: { w: string }) => {
 			</div>
 		</Button>
 	);
-}
+};
 
-export default LoadingButton
+export default LoadingButton;

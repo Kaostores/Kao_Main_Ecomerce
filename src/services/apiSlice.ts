@@ -24,6 +24,7 @@ export const api = createApi({
 		"reviews",
 		"cart",
 		"chats",
+		"card",
 	],
 	endpoints: (builder) => ({
 		viewAllProducts: builder.query({
@@ -197,8 +198,6 @@ export const api = createApi({
 				const subCategoryID = encodeURIComponent(body.subCategoryID || "");
 				const brand_id = encodeURIComponent(body.brand_id || "");
 
-				console.log("checking", typeof rating);
-
 				return `/products/search/all?search=${search}&category_id=${categoryID}&sub_category_id=${subCategoryID}&filter=&minPrice=${minPrice}&maxPrice=${maxPrice}&rating=${rating}&gender=${gender}&brand_id=${brand_id}`;
 			},
 		}),
@@ -284,11 +283,42 @@ export const api = createApi({
 			}),
 			// invalidatesTags: ["cart"],
 		}),
+
+		AddCardCharge: builder.mutation({
+			query: (body) => ({
+				url: `/transactions/add/card`,
+				method: "POST",
+				body: body,
+			}),
+			invalidatesTags: ["card"],
+		}),
+
+		FetchCard: builder.query({
+			query: () => "/transactions/charge/card",
+			providesTags: ["card"],
+		}),
+
+		AddPayment: builder.mutation({
+			query: (body) => ({
+				url: `/transactions/payment/link`,
+				method: "POST",
+				body: body,
+			}),
+			// invalidatesTags: ["card"],
+		}),
+
+		CheckOutPayment: builder.query({
+			query: () => ({
+				url: `/carts/checkout`,
+				method: "GET",
+			}),
+		}),
 	}),
 });
 
 export const {
 	useViewAllProductsQuery,
+	useCheckOutPaymentQuery,
 	useViewAProductQuery,
 	useCreateOrderMutation,
 	useFetchOrdersQuery,
@@ -327,4 +357,7 @@ export const {
 	usePostMessagesMutation,
 	useFetchMessagesQuery,
 	useChangeCustomerPasswordMutation,
+	useAddCardChargeMutation,
+	useFetchCardQuery,
+	useAddPaymentMutation,
 } = api;

@@ -6,7 +6,7 @@ import CarouselComp from "./CarouselComp";
 const Hero = () => {
 	return (
 		<div className=' flex w-full sm:flex-col md:flex-col mt-7 sm:mt-3  gap-5 '>
-			<div className='w-2/3 sm:w-full md:w-full  h-[450px] sm:h-[300px] '>
+			<div className='w-2/3 sm:w-full md:w-full  '>
 				<CarouselComp />
 			</div>
 

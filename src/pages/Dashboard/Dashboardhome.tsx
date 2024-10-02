@@ -17,8 +17,17 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import { useSelector } from "react-redux";
-import { useGetUserDataQuery } from "@/services/apiSlice";
+import {
+	useAddPaymentMutation,
+	useGetUserDataQuery,
+} from "@/services/apiSlice";
 import { FaRocketchat } from "react-icons/fa";
+// import { LoadingSpinner } from "@/components/reuse/Spinner";
+import LoaderComponent from "@/components/reuse/LoadingComponent";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 const Dashboardhome = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -28,11 +37,30 @@ const Dashboardhome = () => {
 	const [show2, setShow2] = useState(false);
 	const [isActiveFirst, setIsActiveFirst] = useState(true);
 	const [isActiveSecond, setIsActiveSecond] = useState(false);
+	const [amount, setAmount] = useState<number>();
+	const [openAmount, setOpenAmount] = useState(false);
 	// const user = useSelector((state:any)=> state?.persistedReducer?.currentUser)
+	const [proccedToPayment, { isLoading: paymentLoading }] =
+		useAddPaymentMutation();
 
 	const { data } = useGetUserDataQuery({});
 
-	console.log("this is the user", data);
+	const onHandlePayment = async () => {
+		const response: any = await proccedToPayment({
+			amount: amount,
+		});
+
+		// console.log("yooooooooo", response);
+
+		if (response?.data?.success) {
+			const paymentLink = response?.data?.data?.link;
+			// window.open(paymentLink);
+			// window.open(paymentLink, "_blank");
+			window.open(paymentLink, "_blank", "noopener,noreferrer");
+			// window.location.href = paymentLink;
+		} else {
+		}
+	};
 
 	const handleClickFirst = () => {
 		setIsActiveFirst(true);
@@ -69,8 +97,43 @@ const Dashboardhome = () => {
 		});
 	};
 
+	if (paymentLoading) return <LoaderComponent />;
+
 	return (
 		<div className='w-[100%]'>
+			<Dialog open={openAmount} onOpenChange={setOpenAmount}>
+				<DialogTrigger></DialogTrigger>
+
+				<DialogContent className='w-full'>
+					<span className='font-semibold text-xl'>Charge Amount</span>
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							onHandlePayment();
+						}}
+						className='gap-3 flex flex-col'>
+						<Label htmlFor='name' className=''>
+							Enter Amount
+						</Label>
+						<Input
+							onChange={(e) => {
+								setAmount(+e.target.value);
+							}}
+							required
+							type='number'
+							placeholder='e.g 100'
+						/>
+						<Button
+							variant='secondary'
+							className='w-[120px] text-white text-sm py-7'
+							onClick={() => {
+								// action();
+							}}>
+							Procced
+						</Button>
+					</form>
+				</DialogContent>
+			</Dialog>
 			<div className='w-[100%] flex-col p-[15px] mb-[60px] flex-1 bg-[#F4F4F4] ml-[15px] rounded-[8px] md:ml-0 md:hidden sm:hidden'>
 				<div className='w-[100%] flex items-center mt-[14px] justify-between'>
 					<div className='flex items-center'>
@@ -80,7 +143,9 @@ const Dashboardhome = () => {
 						<p className='text-[#0030AD] text-[14px] ml-[5px]'>
 							KAO wallet balance:
 						</p>
-						<h3 className='text-[#0030AD] ml-[5px] font-[500]'>NGN 30,000</h3>
+						<h3 className='text-[#0030AD] ml-[5px] font-[500]'>
+							NGN {data?.data?.balance?.toLocaleString() || 0}
+						</h3>
 					</div>
 					<div>
 						<h3
@@ -111,29 +176,9 @@ const Dashboardhome = () => {
 						<div className='w-[500px] p-[20px] pt-[55px] pb-[55px] flex bg-[#fff] rounded-md flex-col justify-center items-center relative'>
 							<h3 className='text-[18px] font-[500]'>Top up with</h3>
 							<div className='w-[80%] mt-[40px] flex flex-col'>
-								<div className='flex mb-[35px]'>
+								<div onClick={handleClickSecond} className='flex mb-[35px] '>
 									<div>
 										<div
-											onClick={handleClickFirst}
-											className={`w-[15px] h-[15px] rounded-full flex justify-center items-center text-[#fff] cursor-pointer ${
-												isActiveFirst
-													? "bg-primary"
-													: "bg-white border border-iconGray text-iconGray"
-											}`}>
-											<IoCheckmarkSharp className='text-[10px]' />
-										</div>
-									</div>
-									<div className='flex flex-col ml-[15px]'>
-										<h3 className='text-[16px] mt-[-5px]'>Top up with USDT</h3>
-										<p className='text-[13px] text-iconGray mt-[3px]'>
-											Your balance: 30 NGN
-										</p>
-									</div>
-								</div>
-								<div className='flex '>
-									<div>
-										<div
-											onClick={handleClickSecond}
 											className={`w-[15px] h-[15px] rounded-full flex justify-center items-center text-[#fff] cursor-pointer ${
 												isActiveSecond
 													? "bg-primary"
@@ -151,7 +196,33 @@ const Dashboardhome = () => {
 										</p>
 									</div>
 								</div>
-								<button className='w-[100%] h-[40px] text-[#fff] bg-secondary text-[14px] rounded-sm mt-[70px]'>
+								<div onClick={handleClickFirst} className='flex '>
+									<div>
+										<div
+											className={`w-[15px] h-[15px] rounded-full flex justify-center 
+items-center text-[#fff] cursor-pointer ${
+												isActiveFirst
+													? "bg-primary"
+													: "bg-white border border-iconGray text-iconGray"
+											}`}>
+											<IoCheckmarkSharp className='text-[10px]' />
+										</div>
+									</div>
+									<div className='flex flex-col ml-[15px]'>
+										<h3 className='text-[16px] mt-[-5px]'>Top up with USDT</h3>
+										<p className='text-[13px] text-iconGray mt-[3px]'>
+											Your balance: 30 NGN
+										</p>
+									</div>
+								</div>
+								<button
+									onClick={() => {
+										if (isActiveSecond) {
+											// onHandlePayment();
+											setOpenAmount(true);
+										}
+									}}
+									className='w-[100%] h-[40px] text-[#fff] bg-secondary text-[14px] rounded-sm mt-[70px]'>
 									Continue
 								</button>
 							</div>
@@ -182,7 +253,9 @@ const Dashboardhome = () => {
 							Kao wallet balance:
 						</p>
 					</div>
-					<h3 className='text-[16px] font-[600] text-primary'>NGN 36,000</h3>
+					<h3 className='text-[16px] font-[600] text-primary'>
+						NGN {data?.data?.balance?.toLocaleString() || 0}
+					</h3>
 				</div>
 
 				<div
@@ -395,31 +468,9 @@ cursor-pointer
 						<div className='w-[500px] sm:w-[350px] p-[20px] pt-[55px] pb-[55px] flex bg-[#fff] rounded-md flex-col justify-center items-center relative'>
 							<h3 className='text-[18px] font-[500]'>Top up with</h3>
 							<div className='w-[80%] sm:w-[100%] mt-[40px] flex flex-col'>
-								<div className='flex mb-[35px]'>
+								<div onClick={handleClickSecond} className='flex mb-[35px] '>
 									<div>
 										<div
-											onClick={handleClickFirst}
-											className={`w-[15px] h-[15px] rounded-full flex justify-center items-center text-[#fff] cursor-pointer ${
-												isActiveFirst
-													? "bg-primary"
-													: "bg-white border border-iconGray text-iconGray"
-											}`}>
-											<IoCheckmarkSharp className='text-[10px]' />
-										</div>
-									</div>
-									<div className='flex flex-col ml-[15px]'>
-										<h3 className='text-[16px] mt-[-5px] sm:text-[14px] sm:font-[500]'>
-											Top up with USDT
-										</h3>
-										<p className='text-[13px] text-iconGray mt-[3px]'>
-											Your balance: 30 NGN
-										</p>
-									</div>
-								</div>
-								<div className='flex '>
-									<div>
-										<div
-											onClick={handleClickSecond}
 											className={`w-[15px] h-[15px] rounded-full flex justify-center items-center text-[#fff] cursor-pointer ${
 												isActiveSecond
 													? "bg-primary"
@@ -437,7 +488,35 @@ cursor-pointer
 										</p>
 									</div>
 								</div>
-								<button className='w-[100%] h-[40px] text-[#fff] bg-secondary text-[14px] rounded-sm mt-[70px]'>
+								<div onClick={handleClickFirst} className='flex '>
+									<div>
+										<div
+											className={`w-[15px] h-[15px] rounded-full flex justify-center 
+items-center text-[#fff] cursor-pointer ${
+												isActiveFirst
+													? "bg-primary"
+													: "bg-white border border-iconGray text-iconGray"
+											}`}>
+											<IoCheckmarkSharp className='text-[10px]' />
+										</div>
+									</div>
+									<div className='flex flex-col ml-[15px]'>
+										<h3 className='text-[16px] mt-[-5px] sm:text-[14px] sm:font-[500]'>
+											Top up with USDT
+										</h3>
+										<p className='text-[13px] text-iconGray mt-[3px]'>
+											Your balance: 30 NGN
+										</p>
+									</div>
+								</div>
+								<button
+									onClick={() => {
+										if (isActiveSecond) {
+											// onHandlePayment();
+											setOpenAmount(true);
+										}
+									}}
+									className='w-[100%] h-[40px] text-[#fff] bg-secondary text-[14px] rounded-sm mt-[70px]'>
 									Continue
 								</button>
 							</div>

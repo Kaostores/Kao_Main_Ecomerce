@@ -28,6 +28,7 @@ const initialState = {
 	totalQuantity: 0,
 	cartQuantity: 0,
 	addresses: {} as AddressType,
+	selectedCurrency: "USD",
 };
 
 export const Reducers = createSlice({
@@ -47,15 +48,16 @@ export const Reducers = createSlice({
 			state.totalQuantity = 0;
 			state.totalPrice = 0;
 		},
+
 		addToCart: (state, action: PayloadAction<any>) => {
 			const itemToAdd = action.payload;
 
-			console.log("itttttt", itemToAdd);
+			console.log("item added", itemToAdd);
 			const existingItem = state.cart.find(
 				(item) =>
-					item.id === itemToAdd.id ||
+					item.id === itemToAdd.productID ||
 					(item.productID === itemToAdd.productID &&
-						item.variant.id === itemToAdd.variant.id),
+						(!item.variant || item.variant?.id === itemToAdd.variant?.id)),
 			);
 
 			if (existingItem) {
@@ -64,33 +66,50 @@ export const Reducers = createSlice({
 				state.cart.push({ ...itemToAdd, cartQuantity: 1 });
 			}
 
-			state.totalPrice += itemToAdd.price;
 			state.totalQuantity += 1;
+			state.totalPrice += itemToAdd.price;
 		},
 
-		removeFromCart: (state, { payload }: PayloadAction<string>) => {
+		removeFromCart: (state, { payload }) => {
+			// Find the index of the item in the cart
 			const index = state.cart.findIndex((item) =>
-				item.variant ? item.variant.id === payload : item.id === payload,
+				item.variant
+					? item.variant.id === payload
+					: item.productID === payload.productID,
 			);
 
 			if (index !== -1) {
 				const item = state.cart[index];
+				const itemPrice = item.price || item.originalPrice; // Retrieve the price
+
+				// Check if the item's quantity is greater than 1
 				if (item.cartQuantity > 1) {
-					item.cartQuantity -= 1; // Decrement the quantity
-					const amountToDeduct = item.price;
-					state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct); // Ensure totalPrice does not go negative
-					state.totalQuantity -= 1; // Decrement the total item count
+					// Decrement the quantity of the product in the cart
+					item.cartQuantity -= 1;
+
+					// Adjust the total price and total quantity accordingly
+					state.totalPrice = Math.max(0, state.totalPrice - itemPrice);
+					state.totalQuantity -= 1;
 				} else {
-					const amountToDeduct = item.price * item.cartQuantity;
-					state.cart.splice(index, 1); // Remove the item from the cart
-					state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct); // Ensure totalPrice does not go negative
-					state.totalQuantity -= item.cartQuantity; // Adjust the total item count
+					// If the item's quantity is 1, remove it from the cart
+					const amountToDeduct = itemPrice * item.cartQuantity;
+
+					// Remove the item from the cart
+					state.cart.splice(index, 1);
+
+					// Update the total price and total quantity
+					state.totalPrice = Math.max(0, state.totalPrice - amountToDeduct);
+					state.totalQuantity -= item.cartQuantity;
 				}
 			}
 		},
 
 		remove: (state, { payload }: PayloadAction<any>) => {
 			state.cart = state.cart.filter((el) => el.id !== payload.id);
+		},
+
+		storeSelectedCurrency: (state, { payload }) => {
+			state.selectedCurrency = payload;
 		},
 	},
 });
@@ -103,6 +122,7 @@ export const {
 	removeFromCart,
 	remove,
 	addAddress,
+	storeSelectedCurrency,
 } = Reducers.actions;
 
 export default Reducers.reducer;
