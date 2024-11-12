@@ -28,7 +28,9 @@ const initialState = {
 	totalQuantity: 0,
 	cartQuantity: 0,
 	addresses: {} as AddressType,
-	selectedCurrency: "USD",
+	selectedCurrency: "",
+	country: "",
+	currency: "",
 };
 
 export const Reducers = createSlice({
@@ -42,6 +44,10 @@ export const Reducers = createSlice({
 		logoutUser: () => initialState,
 		addAddress: (state, action: PayloadAction<AddressType>) => {
 			state.addresses = action.payload;
+		},
+		setUserLocation: (state, action) => {
+			state.country = action.payload.country;
+			state.currency = action.payload.currency;
 		},
 		clearCart: (state) => {
 			state.cart = [];
@@ -123,6 +129,7 @@ export const {
 	remove,
 	addAddress,
 	storeSelectedCurrency,
+	setUserLocation,
 } = Reducers.actions;
 
 export default Reducers.reducer;

@@ -1,6 +1,6 @@
 import im2 from "../../src/assets/adidas.png";
 import { HiTrash } from "react-icons/hi2";
-import { FaNairaSign } from "react-icons/fa6";
+// import { FaNairaSign } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import CardComp from "@/components/commons/CardComp";
 import { toast } from "react-toastify";
@@ -12,10 +12,10 @@ import EmpyCart from "./EmpyCart";
 import {
 	useAddCartCustomerMutation,
 	useRemoveCartCustomerMutation,
-	useUpdateCartCustomerMutation,
+	// useUpdateCartCustomerMutation,
 	useViewAllBookmarksQuery,
 	useViewAllCartCustomerQuery,
-	useViewAllProductsQuery,
+	// useViewAllProductsQuery,
 } from "@/services/apiSlice";
 import { formatPrice } from "@/helpers";
 import CartSkeleton from "@/components/skeleton/CartSkeleton";
@@ -33,7 +33,10 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 	const navigate = useNavigate();
 	const [addCartFn] = useAddCartCustomerMutation();
 	const [removeCartFn] = useRemoveCartCustomerMutation();
-	const [updateCartFn] = useUpdateCartCustomerMutation();
+	// const selectedCurrency = useAppSelector(
+	// (state) => state.persistedReducer.selectedCurrency,
+	// );
+	// const [updateCartFn] = useUpdateCartCustomerMutation();
 
 	const cart = useAppSelector((state) => state.persistedReducer.cart);
 	const totalPrice = useAppSelector(
@@ -69,6 +72,8 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 
 	const isLoading = isUserCartLoading || isProductDataLoading;
 
+	console.log("this is cartitems", cartItems);
+
 	const handleAddToCartUser = async (props: any) => {
 		const response: any = await addCartFn({
 			product: props?.product_id,
@@ -89,10 +94,12 @@ const Cart: React.FC<CartProps> = ({ openLoginDialog }) => {
 	};
 
 	const handleUpdateCartUser = async (props: any) => {
-		const response: any = await updateCartFn({
-			productId: props?.product_id,
-			quantity: 1,
+		const response: any = await addCartFn({
+			product: props?.product_id,
+			quantity: -1,
+			variant: props?.variantID ? props?.variantID : null,
 		});
+
 		if (response?.data?.success) {
 			toast.success("Removed from Cart successfully");
 		}
@@ -179,7 +186,7 @@ font-bold'>
 														<div className='flex flex-col justify-end items-end ml-[70px]'>
 															<div className='flex justify-center items-center'>
 																<div className='text-[9px]'>
-																	<FaNairaSign />
+																	{product?.currency}
 																</div>
 																<div className='font-semibold text-[18px]'>
 																	{formatPrice(
@@ -242,10 +249,7 @@ cursor-pointer'>
 													<div
 														key={product.id}
 														className='flex min-h-[100px] mb-[18px] gap-3'>
-														<div
-															className='md:w-[80px] md:h-[80px] sm:w-[80px] sm:min-h-[100px] mr-
-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center 
-items-center border-[2px] border-[#0000ff] w-[200px]'>
+														<div className='md:w-[80px] md:h-[80px] sm:w-[80px] sm:min-h-[100px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff] w-[200px]'>
 															<img
 																src={
 																	product?.media?.url || // If product.media.url exists, use it
@@ -276,7 +280,7 @@ items-center border-[2px] border-[#0000ff] w-[200px]'>
 																	<div>
 																		<div className='flex justify-center items-center'>
 																			<div className='text-[9px]'>
-																				<FaNairaSign />
+																				{product?.currency}
 																			</div>
 																			<div className='font-semibold text-[14px]'>
 																				{formatPrice(
@@ -366,9 +370,7 @@ justify-center items-center'>
 py-[10px] px-[5px] bg-ascentGray rounded-md mt-[50px] mb-5 font-semibold'>
 														<div>Sub Total</div>
 														<div className='flex justify-center items-center'>
-															<div className='text-[9px] -mt-1'>
-																<FaNairaSign />
-															</div>
+															<div className='text-[9px] -mt-1'>{"USD"}</div>
 															<div className='text-[17px] font-semibold'>
 																{formatPrice(
 																	userCartData?.data?.cart?.totalPrice ||
@@ -403,9 +405,7 @@ py-[10px] px-[5px] bg-ascentGray rounded-md mt-[50px] mb-5 font-semibold'>
 															Sub Total
 														</div>
 														<div className='flex justify-center items-center'>
-															<div className='text-[9px] -mt-1'>
-																<FaNairaSign />
-															</div>
+															<div className='text-[9px] -mt-1'>{"USD"}</div>
 															<div className='text-[20px] font-semibold'>
 																{formatPrice(
 																	userCartData?.data?.cart?.totalPrice ||

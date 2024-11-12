@@ -12,6 +12,7 @@ const CurrencySelector = ({
 			try {
 				const response = await fetch("https://restcountries.com/v3.1/all");
 				const data = await response.json();
+				console.log("this is it", data);
 				const currencyMap: any = {};
 
 				// Create a map of currency to country

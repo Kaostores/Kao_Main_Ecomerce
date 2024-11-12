@@ -18,6 +18,7 @@ import OrderDetails from "@/pages/Dashboard/Subpages/OrderDetails";
 import PaymentSuccess from "@/pages/Dashboard/PaymentSuccess";
 import Messaging from "@/pages/Dashboard/Messaging";
 import CheckOutSuccess from "@/pages/Dashboard/CheckoutSuccess";
+import MobileWallet from "@/pages/Dashboard/MobileWallet";
 
 type PublicRouteProps = {
 	openLoginDialog: () => void;
@@ -85,6 +86,11 @@ const PublicRoute = ({
 				{
 					index: true,
 					element: <Dashboardhome />,
+				},
+
+				{
+					path: "wallet",
+					element: <MobileWallet />,
 				},
 				{
 					path: "account",

@@ -11,17 +11,28 @@ import {
 
 import useUpdateUrlParams from "../SearchRoute";
 import { useAppSelector } from "@/services/store";
+import { useState, useEffect } from "react";
+
+// Skeleton Component
+const Skeleton = ({ count }: { count: number }) => (
+	<>
+		{[...Array(count)].map((_, i) => (
+			<div
+				key={i}
+				className='animate-pulse bg-gray-200 h-6 w-full rounded mb-2'
+			/>
+		))}
+	</>
+);
 
 const MegaMenu = ({ setShowMegaMenu }: any) => {
 	const updateUrlParams = useUpdateUrlParams();
 
-	const {
-		data: catData,
+	// Fetch category data
+	const { data: catData, isLoading } =
+		useGetAllAdminCategoryAndSubCategoryQuery({});
 
-		isLoading,
-	} = useGetAllAdminCategoryAndSubCategoryQuery({});
 	const cart = useAppSelector((state) => state.persistedReducer.cart);
-
 	const currentUser = useAppSelector(
 		(state) => state.persistedReducer.currentUser,
 	);
@@ -32,13 +43,17 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 		? userCartData?.data?.cart?.items || []
 		: cart;
 
-	// const { data: adminCategory } = useGetAllAdminCategoryQuery({});
+	const [selectedCategory, setSelectedCategory] = useState<any>(null);
 
-	// console.log("this is the sub categorybvz", catData);
+	// Auto-select the first category when loading completes
+	useEffect(() => {
+		if (!isLoading && catData?.data?.length) {
+			setSelectedCategory(catData.data[0]);
+		}
+	}, [isLoading, catData]);
 
 	return (
 		<div
-			onClick={() => setShowMegaMenu(false)}
 			style={{
 				position: "fixed",
 				top: 0,
@@ -48,11 +63,17 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 				background: "rgba(0,0,0,0.6)",
 				display: "flex",
 				justifyContent: "center",
-				// alignItems: "center",
 				zIndex: 99999,
 			}}>
-			<div className='w-[85%] h-[90vh] sm:w-[100%] sm:h-[100%] overflow-y-scroll  bg-white grid grid-cols-4 justify-center  mt-5 sm:mt-0 p-4 rounded-sm pb-5 sm:grid-cols-1'>
-				<div className='hidden sm:flex w-[100%]  items-center gap-5 sm:justify-between mb-3 '>
+			<div className='w-[85%] h-[90vh] sm:w-[100%] sm:h-[100%] overflow-y-scroll bg-white grid grid-cols-4 sm:grid-cols-1 p-4 rounded-sm sm:flex sm:flex-col relative'>
+				{/* Cancel Icon (Top Right) */}
+				<div
+					onClick={() => setShowMegaMenu(false)}
+					className='absolute top-4 right-4 cursor-pointer text-[30px] text-primary sm:hidden'>
+					<MdOutlineClear />
+				</div>
+				{/* Top Section */}
+				<div className='hidden sm:flex w-[100%] items-center gap-5 sm:justify-between mb-3'>
 					<div className='flex items-center'>
 						<div
 							onClick={() => setShowMegaMenu(false)}
@@ -66,12 +87,12 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 						<div className='h-[30px] w-[30px] rounded-[50%] bg-ascentGray flex justify-center items-center text-primary'>
 							?
 						</div>
-						<div className='flex items-center text-[14px] '>
-							Help <MdKeyboardArrowDown />{" "}
+						<div className='flex items-center text-[14px]'>
+							Help <MdKeyboardArrowDown />
 						</div>
 					</div>
 					<div className='relative inline-block sm:hidden'>
-						<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>
+						<div className='text-[20px] p-2 rounded-full focus:outline-none text-primary'>
 							<MdOutlineShoppingCart />
 						</div>
 						<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
@@ -85,11 +106,8 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 						<div className='text-[14px] ml-2 sm:hidden'>Sign in/Sign up</div>
 					</div>
 					<div className='hidden sm:flex gap-3 items-center'>
-						{/* <div className='text-primary'> */}
-						{/* <FaRegUser /> */}
-						{/* </div> */}
-						<div className='relative inline-block '>
-							<div className=' text-[20px] p-2 rounded-full focus:outline-none text-primary'>
+						<div className='relative inline-block'>
+							<div className='text-[20px] p-2 rounded-full focus:outline-none text-primary'>
 								<MdOutlineShoppingCart />
 							</div>
 							<span className='absolute top-2 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
@@ -98,75 +116,65 @@ const MegaMenu = ({ setShowMegaMenu }: any) => {
 						</div>
 					</div>
 				</div>
-				{isLoading ? (
-					<div>Loading...</div>
-				) : (
-					<>
-						{[...catData?.data]
-							?.sort(
-								(a: any, b: any) =>
-									a?.sub_categories?.length - b.sub_categories?.length,
-							)
-							.map((props: any, i: any) => (
-								<div key={i} className='text-[15px] md:text-[13px]'>
-									<div className='font-bold mb-3 mt-5'>{props?.name}</div>
-									{props?.sub_categories?.map((el: any, index: any) => (
+
+				{/* Left - Categories */}
+				<div className='col-span-1'>
+					{isLoading ? (
+						<Skeleton count={10} />
+					) : (
+						<ul className='space-y-3'>
+							{catData?.data?.map((category: any, i: number) => (
+								<li
+									key={i}
+									onClick={() => {
+										setSelectedCategory(category);
+										console.log(category);
+									}}
+									className={`p-2 cursor-pointer w-[80%] hover:bg-gray-100 rounded ${
+										selectedCategory?.id === category.id
+											? "bg-gray-200 font-bold"
+											: ""
+									}`}>
+									{category?.name}
+								</li>
+							))}
+						</ul>
+					)}
+				</div>
+
+				{/* Right - Subcategories */}
+				<div className='col-span-3 sm:flex sm:flex-col sm:mt-5'>
+					{isLoading ? (
+						<Skeleton count={6} />
+					) : selectedCategory ? (
+						<div>
+							<h3 className='text-lg font-bold mb-3'>
+								{selectedCategory?.name}
+							</h3>
+							<div className='grid grid-cols-3 gap-4 sm:flex sm:flex-col'>
+								{selectedCategory?.sub_categories?.map(
+									(subCategory: any, index: number) => (
 										<div
 											key={index}
 											onClick={() => {
-												updateUrlParams({ sub_category_id: el?.id });
+												updateUrlParams({
+													sub_category_id: subCategory?.id,
+												});
 											}}
-											className='mb-5 hover:underline transition ease-in-out delay-150 cursor-pointer'>
-											{el?.name}
+											className='cursor-pointer hover:underline'>
+											{subCategory?.name}
 										</div>
-									))}
-								</div>
-							))}
-					</>
-				)}
+									),
+								)}
+							</div>
+						</div>
+					) : (
+						<div>Please select a category to see the subcategories.</div>
+					)}
+				</div>
 			</div>
 		</div>
 	);
 };
 
 export default MegaMenu;
-
-//
-{
-	/* <> */
-}
-{
-	/* {[...catData?.data] */
-}
-// ?.sort(
-// (a: any, b: any) => a?.sub_categories?.length - b.sub_categories?.length,
-// )
-// .map((props: any, i: any) => (
-// <div key={i} className='text-[15px] md:text-[13px]'>
-{
-	/* <div className='font-bold mb-3 mt-5'>{props?.name}</div> */
-}
-{
-	/* {props?.sub_categories?.map((el: any, index: any) => ( */
-}
-// <div
-// key={index}
-// onClick={() => {
-// navigate("/search");
-// }}
-// className='mb-5 hover:underline transition ease-in-out delay-150
-// cursor-pointer'>
-{
-	/* {el?.name} */
-}
-{
-	/* </div> */
-}
-// ))}
-{
-	/* </div> */
-}
-// ))}
-{
-	/* </>; */
-}

@@ -29,7 +29,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import CurrencySelector from "../currency/CurrencySelector";
+// import CurrencySelector from "../currency/CurrencySelector";
 import { useAddCartCustomerMutation } from "@/services/apiSlice";
 import { useAppSelector } from "@/services/store";
 import { Instance } from "@/utils/AxiosConfig";
@@ -95,9 +95,9 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 			// Perform registration first
 			const response: any = await Register({
 				...values,
-				currency: selectedCurrency,
+				currency: "",
 				role: "user",
-				country: selectedCountry,
+				country: "",
 			});
 
 			// Handle successful registration
@@ -157,8 +157,8 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 		}
 	};
 
-	const [selectedCurrency, setSelectedCurrency] = useState("");
-	const [selectedCountry, setSelectedCountry] = useState("");
+	// const [selectedCurrency, setSelectedCurrency] = useState("");
+	// const [selectedCountry, setSelectedCountry] = useState("");
 
 	const cookies = new Cookies();
 	const dispatch = useDispatch();
@@ -217,12 +217,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 									</FormItem>
 								)}
 							/>
-							<CurrencySelector
-								selectedCurrency={selectedCurrency}
-								setSelectedCurrency={setSelectedCurrency}
-								selectedCountry={selectedCountry}
-								setSelectedCountry={setSelectedCountry}
-							/>
+
 							<FormField
 								control={form.control}
 								name='phone'

@@ -1,5 +1,5 @@
 import { IoWallet } from "react-icons/io5";
-import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 import { IoCheckmarkSharp } from "react-icons/io5";
 import WalletHistoryTable from "./Subpages/WalletHistoryTable";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -35,8 +35,8 @@ const Dashboardhome = () => {
 
 	const [show, setShow] = useState(false);
 	const [show2, setShow2] = useState(false);
-	const [isActiveFirst, setIsActiveFirst] = useState(true);
-	const [isActiveSecond, setIsActiveSecond] = useState(false);
+	const [isActiveFirst, setIsActiveFirst] = useState(false);
+	const [isActiveSecond, setIsActiveSecond] = useState(true);
 	const [amount, setAmount] = useState<number>();
 	const [openAmount, setOpenAmount] = useState(false);
 	// const user = useSelector((state:any)=> state?.persistedReducer?.currentUser)
@@ -158,17 +158,6 @@ const Dashboardhome = () => {
 
 				<div className='w-[100%] h-[1px] bg-[#757575] mt-[22px]'></div>
 
-				<div className='w-[100%] flex items-center mt-[22px] justify-between'>
-					<h3 className='font-[500]'>Payment History</h3>
-					<div className='flex items-center'>
-						<input type='checkbox' />
-						<p className='text-[13px] ml-[10px]'>Date</p>
-						<div className='cursor-pointer'>
-							<IoIosArrowDown />
-						</div>
-					</div>
-				</div>
-
 				<WalletHistoryTable />
 
 				{show ? (
@@ -271,15 +260,37 @@ items-center text-[#fff] cursor-pointer ${
 				<div className='w-[100%] md:w-[85%] sm:w-[90%] flex flex-col mt-[20px]'>
 					<div
 						onClick={() => {
-							navigate("/dashboard/account");
+							navigate("/dashboard/wallet");
 						}}
 						className={`w-full min-h-[45px] flex justify-between items-center mb-[5px] cursor-pointer 
                   ${
-										active === "/dashboard/account"
+										active === "/dashboard/wallet"
 											? "bg-[#0333ae] text-[#fff]"
 											: "text-[#757575]"
 									}
                   }`}>
+						<div className='flex items-center'>
+							<div className='text-[20px]  font-bold'>
+								<FiHome />
+							</div>
+							<div className='font-medium  text-[15px] ml-[15px] '>Wallet</div>
+						</div>
+						<div className='text-iconGray text-[20px]'>
+							<IoIosArrowForward />
+						</div>
+					</div>
+
+					<div
+						onClick={() => {
+							navigate("/dashboard/account");
+						}}
+						className={`w-full min-h-[45px] flex justify-between items-center mb-[5px] cursor-pointer 
+              ${
+								active === "/dashboard/account"
+									? "bg-[#0333ae] text-[#fff]"
+									: "text-[#757575]"
+							}
+              }`}>
 						<div className='flex items-center'>
 							<div className='text-[20px]  font-bold'>
 								<FiHome />

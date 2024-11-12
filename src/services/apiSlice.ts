@@ -197,8 +197,9 @@ export const api = createApi({
 				const categoryID = encodeURIComponent(body.categoryID || "");
 				const subCategoryID = encodeURIComponent(body.subCategoryID || "");
 				const brand_id = encodeURIComponent(body.brand_id || "");
+				const country = encodeURIComponent(body.country || "");
 
-				return `/products/search/all?search=${search}&category_id=${categoryID}&sub_category_id=${subCategoryID}&filter=&minPrice=${minPrice}&maxPrice=${maxPrice}&rating=${rating}&gender=${gender}&brand_id=${brand_id}`;
+				return `/products/search/all?search=${search}&category_id=${categoryID}&sub_category_id=${subCategoryID}&filter=&minPrice=${minPrice}&maxPrice=${maxPrice}&rating=${rating}&gender=${gender}&brand_id=${brand_id}&country=${country}`;
 			},
 		}),
 
@@ -313,11 +314,18 @@ export const api = createApi({
 				method: "GET",
 			}),
 		}),
+		getNotifications: builder.query({
+			query: () => ({
+				url: `/notifications`,
+				method: "GET",
+			}),
+		}),
 	}),
 });
 
 export const {
 	useViewAllProductsQuery,
+	useGetNotificationsQuery,
 	useCheckOutPaymentQuery,
 	useViewAProductQuery,
 	useCreateOrderMutation,

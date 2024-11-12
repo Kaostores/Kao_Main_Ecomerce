@@ -117,7 +117,7 @@ const Footer = () => {
 						<div className='font-bold mb-2'>MAKE MONEY WITH US</div>
 						<div
 							onClick={() => {
-								window.location.href = "https://kao-agent.netlify.app/";
+								window.location.href = "https://kao-web-seven.vercel.app/";
 							}}
 							className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 							Become an agent

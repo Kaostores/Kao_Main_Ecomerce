@@ -7,6 +7,7 @@ import {
 } from "@/services/apiSlice";
 import { useSearchParams } from "react-router-dom";
 import useUpdateUrlParams from "./SearchRoute";
+import { CountrySelector } from "./country/CountrySelector";
 
 interface FilterOptionProps {
 	label: string;
@@ -105,6 +106,15 @@ const RatingOption: React.FC<RatingOptionProps> = ({
 			</div>
 			<div className='text-[13px] ml-[2px]'></div>
 		</div>
+	</div>
+);
+
+const CountrySection = () => (
+	<div className='flex flex-col items-start'>
+		<div className='text-[17px] font-bold mb-[5px]'>Country</div>
+
+		<CountrySelector />
+		<br />
 	</div>
 );
 
@@ -279,6 +289,7 @@ const FilterComponent: React.FC<any> = ({ classNames }: any) => {
 				activeOption={activeCategoryID}
 				onChange={handleCategoryChange}
 			/>
+			<CountrySection />
 			<FilterSection
 				title='Price Range'
 				options={priceOptions}

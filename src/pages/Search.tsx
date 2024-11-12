@@ -30,6 +30,7 @@ const SearchPage = () => {
 	const rating = searchParams.get("rating") || "";
 	const gender = searchParams.get("gender") || "";
 	const brand_id = searchParams.get("brand_id") || "";
+	const country = searchParams.get("country") || "";
 
 	const { data: catData } = useGetSingleCategoryQuery({
 		categoryID: categoryID,
@@ -44,6 +45,7 @@ const SearchPage = () => {
 			maxPrice ||
 			rating ||
 			brand_id ||
+			country ||
 			gender
 		) {
 			// dispatch(fetchProducts({ query, categoryID }));
@@ -57,6 +59,7 @@ const SearchPage = () => {
 		rating,
 		gender,
 		brand_id,
+		country,
 	]);
 
 	const {
@@ -72,6 +75,7 @@ const SearchPage = () => {
 		rating,
 		gender,
 		brand_id,
+		country,
 	});
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -89,6 +93,7 @@ const SearchPage = () => {
 		rating?.length > 0 ||
 		gender?.length > 0 ||
 		brand_id?.length > 0 ||
+		country?.length > 0 ||
 		maxPrice?.length > 0;
 	const isLoading = isAllLoading || (isSearching && isSearchLoading);
 	const isFetching = isAllFetching || (isSearching && isSearchFetching);

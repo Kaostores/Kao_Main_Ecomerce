@@ -19,7 +19,7 @@ import {
 	useViewProductReviewsQuery,
 } from "@/services/apiSlice";
 import { useSelector } from "react-redux";
-import { UseAppDispach } from "@/services/store";
+import { UseAppDispach, useAppSelector } from "@/services/store";
 import { addToCart, removeFromCart } from "@/services/reducers";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -35,6 +35,8 @@ import ImagePreviewModal from "@/components/ImagePreviewModal";
 import MetaTags from "@/components/MetaTags";
 import ShowToast from "@/components/reuse/ShowToast";
 import LoadingButton from "@/components/reuse/LoadingButton";
+import DiscountPrice from "@/components/PriceConversion/DiscountPriceConversion";
+import { handlePriceDisplay } from "@/utils/FallbackPrice";
 
 const ProductDetails = () => {
 	const navigate = useNavigate();
@@ -63,46 +65,19 @@ const ProductDetails = () => {
 	const [removeCartFn, { isLoading: loadingDecrease }] =
 		useRemoveCartCustomerMutation();
 
-	// const [removeBookMark, { data: removeBookMarkData }] =
-	// useDeleteNewBookmarkMutation();
-	// console.log("boooookmark", newBookMarkData);
-	// const handleDeleteBookMark = () => {
-	// if (!removeBookMarkData) {
-	// removeBookMark({ product_id: id });
-	// toast.success("Bookmarked Removed successfully");
-	// } else {
-	// toast.error("Already bookmarked");
-	// }
-	// };
-
 	const dispatch = UseAppDispach();
 	const globalstate = useSelector(
 		(state: any) => state?.persistedReducer?.cart,
 	);
-
-	console.log("user cart", userCartData);
-
-	// const findQuantity = (variantId: any) => {
-	// First, ensure the global state and the items array are not null.
-	// if (!globalstate || !variantId) return 0;
-
-	// const nonUserCart = globalstate?.find(
-	// (item: any) => item?.variant?.id === variantId,
-	// );
-
-	// const checkCart = userCartData?.data?.cart?.items?.find(
-	// (el: any) => el.variant?.id === variantId,
-	// );
-
-	// console.log(item);
-	// return nonUserCart
-	// ? nonUserCart?.cartQuantity
-	// : 0 || (user && checkCart?.variant?.id === variantId)
-	// ? checkCart?.quantity
-	// : 0;
-	// };
-
-	console.log("gloval", globalstate);
+	const selectedCurrency = useAppSelector(
+		(state) => state.persistedReducer.selectedCurrency,
+	);
+	// Determine the price to display based on currency support and fallback mechanism
+	const priceToShow = handlePriceDisplay(
+		selectedCurrency,
+		productData?.data?.convertedPrices,
+		productData?.data?.discountPrice,
+	);
 
 	const findQuantity = (variantId: any, productId: any) => {
 		// Ensure the global state and the variant or product ID are not null.
@@ -140,7 +115,7 @@ const ProductDetails = () => {
 				productName: productData?.data?.name,
 				productID: productData?.data?.id,
 				media: productData?.data?.media[0],
-				price: productData?.data?.discountPrice,
+				price: priceToShow,
 				variant,
 				quantity: 1, // This will be handled in the reducer
 			}),
@@ -149,9 +124,8 @@ const ProductDetails = () => {
 	};
 
 	const handleDecrement = (variantId: any) => {
-		console.log(variantId);
 		// Get the current quantity of the variant from Redux state
-		console.log(variantId);
+
 		const quantity = findQuantity(variantId, null);
 		// Only dispatch removeFromCart if quantity is greater than 1
 		if (quantity > 1) {
@@ -207,7 +181,6 @@ const ProductDetails = () => {
 	};
 
 	const handleAddToCartUser = async (props: any) => {
-		console.log("dfuhjgfn", props);
 		const response: any = await addCartFn({
 			product: props?.product_id,
 			quantity: 1,
@@ -229,35 +202,6 @@ const ProductDetails = () => {
 	};
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	// const overallRating = 4.0;
-	// const totalReviews = 1;
-	// const ratingsBreakdown = { 5: 0, 4: 1, 3: 0, 2: 0, 1: 0 };
-	// const reviews = [
-	// {
-	// name: "Philip",
-	// date: "July 9, 2024",
-	// rating: 4,
-	// comment: "Good",
-	// },
-	// ];
-
-	// const shareOnFacebook = () => {
-	// const url = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
-	// window.open(url, "_blank");
-	// };
-
-	// const shareOnTwitter = () => {
-	// // const url = `https://twitter.com/intent/tweet?url=${currentUrl}&text=${encodeURIComponent(
-	// title,
-	// )}`;
-	// window.open(url, "_blank");
-	// };
-
-	// const shareOnWhatsApp = () => {
-	// const message = `${title}\n\n${currentUrl}`;
-	// window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
-	// };
 
 	useEffect(() => {
 		const meta = document.createElement("meta");
@@ -324,8 +268,6 @@ const ProductDetails = () => {
 		const message = `${title}\n\n${currentUrl}`;
 		window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank");
 	};
-
-	console.log("yeah", productData);
 
 	useEffect(() => {}, [selectedId, productData]);
 	return (
@@ -431,7 +373,10 @@ const ProductDetails = () => {
 									<div className='text-[25px] sm:text-[20px] font-semibold animate-pulse bg-gray-200 h-[10px] w-[130px] mb-[10px] rounded-full my-[20px]'></div>
 								) : (
 									<div className='text-[20px] font-semibold my-[5px]'>
-										#{formatPrice(productData?.data?.discountPrice)}
+										<DiscountPrice
+											discountPrice={priceToShow}
+											currency={selectedCurrency}
+										/>
 									</div>
 								)}
 								<div className='flex flex-col'>
@@ -554,8 +499,6 @@ const ProductDetails = () => {
 																							variantID: variant.id,
 																							quantity: 1,
 																						});
-
-																						console.log("hhhh", productData);
 																					} else {
 																						handleIncrement(variant);
 																					}
@@ -620,7 +563,7 @@ const ProductDetails = () => {
 															productName: productData?.data?.name,
 															productID: productData?.data?.id,
 															variant: null, // No variants, so set to null
-															price: productData?.data?.discountPrice,
+															price: priceToShow,
 															media: productData?.data?.media[0], // Use the main image of the product
 															cartQuantity: 1, // Setting initial cart quantity
 														}),

@@ -19,7 +19,6 @@ import {
 import useUpdateUrlParams from "../SearchRoute";
 import { useAppSelector } from "@/services/store";
 import CurrencyExchange from "../currency/CurrencyExchange";
-
 const Header = () => {
 	const User = useSelector((state: any) => state?.persistedReducer.currentUser);
 	const updateUrlParams = useUpdateUrlParams();
@@ -231,7 +230,7 @@ const Header = () => {
 					) : (
 						<>
 							{catData?.data?.length > 0 ? (
-								catData.data?.slice(0, 7)?.map((props: any, index: number) => (
+								catData.data?.slice(0, 8)?.map((props: any, index: number) => (
 									<div
 										key={index}
 										onClick={() => {
@@ -251,6 +250,7 @@ const Header = () => {
 							)}
 						</>
 					)}
+					<div>{/* <CountrySelector /> */}</div>
 				</div>
 			</div>
 		</div>

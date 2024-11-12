@@ -30,6 +30,7 @@ const Checkout = () => {
 	const [showCheckOut, setShowCheckout] = useState(false);
 	const { data: userCartData } = useViewAllCartCustomerQuery({});
 	const { data: userData } = useGetUserDataQuery({});
+	const user = useAppSelector((state) => state.persistedReducer.currentUser);
 
 	const { data: addressData } = useViewAllAddressQuery({});
 	const [selectedAddressId, setSelectedAddressId] = useState("");
@@ -62,8 +63,9 @@ const Checkout = () => {
 	const [updateAddress] = useUpdateAddressMutation();
 
 	const [shippmentFn] = useShippmentAddressMutation();
-	const [applycoupFn] = useApplyCouponMutation();
+	const [applycoupFn, { isLoading: loadingApply }] = useApplyCouponMutation();
 	const { data: CheckoutData } = useCheckOutPaymentQuery({});
+	const [couponPrice, setCouponPrice] = useState<any>();
 
 	const handleAddressSave = async (formData: any) => {
 		try {
@@ -172,6 +174,22 @@ const Checkout = () => {
 		setShowCheckout(!showCheckOut);
 	};
 
+	const onHandleApplyCoupoun = async () => {
+		// Step 1: Apply coupon if the code is provided
+
+		if (couponCode) {
+			const response: any = await applycoupFn({ couponCode });
+			console.log("coupoun", response);
+			if (response?.error?.status >= 401) {
+				ShowToast(false, `${response?.error?.data?.message}`);
+			} else if (response?.data?.success) {
+				ShowToast(true, "Applied successful, procced to checkout");
+				setCouponPrice(response.data.data?.cart?.bill);
+				setCouponCode("");
+			}
+		}
+	};
+
 	const handlePaymentCheckout = async () => {
 		setLoad(true);
 
@@ -179,7 +197,10 @@ const Checkout = () => {
 			if (selectedItem?.id === 1) {
 				// Handle wallet payment
 				if (userData?.data?.balance < userCartData?.data?.cart?.bill) {
-					ShowToast(false, "Insufficient wallet balance.");
+					ShowToast(
+						false,
+						"Insufficient wallet balance. Please select another payment option to complete your purchase.",
+					);
 					setLoad(false);
 					return;
 				}
@@ -198,17 +219,6 @@ const Checkout = () => {
 				// navigate("/usdt-payment");
 				setLoad(false);
 				return;
-			}
-
-			// Step 1: Apply coupon if the code is provided
-			let applyCouponResponse: any = null;
-			if (couponCode) {
-				applyCouponResponse = await applycoupFn({ couponCode });
-				if (!applyCouponResponse?.data?.status) {
-					alert("Invalid coupon.");
-					setLoad(false);
-					return;
-				}
 			}
 
 			// Step 2: Proceed to shipment
@@ -545,6 +555,17 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 											className='h-[100%] outline-none border-none bg-transparent'
 										/>
 									</div>
+									{couponCode !== "" && (
+										<button
+											disabled={loadingApply}
+											onClick={onHandleApplyCoupoun}
+											className={`w-[100px] flex justify-center items-center text-white   mt-3
+h-[40px] rounded-sm cursor-pointer  ${
+												loadingApply ? "bg-gray-400" : "bg-primary"
+											} `}>
+											<div>{loadingApply ? "Loading..." : "Apply"}</div>
+										</button>
+									)}
 								</div>
 							</div>
 							{show ? (
@@ -575,7 +596,7 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 					</div>
 				)}
 				<div
-					className={`xl:p-[10px] md:p-[10px] xl:h-[300px] md:h-[300px] sm:mb-[30px] flex flex-col xl:bg-[#F0F3FA] md:bg-[#F0F3FA] sm:bg-white  ${
+					className={`xl:p-[10px] md:p-[10px] xl:max-h-[350px] md:max-h-[350px] sm:mb-[30px] flex flex-col xl:bg-[#F0F3FA] md:bg-[#F0F3FA] sm:bg-white   ${
 						showAddress !== true ? "sm:hidden" : ""
 					}`}>
 					<div className='font-semibold mb-[10px] xl:text-[20px] md:text-[17px]'>
@@ -587,10 +608,15 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 								<div className='text-[13px] font-semibold'>Sub Total</div>
 								<div className='flex justify-center items-center'>
 									<div className='text-[9px]'>
-										<FaNairaSign />
+										{/* <FaNairaSign /> */}
+										USD
 									</div>
-									<div className='text-[14px] font-semibold'>
-										{formatPrice(userCartData?.data?.cart?.totalPrice)}
+									<div>
+										<div className='text-[14px] font-semibold '>
+											{user
+												? formatPrice(userCartData?.data?.cart?.bill)
+												: totalPrice}
+										</div>
 									</div>
 								</div>
 							</div>
@@ -598,7 +624,8 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 								<div className='text-[13px] font-semibold'>Delivery fee</div>
 								<div className='flex justify-center items-center'>
 									<div className='text-[9px]'>
-										<FaNairaSign />
+										{/* <FaNairaSign /> */}
+										USD
 									</div>
 									<div className='text-[14px] font-semibold'>0.00</div>
 								</div>
@@ -607,27 +634,58 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 								<div className='text-[13px] font-semibold'>Total</div>
 								<div className='flex justify-center items-center'>
 									<div className='text-[9px]'>
-										<FaNairaSign />
+										{/* <FaNairaSign /> */}
+										USD
 									</div>
-									<div className='text-[14px] font-semibold'>{totalPrice}</div>
+
+									<div className='flex gap-3'>
+										<div
+											className={`text-[14px] font-semibold ${
+												couponPrice ? "line-through " : ""
+											} `}>
+											{user
+												? formatPrice(userCartData?.data?.cart?.bill)
+												: totalPrice}
+										</div>
+										{couponPrice && (
+											<div className='text-[14px] font-semibold flex items-center'>
+												<div className='text-[9px]'>
+													<FaNairaSign />
+												</div>
+												{formatPrice(couponPrice)}
+											</div>
+										)}
+									</div>
 								</div>
 							</div>
 							<div className='w-[320px] md:w-[220px] xl:flex lg:flex md:flex justify-between sm:hidden'>
 								<div className='text-[13px] font-semibold'>Apply code</div>
-								<div className='flex justify-center items-center'>
+								<div className='flex justify-center  flex-col'>
 									<div className='text-[14px] font-semibold border-[2px] md:w-[150px] border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 										<div className='mr-[5px]'>
 											<RiCoupon2Line />
 										</div>
-										<input
-											onChange={(e) => {
-												setCouponCode(e.target.value);
-											}}
-											type='text'
-											placeholder='Apply code'
-											className='h-[100%] outline-none border-none bg-transparent'
-										/>
+										<div>
+											<input
+												onChange={(e) => {
+													setCouponCode(e.target.value);
+												}}
+												type='text'
+												placeholder='Apply code'
+												className='h-[100%] outline-none border-none bg-transparent'
+											/>
+										</div>
 									</div>
+									{couponCode !== "" && (
+										<button
+											disabled={loadingApply}
+											onClick={onHandleApplyCoupoun}
+											className={`w-[100px] flex justify-center items-center text-white   mt-3 h-[40px] rounded-sm cursor-pointer  ${
+												loadingApply ? "bg-gray-400" : "bg-primary"
+											} `}>
+											<div>{loadingApply ? "Loading..." : "Apply"}</div>
+										</button>
+									)}
 								</div>
 							</div>
 						</div>

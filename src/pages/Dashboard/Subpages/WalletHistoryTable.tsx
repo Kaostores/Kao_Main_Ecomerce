@@ -1,202 +1,294 @@
-import { FaSort } from "react-icons/fa";
-import { CiSearch } from "react-icons/ci";
-import { IoFilterOutline } from "react-icons/io5";
-import { GoSortDesc } from "react-icons/go";
-import { IoIosArrowDown } from "react-icons/io";
-import { useState } from "react";
+"use client";
 
-export default () => {
-	const [filter, setFilter] = useState("All");
+import { useState, useEffect, useMemo } from "react";
+import { CalendarIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 
-	const tableItems = [
-		{
-			ID: "#4170",
-			Date: "10/08/2023",
-			Type: "Payment",
-			Amount: "NGN 3,000",
-		},
-		{
-			ID: "#4170",
-			Date: "10/08/2023",
-			Type: "Top up",
-			Amount: "NGN 3,000",
-		},
-		{
-			ID: "#4170",
-			Date: "10/08/2023",
-			Type: "Payment",
-			Amount: "NGN 3,000",
-		},
-		{
-			ID: "#4170",
-			Date: "10/08/2023",
-			Type: "Payment",
-			Amount: "NGN 3,000",
-		},
-		{
-			ID: "#4170",
-			Date: "10/08/2023",
-			Type: "Top up",
-			Amount: "NGN 3,000",
-		},
-		{
-			ID: "#4170",
-			Date: "10/08/2023",
-			Type: "Payment",
-			Amount: "NGN 3,000",
-		},
-		{
-			ID: "#4170",
-			Date: "10/08/2023",
-			Type: "Top up",
-			Amount: "NGN 3,000",
-		},
-		{
-			ID: "#4170",
-			Date: "10/08/2023",
-			Type: "Top up",
-			Amount: "NGN 3,000",
-		},
-	];
+interface Transaction {
+	id: string;
+	date: string;
+	type: "Payment" | "Top up";
+	amount: string;
+}
 
-	const filteredItems =
-		filter === "All"
-			? tableItems
-			: tableItems.filter((item) => item.Type === filter);
+// Mock data for the table
+const mockData: Transaction[] = [
+	{ id: "#4170", date: "2023-08-30", type: "Payment", amount: "NGN 3,000" },
+	{ id: "#4171", date: "2023-08-30", type: "Top up", amount: "NGN 3,000" },
+	{ id: "#4172", date: "2023-08-29", type: "Payment", amount: "NGN 2,500" },
+	{ id: "#4173", date: "2023-08-29", type: "Payment", amount: "NGN 4,000" },
+	{ id: "#4174", date: "2023-08-28", type: "Top up", amount: "NGN 5,000" },
+	{ id: "#4175", date: "2023-08-28", type: "Payment", amount: "NGN 1,500" },
+	{ id: "#4176", date: "2023-08-27", type: "Top up", amount: "NGN 3,500" },
+	{ id: "#4177", date: "2023-08-27", type: "Top up", amount: "NGN 2,000" },
+	{ id: "#4178", date: "2023-08-26", type: "Payment", amount: "NGN 3,200" },
+	{ id: "#4179", date: "2023-08-26", type: "Top up", amount: "NGN 4,500" },
+	{ id: "#4180", date: "2023-08-25", type: "Payment", amount: "NGN 2,800" },
+	{ id: "#4181", date: "2023-08-25", type: "Top up", amount: "NGN 3,300" },
+];
 
-	const itemsPerPage = 4;
+export default function PaymentHistory() {
+	const [dateRange, setDateRange] = useState<any>({
+		from: new Date(2023, 7, 14),
+		to: new Date(2023, 7, 30),
+	});
+	const [filter, setFilter] = useState<"All" | "Top up" | "Payment">("All");
+	const [searchQuery, setSearchQuery] = useState("");
+	const [sortBy, setSortBy] = useState<
+		"date-asc" | "date-desc" | "amount-asc" | "amount-desc"
+	>("date-desc");
 	const [currentPage, setCurrentPage] = useState(1);
+	const itemsPerPage = 5;
 
-	const totalPages = Math.ceil(tableItems.length / itemsPerPage);
+	const filteredAndSortedData = useMemo(() => {
+		let result = mockData;
 
-	const paginatedItems = filteredItems.slice(
-		(currentPage - 1) * itemsPerPage,
-		currentPage * itemsPerPage,
-	);
+		// Apply date range filter
+		if (dateRange.from && dateRange.to) {
+			result = result.filter((item) => {
+				const itemDate = new Date(item.date);
+				return itemDate >= dateRange.from && itemDate <= dateRange.to!;
+			});
+		}
 
-	const handlePageChange = (page: number) => {
-		setCurrentPage(page);
-	};
+		// Apply type filter
+		if (filter !== "All") {
+			result = result.filter((item) => item.type === filter);
+		}
+
+		// Apply search filter
+		if (searchQuery) {
+			result = result.filter((item) =>
+				item.id.toLowerCase().includes(searchQuery.toLowerCase()),
+			);
+		}
+
+		// Apply sorting
+		result.sort((a, b) => {
+			switch (sortBy) {
+				case "date-asc":
+					return new Date(a.date).getTime() - new Date(b.date).getTime();
+				case "date-desc":
+					return new Date(b.date).getTime() - new Date(a.date).getTime();
+				case "amount-asc":
+					return (
+						parseInt(a.amount.replace(/\D/g, "")) -
+						parseInt(b.amount.replace(/\D/g, ""))
+					);
+				case "amount-desc":
+					return (
+						parseInt(b.amount.replace(/\D/g, "")) -
+						parseInt(a.amount.replace(/\D/g, ""))
+					);
+				default:
+					return 0;
+			}
+		});
+
+		return result;
+	}, [dateRange, filter, searchQuery, sortBy]);
+
+	const paginatedData = useMemo(() => {
+		const startIndex = (currentPage - 1) * itemsPerPage;
+		return filteredAndSortedData.slice(startIndex, startIndex + itemsPerPage);
+	}, [filteredAndSortedData, currentPage]);
+
+	const totalPages = Math.ceil(filteredAndSortedData.length / itemsPerPage);
+
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [dateRange, filter, searchQuery, sortBy]);
 
 	return (
-		<div>
-			<div className='w-[100%] flex items-center mt-[20px] justify-between'>
-				<div className='flex items-center bg-[#f6f8fa] h-[30px] pl-[5px] pr-[5px]'>
-					<div
-						onClick={() => setFilter("All")}
-						className={`pl-[20px] pr-[20px] h-[23px] flex justify-center items-center text-[12px] rounded-[3px] cursor-pointer bg-[${
-							filter === "All" ? "white" : "#f6f8fa"
-						}]`}>
+		<div className=' w-full  '>
+			<h1 className='text-xl font-bold mb-2'>Payment History</h1>
+			<div className='flex sm:flex-col justify-between items-center sm:items-start mb-4  sm:space-y-0 gap-10 w-full sm:gap-5'>
+				<div className='flex sm:flex-wrap gap-2'>
+					<Button
+						className={`${filter === "All" ? "text-white" : ""}`}
+						variant={filter === "All" ? "default" : "outline"}
+						onClick={() => setFilter("All")}>
 						All
-					</div>
-
-					<div
-						onClick={() => setFilter("Top up")}
-						className={`pl-[20px] pr-[20px] h-[23px] flex justify-center items-center text-[12px] rounded-[3px] ml-[5px] cursor-pointer bg-[${
-							filter === "Top up" ? "white" : "#f6f8fa"
-						}]`}>
+					</Button>
+					<Button
+						className={`${filter === "Top up" ? "text-white" : ""}`}
+						variant={filter === "Top up" ? "default" : "outline"}
+						onClick={() => setFilter("Top up")}>
 						Top up
-					</div>
-
-					<div
-						onClick={() => setFilter("Payment")}
-						className={`pl-[20px] pr-[20px] h-[23px] flex justify-center items-center text-[12px] rounded-[3px] ml-[5px] cursor-pointer bg-[${
-							filter === "Payment" ? "white" : "#f6f8fa"
-						}]`}>
+					</Button>
+					<Button
+						className={`${filter === "Payment" ? "text-white" : ""}`}
+						variant={filter === "Payment" ? "default" : "outline"}
+						onClick={() => setFilter("Payment")}>
 						Payment
-					</div>
+					</Button>
 				</div>
-				<div className='flex items-center'>
-					<div className='w-[270px] h-[27px] flex items-center pl-[10px] bg-[white] text-[12px] rounded-sm ml-[5px] pr-[5px]'>
-						<div className='text-[17px]'>
-							<CiSearch />
-						</div>
-						<input
-							placeholder='Search by ID'
-							type='text'
-							className='ml-[5px] outline-none flex-1'
-						/>
-					</div>
-					<div className='pl-[10px] pr-[10px] h-[27px] flex justify-center items-center bg-[white] text-[12px] rounded-sm ml-[10px] cursor-pointer'>
-						<div className='mr-[7px] text-iconGray'>
-							<IoFilterOutline />
-						</div>
-						Filter
-					</div>
-					<div className='pl-[10px] pr-[10px] h-[27px] flex justify-center items-center bg-[white] text-[12px] rounded-sm ml-[10px] cursor-pointer'>
-						<div className='mr-[7px] text-iconGray text-[17px]'>
-							<GoSortDesc />
-						</div>
-						Sort by
-						<div className='text-iconGray ml-[7px]'>
-							<IoIosArrowDown />
-						</div>
-					</div>
+				<div className='flex  sm:flex-col sm:gap-3  items-center sm:items-start  sm:space-y-0  w-full sm:w-auto'>
+					<Input
+						placeholder='Search by ID'
+						className='w-full sm:w-64'
+						value={searchQuery}
+						onChange={(e) => setSearchQuery(e.target.value)}
+					/>
+					<Popover>
+						<PopoverTrigger asChild>
+							<Button
+								variant='outline'
+								className='w-full sm:w-[280px] justify-start text-left font-normal bg-white'>
+								<CalendarIcon className='mr-2 h-4 w-4' />
+								{dateRange.from ? (
+									dateRange.to ? (
+										<>
+											{dateRange.from.toLocaleDateString()} -{" "}
+											{dateRange.to.toLocaleDateString()}
+										</>
+									) : (
+										dateRange.from.toLocaleDateString()
+									)
+								) : (
+									<span>Pick a date</span>
+								)}
+							</Button>
+						</PopoverTrigger>
+						<PopoverContent className='w-auto p-0 ' align='start'>
+							<Calendar
+								initialFocus
+								mode='range'
+								defaultMonth={dateRange.from}
+								selected={dateRange}
+								onSelect={setDateRange}
+								numberOfMonths={2}
+							/>
+							<div className='grid grid-cols-2 gap-2 p-3 text-white'>
+								<Button
+									size='sm'
+									onClick={() =>
+										setDateRange({ from: new Date(), to: new Date() })
+									}>
+									Today
+								</Button>
+								<Button
+									size='sm'
+									onClick={() => {
+										const to = new Date();
+										const from = new Date(
+											to.getTime() - 7 * 24 * 60 * 60 * 1000,
+										);
+										setDateRange({ from, to });
+									}}>
+									Last 7 days
+								</Button>
+								<Button
+									size='sm'
+									onClick={() => {
+										const to = new Date();
+										const from = new Date(
+											to.getTime() - 30 * 24 * 60 * 60 * 1000,
+										);
+										setDateRange({ from, to });
+									}}>
+									Last 30 days
+								</Button>
+								<Button
+									size='sm'
+									onClick={() => {
+										const to = new Date();
+										const from = new Date(
+											to.getFullYear(),
+											to.getMonth() - 3,
+											to.getDate(),
+										);
+										setDateRange({ from, to });
+									}}>
+									Last 3 months
+								</Button>
+							</div>
+						</PopoverContent>
+					</Popover>
+					<Select
+						value={sortBy}
+						onValueChange={(value: any) => setSortBy(value)}>
+						<SelectTrigger className='w-full sm:w-[180px]'>
+							<SelectValue placeholder='Sort by' />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value='date-asc'>Date (Ascending)</SelectItem>
+							<SelectItem value='date-desc'>Date (Descending)</SelectItem>
+							<SelectItem value='amount-asc'>Amount (Ascending)</SelectItem>
+							<SelectItem value='amount-desc'>Amount (Descending)</SelectItem>
+						</SelectContent>
+					</Select>
 				</div>
 			</div>
-			<div className='max-w-screen-xl mx-auto md:px-8'>
-				<div className='mt-12 overflow-x-auto'>
-					<table className='w-full table-auto text-sm text-left'>
-						<thead className='text-[#979ba4] bg-[#f6f8fa] text-[12px] mb-2'>
-							<tr>
-								<th className='py-3 px-6'>
-									ID <FaSort className='inline-block ml-1' />
-								</th>
-								<th className='py-3 px-6'>
-									Date <FaSort className='inline-block ml-1' />
-								</th>
-								<th className='py-3 px-6'>
-									Type of transaction <FaSort className='inline-block ml-1' />
-								</th>
-								<th className='py-3 px-6'>
-									Amount <FaSort className='inline-block ml-1' />
-								</th>
-							</tr>
-						</thead>
-						<tbody className='text-gray-600'>
-							{paginatedItems.map((item, idx) => (
-								<tr key={idx} className='odd:bg-white even:bg-[#f0f3fa]'>
-									<td className='px-6 py-3 whitespace-nowrap flex items-center gap-x-4 text-[11px] font-[600]'>
-										{item.ID}
-									</td>
-									<td className='px-6 py-3 whitespace-nowrap text-[11px] font-[600]'>
-										{item.Date}
-									</td>
-									<td className='px-6 py-3 whitespace-nowrap text-[11px] font-[600]'>
-										{item.Type}
-									</td>
-									<td className='px-6 py-3 whitespace-nowrap text-[11px] font-[600]'>
-										{item.Amount}
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div className='w-[100%] mt-[20px] flex justify-between items-center'>
-				<h3 className='text-[13px] font-[500] '>
-					Showing {Math.min(currentPage * itemsPerPage, tableItems.length)} of{" "}
-					{tableItems.length}
-				</h3>
-				<div className='mt-[10px]'>
-					<ul className='p-0 list-none flex'>
-						{Array.from({ length: totalPages }, (_, index) => (
-							<li
-								key={index}
-								onClick={() => handlePageChange(index + 1)}
-								className={`px-3 py-1 mr-[10px] rounded-md cursor-pointer ${
-									currentPage === index + 1
-										? "bg-primary text-white"
-										: "bg-gray-200 text-gray-700"
-								}`}>
-								{index + 1}
-							</li>
+			<div className='overflow-x-auto'>
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead className='w-[100px]'>ID</TableHead>
+							<TableHead>Date</TableHead>
+							<TableHead>Type of transaction</TableHead>
+							<TableHead className='text-right'>Amount</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{paginatedData.map((row, index) => (
+							<TableRow
+								key={row.id}
+								className={index % 2 === 0 ? "bg-muted/50" : ""}>
+								<TableCell className='font-medium'>{row.id}</TableCell>
+								<TableCell>{new Date(row.date).toLocaleDateString()}</TableCell>
+								<TableCell>{row.type}</TableCell>
+								<TableCell className='text-right'>{row.amount}</TableCell>
+							</TableRow>
 						))}
-					</ul>
+					</TableBody>
+				</Table>
+			</div>
+			<div className='mt-4 flex justify-between items-center'>
+				<div>
+					Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+					{Math.min(currentPage * itemsPerPage, filteredAndSortedData.length)}{" "}
+					of {filteredAndSortedData.length} entries
 				</div>
-				<button className='invisible'>gfgfg</button>
+				<div className='flex space-x-2'>
+					<Button
+						variant='outline'
+						onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+						disabled={currentPage === 1}>
+						Previous
+					</Button>
+					<Button
+						variant='outline'
+						onClick={() =>
+							setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+						}
+						disabled={currentPage === totalPages}>
+						Next
+					</Button>
+				</div>
 			</div>
 		</div>
 	);
-};
+}
