@@ -2,7 +2,7 @@ import pic from "@/assets/black.jpg";
 import { RiFacebookCircleFill } from "react-icons/ri";
 import { CgInstagram } from "react-icons/cg";
 import { BsTwitterX } from "react-icons/bs";
-import BrandsComp from "@/components/commons/BrandsComp";
+import BrandData from "@/components/reuse/BrandData";
 
 const Contact = () => {
 	return (
@@ -12,8 +12,12 @@ const Contact = () => {
 					<div className='text-[30px] font-semibold text-primary mb-[10px] xl:hidden lg:hidden md:hidden'>
 						Contact Us
 					</div>
-					<div className='xl:w-[400px] lg:w-[400px] md:w-[340px] sm:w-[290px] lg:mr-[20px] xl:mr-[20px] md:mr-[15px]'>
-						<img src={pic} alt='' className='w-[100%] ' />
+					<div className='xl:w-[400px] lg:w-[400px] md:w-[340px] sm:w-[100%] lg:mr-[20px] xl:mr-[20px] md:mr-[15px]'>
+						<img
+							src={pic}
+							alt=''
+							className='w-[100%] sm:object-cover sm:h-[200px] sm:rounded-tr-[50px] sm:rounded-bl-[50px] '
+						/>
 					</div>
 					<div className='flex flex-col md:w-[280px]'>
 						<div className='text-[30px] font-semibold text-primary mb-[10px] sm:hidden md:text-[24px]'>
@@ -25,7 +29,7 @@ const Contact = () => {
 								<input
 									type='text'
 									placeholder='Input Your Name'
-									className='border border-[#ddd] w-[400px] md:w-[100%] sm:w-[290px] py-[10px] outline-none px-[3px] rounded-[5px] text-[14px]'
+									className='border border-[#ddd] w-[400px] md:w-[100%] sm:w-[100%] py-[10px] outline-none px-[3px] rounded-[5px] text-[14px]'
 								/>
 							</div>
 							<div className='flex flex-col mb-[15px]'>
@@ -33,18 +37,17 @@ const Contact = () => {
 								<input
 									type='text'
 									placeholder='+234'
-									className='border border-[#ddd] w-[400px] sm:w-[290px] md:w-[100%]  py-[10px] outline-none px-[3px] rounded-[5px] text-[14px]'
+									className='border border-[#ddd] w-[400px] sm:w-[100%] md:w-[100%]  py-[10px] outline-none px-[3px] rounded-[5px] text-[14px]'
 								/>
 							</div>
 							<div className='flex flex-col mb-[15px]'>
 								<div className='text-[12px] mb-[5px]'>Delivery Address</div>
-								<input
-									type='text'
+								<textarea
 									placeholder='Input Your Address'
-									className='border border-[#ddd] w-[400px] md:w-[100%]  sm:w-[290px] h-[100px] md:h-[50px] py-[10px] outline-none px-[3px] rounded-[5px] text-[14px]'
+									className='border border-[#ddd] w-[400px] md:w-[100%]  sm:w-[100%] h-[100px] md:h-[50px] py-[10px] outline-none px-[3px] rounded-[5px] text-[14px]'
 								/>
 							</div>
-							<button className='w-[400px] sm:w-[290px] text-white bg-secondary flex justify-center md:w-[100%]  items-center py-[15px] rounded-[2px]'>
+							<button className='w-[400px] sm:w-[100%] text-white bg-secondary flex justify-center md:w-[100%]  items-center py-[15px] rounded-[2px]'>
 								Contact Us
 							</button>
 						</form>
@@ -73,15 +76,9 @@ const Contact = () => {
 					</div>
 				</div>
 
-				<div className='sm:hidden mt-10'>
+				<div className=' mt-5'>
 					<h3 className='mt-7 font-bold mb-3'>Brand Spootlight</h3>
-					<div className='grid  grid-cols-5 gap-4 sm:grid-cols-2 mb-10 md:grid-cols-3'>
-						<BrandsComp />
-						<BrandsComp />
-						<BrandsComp />
-						<BrandsComp />
-						<BrandsComp />
-					</div>
+					<BrandData />
 				</div>
 			</div>
 		</div>

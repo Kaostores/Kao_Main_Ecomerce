@@ -54,7 +54,11 @@ const Footer = () => {
 							className='mb-1 cursor-pointer hover:underline transition ease-in-out delay-150'>
 							Contact Us
 						</div>
-						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
+						<div
+							onClick={() => {
+								window.location.href = "https://kao-web-seven.vercel.app/about";
+							}}
+							className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 							About Us
 						</div>
 						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
@@ -63,19 +67,29 @@ const Footer = () => {
 					</div>
 					<div className='text-[15px] md:text-[13px]'>
 						<div className='font-bold mb-2'>PAYMENT</div>
-						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
+						<div
+							onClick={() => navigate("/help&support")}
+							className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 							KAO Wallet
 						</div>
-						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
+						<div
+							onClick={() => navigate("/help&support")}
+							className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 							Verve
 						</div>
-						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
+						<div
+							onClick={() => navigate("/help&support")}
+							className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 							Visa
 						</div>
-						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
+						<div
+							onClick={() => navigate("/help&support")}
+							className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 							Master Card
 						</div>
-						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
+						<div
+							onClick={() => navigate("/help&support")}
+							className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 							Digital Currency
 						</div>
 					</div>
@@ -84,7 +98,9 @@ const Footer = () => {
 						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 							FAQs
 						</div>
-						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
+						<div
+							onClick={() => navigate("/help&support")}
+							className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 							Delivery
 						</div>
 						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
@@ -99,7 +115,11 @@ const Footer = () => {
 					</div>
 					<div className='text-[15px] md:text-[13px]'>
 						<div className='font-bold mb-2'>MAKE MONEY WITH US</div>
-						<div className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
+						<div
+							onClick={() => {
+								window.location.href = "https://kao-web-seven.vercel.app/";
+							}}
+							className='mb-1 hover:underline transition ease-in-out delay-150 cursor-pointer'>
 							Become an agent
 						</div>
 					</div>

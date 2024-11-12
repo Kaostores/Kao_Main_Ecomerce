@@ -4,10 +4,28 @@ import StarRating from "../StarRating";
 import { Link } from "react-router-dom";
 import pic3 from "../../assets/lenovo.png";
 import { decodeHTMLEntities } from "@/helpers";
+import DiscountPrice from "../PriceConversion/DiscountPriceConversion";
+import OriginalPrice from "../PriceConversion/OriginalPriceConversion";
+import { useAppSelector } from "@/services/store";
+import { handlePriceDisplay } from "@/utils/FallbackPrice";
 
 const CardComp = ({ deal, productId, isLoading, ...props }: any) => {
+	// Determine the price to show based on currency selection and availability of converted price
+
+	// console.log("this is props", selectedCurrency);
+	const selectedCurrency = useAppSelector(
+		(state) => state.persistedReducer.selectedCurrency,
+	);
+
+	// Determine the price to display based on currency support and fallback mechanism
+	const priceToShow = handlePriceDisplay(
+		selectedCurrency,
+		props?.convertedPrices,
+		props?.discountPrice,
+	);
+
 	return (
-		<div className='h-[370px]  sm:w-[100%]  pb-3  flex-shrink-0  bg-ascentBlue rounded-sm'>
+		<div className='h-[370px] sm:w-[100%] pb-3 flex-shrink-0 bg-ascentBlue rounded-sm'>
 			<Link to={`/product-details/${productId ? productId : props.id}`}>
 				<div className='h-[260px] relative w-[100%]'>
 					<img
@@ -30,10 +48,6 @@ const CardComp = ({ deal, productId, isLoading, ...props }: any) => {
 										}}
 									/>{" "}
 								</div>
-								{/* <div className='flex bg-[#F7CDBB] p-1 rounded-sm text-[12px]'> */}
-								{/* Hot */}
-								{/* <img src={pic2} /> */}
-								{/* </div> */}
 							</div>
 						)}
 
@@ -43,25 +57,26 @@ const CardComp = ({ deal, productId, isLoading, ...props }: any) => {
 					</div>
 				</div>
 
-				<h2 className='ml-[10px] text-nowrap  text-[16px] sm:text-[12px] font-[600] mt-[15px] overflow-hidden whitespace-nowrap truncate '>
+				<h2 className='ml-[10px] text-nowrap text-[16px] sm:text-[12px] font-[600] mt-[15px] overflow-hidden whitespace-nowrap truncate'>
 					{decodeHTMLEntities(props?.name)}
 				</h2>
 
 				<div className='p-2'>
-					<div
-						className='flex justify-between sm:flex-col sm:pb-3
-				  '>
-						<StarRating id={props?.id} />
-						{/* <Rating  size={10}   initialValue={ratingValue} /> */}
+					<div className='flex justify-between sm:flex-col sm:pb-3'>
+						<StarRating id={props?.totalRatings?.sumOfRatings || 0} />
 
-						<div className='text-right  '>
+						<div className='text-right'>
 							<div className='flex font-bold'>
-								<div className='text-[10px] mt-2 mr-2 sm:mt-1 '>NGN </div>
-								{props.discountPrice?.toLocaleString()}
+								{/* Show the price based on currency */}
+								<DiscountPrice
+									discountPrice={priceToShow}
+									currency={selectedCurrency}
+								/>
 							</div>
-							<div className='line-through text-[12px] text-cardBrown font-bold'>
-								{props.originalPrice?.toLocaleString()}
-							</div>
+							<OriginalPrice
+								originalPrice={priceToShow * 2}
+								currency={selectedCurrency}
+							/>
 						</div>
 					</div>
 				</div>

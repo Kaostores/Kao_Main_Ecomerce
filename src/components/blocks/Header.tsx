@@ -18,18 +18,13 @@ import {
 } from "@/services/apiSlice";
 import useUpdateUrlParams from "../SearchRoute";
 import { useAppSelector } from "@/services/store";
-
+import CurrencyExchange from "../currency/CurrencyExchange";
 const Header = () => {
 	const User = useSelector((state: any) => state?.persistedReducer.currentUser);
 	const updateUrlParams = useUpdateUrlParams();
 	const cart = useAppSelector((state) => state.persistedReducer.cart);
 
-	console.log("thjis the user", User);
 	// const dispatch = useDispatch();
-
-	const readCartQuantity = useSelector(
-		(state: any) => state.persistedReducer.totalQuantity,
-	);
 
 	const show = () => {
 		// ShowToast(true, "true");
@@ -81,7 +76,11 @@ const Header = () => {
 
 	// if (showMegaMenu) return <MegaMenu />;
 	return (
-		<div className='w-[100%] flex flex-col justify-center items-center'>
+		<div
+			style={{
+				zIndex: 999,
+			}}
+			className='w-[100%] bg-white flex flex-col justify-center items-center sticky top-0'>
 			<Register open={open} onClose={onClose} onOpenLogin={onOpenLogin} />
 			<Login open={open} onClose={onClose} onOpenRegister={onOpenRegister} />
 			{showMegaMenu ? (
@@ -153,7 +152,6 @@ const Header = () => {
 						<div
 							onClick={() => {
 								onOpenLogin();
-								console.log(open);
 							}}
 							className='flex items-center cursor-pointer sm:hidden'>
 							<div className='text-primary'>
@@ -188,13 +186,14 @@ const Header = () => {
 							<div
 								onClick={() => {
 									onOpenLogin();
-									console.log(open);
 								}}
 								className=' items-center cursor-pointer sm:flex hidden'>
 								<div className='text-primary'>
 									<FaRegUser />
 								</div>
-								<div className='text-[14px] ml-2 sm:flex'>Sign in/Sign up</div>
+								<div className='text-[12px] ml-2 sm:flex whitespace-nowrap'>
+									Sign in/Sign up
+								</div>
 							</div>
 						</>
 					)}
@@ -205,11 +204,12 @@ const Header = () => {
 							</div>
 
 							<span className='absolute top-4 right-2 -mt-1 -mr-1 bg-secondary text-white w-3 h-3 flex items-center justify-center rounded-full text-[10px]'>
-								{readCartQuantity}
+								{cartItems?.length || 0}
 							</span>
 						</div>
 					</Link>
 				</div>
+				<CurrencyExchange />
 			</div>
 			<div className='hidden sm:flex flex-1  w-[90%] sm:mb-3'>
 				<SearchInput />
@@ -230,7 +230,7 @@ const Header = () => {
 					) : (
 						<>
 							{catData?.data?.length > 0 ? (
-								catData.data?.slice(0, 7)?.map((props: any, index: number) => (
+								catData.data?.slice(0, 8)?.map((props: any, index: number) => (
 									<div
 										key={index}
 										onClick={() => {
@@ -250,6 +250,7 @@ const Header = () => {
 							)}
 						</>
 					)}
+					<div>{/* <CountrySelector /> */}</div>
 				</div>
 			</div>
 		</div>

@@ -62,10 +62,8 @@ const Account = () => {
 
 	const { data } = useViewAllAddressQuery({});
 
-	console.log("hre is the address", data);
-
 	const { data: userData, isLoading } = useGetUserDataQuery({});
-	console.log("userData", userData);
+
 	const [newAddress, { isLoading: newLoading }] = useCreateNewAddressMutation();
 	const [newPass, { isLoading: newPassLoading }] =
 		useChangeCustomerPasswordMutation();
@@ -114,16 +112,14 @@ const Account = () => {
 		event.preventDefault();
 		try {
 			const response: any = await newAddress(formData);
-			console.log("new address", response);
+
 			if (response?.data?.success == true) {
 				ShowToast(true, "Address Added Successfully");
 				ToggleChangeNewAddress();
 			} else {
 				ToggleChangeNewAddress();
 			}
-		} catch (error) {
-			console.error("Error adding address:", error);
-		}
+		} catch (error) {}
 	};
 	const [updateAddress, { isLoading: Loading }] = useUpdateAddressMutation();
 
@@ -135,9 +131,7 @@ const Account = () => {
 			});
 			// console.log("response", response);
 			ShowToast(true, "Address Updated Successfully");
-		} catch (error) {
-			console.error("Error updating address:", error);
-		}
+		} catch (error) {}
 	};
 
 	const UpdatePassword = async () => {
@@ -150,7 +144,7 @@ const Account = () => {
 				password: password,
 				current_password: oldPass,
 			});
-			console.log("response", response);
+
 			// ShowToast(true, "Address Updated Successfully");
 
 			if (
@@ -178,7 +172,6 @@ const Account = () => {
 		}
 	};
 
-	console.log("Captyred Addess", captureAddress);
 	return (
 		<>
 			{show ? (
@@ -201,69 +194,65 @@ const Account = () => {
 
 						<div className='bg-[#E6E6E6] md:w-[100%] w-[100%] h-[2px] mt-[15px] sm:hidden'></div>
 
-						<div className='w-[100%] md:items-center sm:items-center flex flex-col mt-[15px] sm:mt-[30px]'>
-							<div className='w-[100%] md:w-[85%] sm:w-[90%] flex flex-col'>
-								<div className='items-center sm:flex hidden sm:mb-[20px]'>
-									<div className='text-primary'>
-										<MdModeEditOutline />
-									</div>
-									<h3
-										onClick={Toggle2}
-										className='text-primary text-[13px] sm:font-[600] font-[500] ml-[5px]'>
-										Edit Account
-									</h3>
+						{isLoading ? (
+							<div className='w-[100%] md:w-[85%] sm:w-[90%] flex flex-col mt-[15px] sm:mt-[30px]'>
+								<div className='animate-pulse'>
+									<div className='w-full h-6 bg-gray-200 rounded mb-4'></div>{" "}
+									{/* Name skeleton */}
+									<div className='w-full h-6 bg-gray-200 rounded mb-4'></div>{" "}
+									{/* Email skeleton */}
+									<div className='w-full h-6 bg-gray-200 rounded mb-4'></div>{" "}
+									{/* Phone number skeleton */}
 								</div>
-
-								<div className='w-[100%] flex items-center justify-between'>
-									<p className='text-[#606060] text-[13px]'>Name</p>
-									<div className='flex items-center sm:hidden'>
+							</div>
+						) : (
+							<div className='w-[100%] md:items-center sm:items-center flex flex-col mt-[15px] sm:mt-[30px]'>
+								<div className='w-[100%] md:w-[85%] sm:w-[90%] flex flex-col'>
+									<div className='items-center sm:flex hidden sm:mb-[20px]'>
 										<div className='text-primary'>
 											<MdModeEditOutline />
 										</div>
 										<h3
 											onClick={Toggle2}
-											className='text-primary text-[13px] font-[500] ml-[5px] cursor-pointer'>
+											className='text-primary text-[13px] sm:font-[600] font-[500] ml-[5px]'>
 											Edit Account
 										</h3>
 									</div>
-								</div>
-								{isLoading ? (
-									<h3 className='mt-[10px] font-[500]'>Loading...</h3>
-								) : (
+									<div className='w-[100%] flex items-center justify-between'>
+										<p className='text-[#606060] text-[13px]'>Name</p>
+										<div className='flex items-center sm:hidden'>
+											<div className='text-primary'>
+												<MdModeEditOutline />
+											</div>
+											<h3
+												onClick={Toggle2}
+												className='text-primary text-[13px] font-[500] ml-[5px] cursor-pointer'>
+												Edit Account
+											</h3>
+										</div>
+									</div>
 									<h3 className='mt-[10px] font-[500]'>
 										{userData?.data?.firstname} {userData?.data?.lastname}
 									</h3>
-								)}
-							</div>
-							<div className='w-[100%] md:w-[85%] sm:w-[90%] flex flex-col mt-[20px]'>
-								<div className='w-[100%] flex items-center justify-between'>
-									<p className='text-[#606060] text-[13px]'>Email</p>
 								</div>
-								{isLoading ? (
-									<h3 className='mt-[10px] font-[500]'>Loading...</h3>
-								) : (
+								<div className='w-[100%] md:w-[85%] sm:w-[90%] flex flex-col mt-[20px]'>
+									<div className='w-[100%] flex items-center justify-between'>
+										<p className='text-[#606060] text-[13px]'>Email</p>
+									</div>
 									<h3 className='mt-[10px] font-[500]'>
-										<h3 className='mt-[10px] font-[500]'>
-											{userData?.data?.email}
-										</h3>
+										{userData?.data?.email}
 									</h3>
-								)}
-							</div>
-							<div className='w-[100%] md:w-[85%] sm:w-[90%] flex flex-col mt-[20px]'>
-								<div className='w-[100%] flex items-center justify-between'>
-									<p className='text-[#606060] text-[13px]'>Phone number</p>
 								</div>
-								{isLoading ? (
-									<h3 className='mt-[10px] font-[500]'>Loading...</h3>
-								) : (
+								<div className='w-[100%] md:w-[85%] sm:w-[90%] flex flex-col mt-[20px]'>
+									<div className='w-[100%] flex items-center justify-between'>
+										<p className='text-[#606060] text-[13px]'>Phone number</p>
+									</div>
 									<h3 className='mt-[10px] font-[500]'>
-										<h3 className='mt-[10px] font-[500]'>
-											{userData?.data?.phone}
-										</h3>
+										{userData?.data?.phone}
 									</h3>
-								)}
+								</div>
 							</div>
-						</div>
+						)}
 
 						<div className='bg-[#E6E6E6] w-[100%] h-[2px] mt-[18px]'></div>
 
@@ -584,10 +573,7 @@ const Account = () => {
 									<LoadingButton w={"100%"} />
 								</div>
 							) : (
-								<button
-									className='w-[100%] h-[43px] flex justify-center 
-items-center text-[white] bg-secondary mt-[45px] text-[14px] 
-rounded-sm'>
+								<button className='w-[100%] h-[43px] flex justify-center items-center text-[white] bg-secondary mt-[45px] text-[14px] rounded-sm'>
 									Save Password
 								</button>
 							)}

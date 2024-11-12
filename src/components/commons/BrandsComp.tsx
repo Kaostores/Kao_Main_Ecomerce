@@ -6,7 +6,7 @@ const BrandsComp = ({ ...props }) => {
 	return (
 		<div
 			onClick={() => {
-				updateUrlParams({ brand_id: props?.id });
+				updateUrlParams({ brand_id: props?.proBrandId });
 			}}
 			className=' relative cursor-pointer '>
 			<img

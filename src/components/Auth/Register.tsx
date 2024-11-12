@@ -29,9 +29,10 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import CurrencySelector from "../currency/CurrencySelector";
+// import CurrencySelector from "../currency/CurrencySelector";
 import { useAddCartCustomerMutation } from "@/services/apiSlice";
 import { useAppSelector } from "@/services/store";
+import { Instance } from "@/utils/AxiosConfig";
 // import { useAddCartCustomerMutation } from "@/services/apiSlice";
 // import { useAppSelector } from "@/services/store";
 //
@@ -66,7 +67,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 	});
 	//
 	const cart = useAppSelector((state) => state.persistedReducer.cart);
-	console.log("there is cat data", cart);
+
 	//
 	const [addCartFn] = useAddCartCustomerMutation();
 	//
@@ -78,18 +79,13 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 				variant: props?.variantID ? props?.variantID : null,
 			});
 
-			console.log("cart added", response);
-
 			if (response?.data?.success) {
 				// toast.success("cart added");
 			} else {
 				toast.error("Failed to add item to Cart");
 			}
-
-			console.log("Response from adding to cart:", response);
 		} catch (error) {
 			toast.error("An error occurred while adding to the cart");
-			console.error("Error adding cart item:", error);
 		}
 	};
 
@@ -99,9 +95,9 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 			// Perform registration first
 			const response: any = await Register({
 				...values,
-				currency: selectedCurrency,
+				currency: "",
 				role: "user",
-				country: selectedCountry,
+				country: "",
 			});
 
 			// Handle successful registration
@@ -122,6 +118,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 						await handleAddToCartUser({
 							product_id: cartItem.productID,
 							variantID: cartItem.variant ? cartItem.variant.id : null,
+							quantity: cartItem.quantity,
 						});
 					}
 				}
@@ -141,50 +138,27 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 		} catch (error) {
 			// Handle error case
 			toast.error("An error occurred during registration. Please try again.");
-			console.error("Error during registration:", error);
+
 			setLoad(false);
 		}
 	}
 
-	const [selectedCurrency, setSelectedCurrency] = useState("");
-	const [selectedCountry, setSelectedCountry] = useState("");
+	const initiateGoogleLogin = async () => {
+		try {
+			const response = await Instance.get("/user/login/google");
+			if (response.data.success) {
+				// Redirect user to Google OAuth URL
+				window.location.href = response.data.data;
+			} else {
+				console.error("Failed to initiate Google login");
+			}
+		} catch (error) {
+			console.error("Error initiating Google login", error);
+		}
+	};
 
-	// async function onSubmit(values: z.infer<typeof formSchema>) {
-	// setLoad(true);
-	// try {
-	// const response: any = await Register({
-	// ...values,
-	// currency: selectedCurrency,
-	// role: "user",
-	// country: selectedCountry,
-	// });
-
-	// if (response?.status >= 200 && response?.status < 300) {
-	// toast.success(response?.data?.message);
-	// } else if (response?.status >= 300 && response?.status < 400) {
-	// toast.info(response?.data?.message);
-	// } else if (response?.status >= 400 && response?.status < 500) {
-	// toast.error(response?.data?.message);
-	// } else if (response?.status >= 500 && response?.status < 600) {
-	// toast.error(response?.data?.message);
-	// }
-
-	// Additional specific status checks and handling
-	// if (response?.status === 200) {
-	// cookies.set("Kao_cookie_user", response?.data?.token, {
-	// expires: expiryDate,
-	// path: "/",
-	// });
-	// dispatch(updateUserDetails(response?.data.data));
-	// onClose();
-	// }
-
-	// setLoad(false);
-	// } catch (error) {
-	// toast.error("An error occurred. Please try again.");
-	// setLoad(false);
-	// }
-	// }
+	// const [selectedCurrency, setSelectedCurrency] = useState("");
+	// const [selectedCountry, setSelectedCountry] = useState("");
 
 	const cookies = new Cookies();
 	const dispatch = useDispatch();
@@ -243,12 +217,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 									</FormItem>
 								)}
 							/>
-							<CurrencySelector
-								selectedCurrency={selectedCurrency}
-								setSelectedCurrency={setSelectedCurrency}
-								selectedCountry={selectedCountry}
-								setSelectedCountry={setSelectedCountry}
-							/>
+
 							<FormField
 								control={form.control}
 								name='phone'
@@ -314,7 +283,7 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 						<div className='font-bold'>Or Continue with</div>
 						<div className='flex-1 h-[1px] bg-black'></div>
 					</div>
-					<div className='flex justify-center'>
+					<div onClick={initiateGoogleLogin} className='flex justify-center'>
 						<Button
 							variant='outline'
 							className='w-full border-border'

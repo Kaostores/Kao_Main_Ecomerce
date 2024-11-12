@@ -31,6 +31,7 @@ import { updateUserDetails } from "@/services/reducers";
 import { useState } from "react";
 import { useAddCartCustomerMutation } from "@/services/apiSlice";
 import { useAppSelector } from "@/services/store";
+import { Instance } from "@/utils/AxiosConfig";
 
 const formSchema = z.object({
 	email: z.string().min(2, {
@@ -51,7 +52,7 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 	});
 
 	const cart = useAppSelector((state) => state.persistedReducer.cart);
-	console.log("there is cat data", cart);
+
 	//
 	const [addCartFn] = useAddCartCustomerMutation();
 	//
@@ -62,16 +63,14 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 				quantity: 1,
 				variant: props?.variantID ? props?.variantID : null,
 			});
-			console.log("cart added", response);
+
 			if (response?.data?.success) {
 				// toast.success("cart added");
 			} else {
 				toast.error("Failed to add item to Cart");
 			}
-			console.log("Response from adding to cart:", response);
 		} catch (error) {
 			toast.error("An error occurred while adding to the cart");
-			console.error("Error adding cart item:", error);
 		}
 	};
 
@@ -80,7 +79,6 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 		try {
 			// Perform login first
 			const response: any = await LogIn(values);
-			console.log("Login response:", response);
 
 			// Handle successful login
 			if (response?.status === 200) {
@@ -102,6 +100,7 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 						await handleAddToCartUser({
 							product_id: cartItem.productID,
 							variantID: cartItem.variant ? cartItem.variant.id : null,
+							quantity: cartItem.quantity,
 						});
 					}
 				}
@@ -112,12 +111,14 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 				ShowToast(false, "Details do not match");
 			} else if (response?.response?.status === 401) {
 				ShowToast(false, "Invalid Credentials");
+			} else {
+				ShowToast(false, "Invalid Credentials");
 			}
 
 			setLoad(false);
 		} catch (error) {
 			toast.info("An error occurred. Please try again.");
-			console.error("Error during login:", error);
+
 			setLoad(false);
 		}
 	}
@@ -127,6 +128,20 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 	const expiryDate = new Date();
 	expiryDate.setDate(expiryDate.getDate() + 7);
 	const [load, setLoad] = useState(false);
+
+	const initiateGoogleLogin = async () => {
+		try {
+			const response = await Instance.get("/user/login/google");
+			if (response.data.success) {
+				// Redirect user to Google OAuth URL
+				window.location.href = response.data.data;
+			} else {
+				console.error("Failed to initiate Google login");
+			}
+		} catch (error) {
+			console.error("Error initiating Google login", error);
+		}
+	};
 
 	return (
 		<Dialog
@@ -196,7 +211,7 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 						<div className='font-bold'>Or Continue with</div>
 						<div className='flex-1 h-[1px] bg-black'></div>
 					</div>
-					<div className='flex justify-center'>
+					<div onClick={initiateGoogleLogin} className='flex justify-center'>
 						<Button
 							variant='outline'
 							className='w-full border-border'

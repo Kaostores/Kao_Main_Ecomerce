@@ -2,7 +2,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import pic4 from "@/assets/hero2.png";
-import pic5 from "@/assets/caro2.jpg";
 import pic6 from "@/assets/caro3.jpg";
 
 const CarouselComp = () => {
@@ -38,27 +37,21 @@ const CarouselComp = () => {
 	};
 
 	return (
-		<div>
+		<div className='relative overflow-hidden'>
 			<Slider {...settings}>
 				<div>
 					<img
-						className='h-[400px] object-cover sm:h-[250px]'
+						className='w-full h-auto object-cover'
 						src={pic4}
 						alt='Slide 1'
 					/>
 				</div>
+
 				<div>
 					<img
-						src={pic5}
-						alt='Slide 2'
-						className='h-[400px] object-cover sm:h-[250px] w-full'
-					/>
-				</div>
-				<div>
-					<img
+						className='w-full h-auto object-cover'
 						src={pic6}
 						alt='Slide 3'
-						className='h-[400px] object-cover sm:h-[250px] w-full'
 					/>
 				</div>
 			</Slider>
@@ -76,7 +69,6 @@ const PrevArrow = (props: any) => {
 				display: "block",
 				background: "gray",
 				borderRadius: "50%",
-				// padding: "10px",
 				position: "absolute",
 				top: "50%",
 				transform: "translateY(-50%)",
@@ -98,7 +90,6 @@ const NextArrow = (props: any) => {
 				display: "block",
 				background: "gray",
 				borderRadius: "50%",
-				// padding: "10px",
 				position: "absolute",
 				top: "50%",
 				transform: "translateY(-50%)",

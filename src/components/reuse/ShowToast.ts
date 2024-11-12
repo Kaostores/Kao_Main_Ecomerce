@@ -7,7 +7,6 @@ const ShowToast = (isSuccess: boolean, value: string) => {
 		toast.error(value, {
 			// variant: "destructive",
 			// title: "Uh oh! Something went wrong.",
-			// description: value,
 		});
 	}
 };

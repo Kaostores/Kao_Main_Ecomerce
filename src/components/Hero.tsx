@@ -6,7 +6,7 @@ import CarouselComp from "./CarouselComp";
 const Hero = () => {
 	return (
 		<div className=' flex w-full sm:flex-col md:flex-col mt-7 sm:mt-3  gap-5 '>
-			<div className='w-2/3 sm:w-full md:w-full  h-[450px] sm:h-[300px] '>
+			<div className='w-2/3 sm:w-full md:w-full  '>
 				<CarouselComp />
 			</div>
 
@@ -14,7 +14,7 @@ const Hero = () => {
 				<a
 					className='flex-1'
 					target='_blank'
-					href='https://kao-agent.netlify.app/'>
+					href='https://kao-web-seven.vercel.app/'>
 					<div className='bg-ascentBlue rounded-sm min-h-[70px] md:h-[70px] flex justify-between pl-5 pr-5 items-center flex-1 cursor-pointer'>
 						<div className='text-[17px]  sm:text-[14px] md:text-[14px] font-semibold text-primary cursor-pointer'>
 							Become an <br />
@@ -29,7 +29,7 @@ const Hero = () => {
 				<a
 					className='flex-1'
 					target='_blank'
-					href='https://kao-storeowner.netlify.app/'>
+					href='https://kao-web-seven.vercel.app/'>
 					<div className='bg-secondaryAscent rounded-sm min-h-[70px] md:h-[70px] flex justify-between pl-5 pr-5 items-center flex-1 '>
 						<div className='text-[17px] sm:text-[14px] md:text-[14px] font-semibold text-secondary  cursor-pointer'>
 							Sell On <br />

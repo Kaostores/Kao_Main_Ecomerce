@@ -27,7 +27,6 @@ const Items = () => {
 		}
 	};
 
-	console.log("all book mark", data);
 	return (
 		<div className='w-[100%] flex flex-col p-[15px] md:items-center sm:items-center md:p-0 sm:p-0 bg-[#F4F4F4] md:bg-white sm:bg-[#fff] ml-[15px] sm:ml-0 md:ml-0 rounded-[8px]'>
 			<div

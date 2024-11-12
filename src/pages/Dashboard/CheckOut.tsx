@@ -13,13 +13,15 @@ import {
 	useViewAllAddressQuery,
 	useUpdateAddressMutation,
 	useViewAllCartCustomerQuery,
-	useVerifyPayMutation,
 	useShippmentAddressMutation,
 	useApplyCouponMutation,
+	useCheckOutPaymentQuery,
+	useGetUserDataQuery,
 } from "@/services/apiSlice";
 import { MdModeEdit } from "react-icons/md";
 import ShowToast from "@/components/reuse/ShowToast";
 import { formatPrice } from "@/helpers";
+import LoaderComponent from "@/components/reuse/LoadingComponent";
 
 const Checkout = () => {
 	const [showAddress, setShowAddress] = useState(true);
@@ -27,6 +29,8 @@ const Checkout = () => {
 	const [load, setLoad] = useState(false);
 	const [showCheckOut, setShowCheckout] = useState(false);
 	const { data: userCartData } = useViewAllCartCustomerQuery({});
+	const { data: userData } = useGetUserDataQuery({});
+	const user = useAppSelector((state) => state.persistedReducer.currentUser);
 
 	const { data: addressData } = useViewAllAddressQuery({});
 	const [selectedAddressId, setSelectedAddressId] = useState("");
@@ -55,13 +59,13 @@ const Checkout = () => {
 		setShowAllAddresses(!showAllAddresses);
 	};
 
-	console.log("all addresss", addressData);
-
 	const navigate = useNavigate();
 	const [updateAddress] = useUpdateAddressMutation();
-	const [verifyPayFn] = useVerifyPayMutation();
+
 	const [shippmentFn] = useShippmentAddressMutation();
-	const [applycoupFn] = useApplyCouponMutation();
+	const [applycoupFn, { isLoading: loadingApply }] = useApplyCouponMutation();
+	const { data: CheckoutData } = useCheckOutPaymentQuery({});
+	const [couponPrice, setCouponPrice] = useState<any>();
 
 	const handleAddressSave = async (formData: any) => {
 		try {
@@ -70,9 +74,7 @@ const Checkout = () => {
 			setAddressFormData(null);
 			setShowAddress(true);
 			setIsEditing(true);
-		} catch (error) {
-			console.error("Error updating address:", error);
-		}
+		} catch (error) {}
 	};
 
 	const toggleBtn = () => {
@@ -96,10 +98,9 @@ const Checkout = () => {
 		}
 	}, [addressData]);
 
-	const user = useAppSelector((state) => state.persistedReducer.currentUser);
 	const cartItems = useAppSelector((state) => state.persistedReducer.cart);
-	const addresses = useAppSelector((state) => state.persistedReducer.addresses);
-	console.log("addresses", addresses);
+	// const addresses = useAppSelector((state) => state.persistedReducer.addresses);
+
 	const totalPrice = useAppSelector(
 		(state) => state.persistedReducer.totalPrice,
 	);
@@ -108,7 +109,7 @@ const Checkout = () => {
 		setSelectedAddressId(id);
 	};
 
-	// console.log("carrrrrrrrrrrrt", cartItems);
+	// console.log("carrrrrrrrrrrrt", userData);
 
 	const [showAllItems, setShowAllItems] = useState(false);
 
@@ -126,27 +127,36 @@ const Checkout = () => {
 	const [items] = useState([
 		{
 			id: 1,
-			name: "Pay with USDT",
-			balance: "Wallet balance",
-			price: "NGN 30,000",
+			name: "Pay with wallet",
+			balance:
+				userData?.data?.balance < userCartData?.data?.cart?.bill
+					? "Insufficient balance"
+					: "Wallet balance",
+			price: `${userData?.data?.balance?.toLocaleString() || 0}`,
+			disabled: userData?.data?.balance < userCartData?.data?.cart?.bill, // disable if balance is insufficient
 			selected: true,
 		},
 		{
 			id: 2,
 			name: "Pay with Cards, Bank Transfer or USSD",
 			balance: "You will be directed to the payment gateway",
+			disabled: false,
 			selected: false,
 		},
 		{
 			id: 3,
-			name: "Pay with wallet",
-			balance: "The money will be deducted from your wallet balance",
+			name: "Pay with USDT",
+			balance: "choose your best cryptocurrency payment",
+			disabled: false,
 			selected: false,
 		},
 	]);
 
 	const [selectedItem, setSelectedItem] = useState(items[0]);
 	const [showChangeButton, setShowChangeButton] = useState(false);
+
+	// console.log("na cart ooooo", userData);
+
 	const handleChangeItem = () => {
 		setShowChangeButton(false);
 	};
@@ -164,55 +174,81 @@ const Checkout = () => {
 		setShowCheckout(!showCheckOut);
 	};
 
+	const onHandleApplyCoupoun = async () => {
+		// Step 1: Apply coupon if the code is provided
+
+		if (couponCode) {
+			const response: any = await applycoupFn({ couponCode });
+			console.log("coupoun", response);
+			if (response?.error?.status >= 401) {
+				ShowToast(false, `${response?.error?.data?.message}`);
+			} else if (response?.data?.success) {
+				ShowToast(true, "Applied successful, procced to checkout");
+				setCouponPrice(response.data.data?.cart?.bill);
+				setCouponCode("");
+			}
+		}
+	};
+
 	const handlePaymentCheckout = async () => {
 		setLoad(true);
+
 		try {
-			// Step 1: Apply coupon if the code is provided
-			let applyCouponResponse: any;
-			if (couponCode) {
-				applyCouponResponse = await applycoupFn({ couponCode });
+			if (selectedItem?.id === 1) {
+				// Handle wallet payment
+				if (userData?.data?.balance < userCartData?.data?.cart?.bill) {
+					ShowToast(
+						false,
+						"Insufficient wallet balance. Please select another payment option to complete your purchase.",
+					);
+					setLoad(false);
+					return;
+				}
+
+				// Deduct balance and update user data
+				// const newBalance =
+				// userData?.data?.balance - userCartData?.data?.cart?.bill;
+				// await updateUserData({ balance: newBalance });
+
+				// Navigate to success page
+				// navigate("/success");
+				setLoad(false);
+				return; // Exit after wallet payment
+			} else if (selectedItem?.id === 3) {
+				// Handle USDT payment here
+				// navigate("/usdt-payment");
+				setLoad(false);
+				return;
 			}
 
 			// Step 2: Proceed to shipment
 			const shipmentResponse: any = await shippmentFn({
 				addressId: selectedAddressId,
 			});
-
-			// Step 3: Verify payment
-			const verifyPaymentResponse: any = await verifyPayFn({
-				tx_ref: "1234",
-				customer: user.id,
-			});
-
-			console.log("verifypp", verifyPaymentResponse);
-
-			// Handle the outcome
-			if (
-				couponCode &&
-				applyCouponResponse?.data?.status &&
-				shipmentResponse?.data?.status &&
-				verifyPaymentResponse
-			) {
-				navigate("/payment-success");
+			if (!shipmentResponse?.data?.success) {
+				alert("Shipping failed. Please try again.");
 				setLoad(false);
-			} else if (
-				!couponCode &&
-				shipmentResponse?.data?.status &&
-				verifyPaymentResponse
-			) {
-				// alert("Payment successful, your delivery will arrive in 30 minutes.");
-				navigate("/payment-success");
-				setLoad(false);
-			} else {
-				navigate("/payment-success");
-				setLoad(false);
-				// alert("Payment successful, your delivery will arrive in 30 minutes.");
+				return;
 			}
+
+			// Step 3: Open payment link
+			const paymentLink = CheckoutData?.data?.link;
+			if (paymentLink) {
+				window.open(paymentLink, "_blank", "noopener,noreferrer");
+			} else {
+				alert("Payment link not available.");
+			}
+
+			setLoad(false);
 		} catch (error) {
-			console.error("Error during checkout:", error);
 			alert("An error occurred during the checkout process. Please try again.");
+			setLoad(false); // Ensure loading state is reset on error
 		}
 	};
+
+	useEffect(() => {}, [userData, items]);
+
+	if (load) return <LoaderComponent />;
 
 	return (
 		<div className='w-[100%] mb-20 min-h-[100%] flex xl:justify-center items-center '>
@@ -349,7 +385,7 @@ const Checkout = () => {
 												? `${item.id}-${item.variant.id}`
 												: `${item.id}-default`
 										}
-										className='flex h-[100px] md:w-[300px] mb-[15px]'>
+										className='flex min-h-[100px] md:w-[300px] mb-[15px]'>
 										<div className='xl:w-[100px] xl:h-[100px] lg:w-[100px] lg:h-[100px] md:w-[80px] md:h-[80px] sm:w-[90px] sm:h-[100px] mr-[10px] overflow-hidden mb-[10px] cursor-pointer flex justify-center items-center border-[2px] border-[#0000ff]'>
 											<img
 												src={
@@ -361,7 +397,7 @@ const Checkout = () => {
 												className='xl:w-[50px] md:w-[30px] lg:w-[50px] sm:w-[50px]'
 											/>
 										</div>
-										<div className='flex flex-col md:h-[80px]'>
+										<div className='flex flex-col md:h-[80px] flex-1'>
 											<div className='xl:text-[20px] sm:text-[14px] md:text-[14px] font-semibold mb-[5px]'>
 												{item?.product?.name} -{" "}
 												{item.variant?.name || "No Variant"}
@@ -446,12 +482,17 @@ const Checkout = () => {
 										</div>
 									)}
 								</div>
-								{showChangeButton ? (
+
+								{showChangeButton && (
 									<div>
 										{items.map((item) => (
 											<div
-												className='flex items-start mb-[10px] cursor-pointer'
-												onClick={() => setSelectedItem(item)}>
+												key={item.id}
+												className={`flex items-start mb-[10px] cursor-pointer ${
+													item.disabled ? "cursor-not-allowed opacity-50" : ""
+												}`}
+												onClick={() => !item.disabled && setSelectedItem(item)} // Disable onClick when item is disabled
+											>
 												<div
 													className={`mr-[5px] ${
 														selectedItem === item
@@ -467,14 +508,17 @@ const Checkout = () => {
 													<div className='text-[13px] text-[#535353] flex'>
 														<div className='mr-[5px]'>{item.balance}</div>
 														<div className='font-semibold text-black'>
-															{item.price}
+															{item.id === 1
+																? userData?.data?.balance?.toLocaleString() || 0
+																: null}
 														</div>
 													</div>
 												</div>
 											</div>
 										))}
 									</div>
-								) : null}
+								)}
+
 								{show ? null : (
 									<div className='flex items-start mb-[10px]'>
 										<div className='flex flex-col mb-[10px] sm:text-[13px]'>
@@ -484,7 +528,9 @@ const Checkout = () => {
 											<div className='text-[13px] text-[#535353] flex'>
 												<div className='mr-[5px]'>{selectedItem.balance}</div>
 												<div className='font-semibold text-black'>
-													{selectedItem.price}
+													{selectedItem.id === 1
+														? userData?.data?.balance?.toLocaleString() || 0
+														: null}
 												</div>
 											</div>
 										</div>
@@ -509,6 +555,17 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 											className='h-[100%] outline-none border-none bg-transparent'
 										/>
 									</div>
+									{couponCode !== "" && (
+										<button
+											disabled={loadingApply}
+											onClick={onHandleApplyCoupoun}
+											className={`w-[100px] flex justify-center items-center text-white   mt-3
+h-[40px] rounded-sm cursor-pointer  ${
+												loadingApply ? "bg-gray-400" : "bg-primary"
+											} `}>
+											<div>{loadingApply ? "Loading..." : "Apply"}</div>
+										</button>
+									)}
 								</div>
 							</div>
 							{show ? (
@@ -539,7 +596,7 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 					</div>
 				)}
 				<div
-					className={`xl:p-[10px] md:p-[10px] xl:h-[300px] md:h-[300px] sm:mb-[30px] flex flex-col xl:bg-[#F0F3FA] md:bg-[#F0F3FA] sm:bg-white  ${
+					className={`xl:p-[10px] md:p-[10px] xl:max-h-[350px] md:max-h-[350px] sm:mb-[30px] flex flex-col xl:bg-[#F0F3FA] md:bg-[#F0F3FA] sm:bg-white   ${
 						showAddress !== true ? "sm:hidden" : ""
 					}`}>
 					<div className='font-semibold mb-[10px] xl:text-[20px] md:text-[17px]'>
@@ -551,10 +608,15 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 								<div className='text-[13px] font-semibold'>Sub Total</div>
 								<div className='flex justify-center items-center'>
 									<div className='text-[9px]'>
-										<FaNairaSign />
+										{/* <FaNairaSign /> */}
+										USD
 									</div>
-									<div className='text-[14px] font-semibold'>
-										{formatPrice(userCartData?.data?.cart?.totalPrice)}
+									<div>
+										<div className='text-[14px] font-semibold '>
+											{user
+												? formatPrice(userCartData?.data?.cart?.bill)
+												: totalPrice}
+										</div>
 									</div>
 								</div>
 							</div>
@@ -562,7 +624,8 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 								<div className='text-[13px] font-semibold'>Delivery fee</div>
 								<div className='flex justify-center items-center'>
 									<div className='text-[9px]'>
-										<FaNairaSign />
+										{/* <FaNairaSign /> */}
+										USD
 									</div>
 									<div className='text-[14px] font-semibold'>0.00</div>
 								</div>
@@ -571,27 +634,58 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 								<div className='text-[13px] font-semibold'>Total</div>
 								<div className='flex justify-center items-center'>
 									<div className='text-[9px]'>
-										<FaNairaSign />
+										{/* <FaNairaSign /> */}
+										USD
 									</div>
-									<div className='text-[14px] font-semibold'>{totalPrice}</div>
+
+									<div className='flex gap-3'>
+										<div
+											className={`text-[14px] font-semibold ${
+												couponPrice ? "line-through " : ""
+											} `}>
+											{user
+												? formatPrice(userCartData?.data?.cart?.bill)
+												: totalPrice}
+										</div>
+										{couponPrice && (
+											<div className='text-[14px] font-semibold flex items-center'>
+												<div className='text-[9px]'>
+													<FaNairaSign />
+												</div>
+												{formatPrice(couponPrice)}
+											</div>
+										)}
+									</div>
 								</div>
 							</div>
 							<div className='w-[320px] md:w-[220px] xl:flex lg:flex md:flex justify-between sm:hidden'>
 								<div className='text-[13px] font-semibold'>Apply code</div>
-								<div className='flex justify-center items-center'>
+								<div className='flex justify-center  flex-col'>
 									<div className='text-[14px] font-semibold border-[2px] md:w-[150px] border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 										<div className='mr-[5px]'>
 											<RiCoupon2Line />
 										</div>
-										<input
-											onChange={(e) => {
-												setCouponCode(e.target.value);
-											}}
-											type='text'
-											placeholder='Apply code'
-											className='h-[100%] outline-none border-none bg-transparent'
-										/>
+										<div>
+											<input
+												onChange={(e) => {
+													setCouponCode(e.target.value);
+												}}
+												type='text'
+												placeholder='Apply code'
+												className='h-[100%] outline-none border-none bg-transparent'
+											/>
+										</div>
 									</div>
+									{couponCode !== "" && (
+										<button
+											disabled={loadingApply}
+											onClick={onHandleApplyCoupoun}
+											className={`w-[100px] flex justify-center items-center text-white   mt-3 h-[40px] rounded-sm cursor-pointer  ${
+												loadingApply ? "bg-gray-400" : "bg-primary"
+											} `}>
+											<div>{loadingApply ? "Loading..." : "Apply"}</div>
+										</button>
+									)}
 								</div>
 							</div>
 						</div>
@@ -626,7 +720,10 @@ border-primary rounded-[5px] py-[15px] px-[3px] flex items-center '>
 								No
 							</button>
 							<button
-								onClick={handlePaymentCheckout}
+								onClick={() => {
+									handlePaymentCheckout();
+									// onHandlePayment();
+								}}
 								disabled={load}
 								className={`w-[45%] sm:w-[100%] sm:mb-[10px] xl:flex lg:flex md:flex 
 justify-center items-center text-white bg-secondary cursor-pointer py-[10px] 

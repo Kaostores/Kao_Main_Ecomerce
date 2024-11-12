@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 // import axios from "axios";
 import io from "socket.io-client";
 import ShowToast from "@/components/reuse/ShowToast";
+import { ImUsers } from "react-icons/im";
 
 const Messaging = () => {
 	const cookies = new Cookies();
@@ -45,12 +46,11 @@ const Messaging = () => {
 		setMessage("");
 	};
 
-	const [messages, setMessages] = useState<any>([]);
+	const [, setMessages] = useState<any>([]);
 
 	const socket = io(url, {
 		query: { token: tokenValue },
 	});
-	console.log("yooo", socket);
 
 	useEffect(() => {
 		socket.on("new-message", (msg) => {
@@ -75,8 +75,6 @@ const Messaging = () => {
 	// fetchChat();
 	//
 	// }, []);
-
-	console.log("have gotten this message", messages);
 
 	// Update isMobile state on window resize
 	useEffect(() => {
@@ -183,7 +181,17 @@ const Messaging = () => {
 						))}
 					</div>
 				) : (
-					<div>No user found</div>
+					<div className='h-full flex mt-10 sm:justify-center items-center flex-col sm:h-[200px]'>
+						<span className='text-[50px] mb-2'>
+							<ImUsers />
+						</span>
+						<p className='text-lg font-semibold text-center'>
+							You currently have no users.
+						</p>
+						<p className='text-gray-600 text-center'>
+							Please checkout to start chatting with your vendor.
+						</p>
+					</div>
 				)}
 			</div>
 			{/* messages */}

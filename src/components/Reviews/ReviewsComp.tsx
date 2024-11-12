@@ -7,7 +7,6 @@ import ReviewPage from "@/pages/Dashboard/Subpages/ReviewPage";
 
 const ReviewComponent = ({ showReview, setShowReview }: any) => {
 	const { id } = useParams();
-
 	const [overallRating, setOverallRating] = useState(0);
 	const [totalReviews, setTotalReviews] = useState(0);
 	const [ratingsBreakdown, setRatingsBreakdown] = useState<any>({
@@ -18,16 +17,19 @@ const ReviewComponent = ({ showReview, setShowReview }: any) => {
 		1: 0,
 	});
 	const [reviews, setReviews] = useState([]);
+	const [hasFetched, setHasFetched] = useState(false); // New state variable
 
-	const { data } = useViewProductReviewsQuery({ product_id: id });
+	const { data } = useViewProductReviewsQuery({ product_id: id, skip: !id });
 	const user = useSelector(
 		(state: any) => state?.persistedReducer?.currentUser,
 	);
 
 	useEffect(() => {
-		if (data && data.success) {
+		if (data && data.success && !hasFetched) {
+			// Only fetch if not already fetched
+			setHasFetched(true);
 			const reviewsData = data.data.map((review: any) => ({
-				name: `${user.firstname} ${user.lastname}`, // Assuming user name from Redux store
+				name: `${user.firstname} ${user.lastname}`,
 				date: moment(review.createdAt).calendar(),
 				rating: review.rating,
 				comment: review.message,
@@ -51,8 +53,7 @@ const ReviewComponent = ({ showReview, setShowReview }: any) => {
 			setTotalReviews(ratingsCount);
 			setRatingsBreakdown(breakdown);
 		}
-	}, [data, user]);
-
+	}, [data, user, hasFetched]); // Add hasFetched to dependency array
 	return (
 		<div className='p-4 max-w-4xl mx-auto '>
 			<div className='flex flex-col md:flex-row justify-between items-center mb-6'>

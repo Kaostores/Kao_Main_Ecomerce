@@ -59,8 +59,6 @@ export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
 
 	const dispatch = useDispatch();
 
-	console.log("this are cat itemdfghjhgfs", cartItems);
-
 	const config = {
 		public_key: "FLWPUBK_TEST-0822da2514e8dd6f0d0441f20d18337a-X",
 		tx_ref: `KAO-${Date.now()}`,
@@ -78,7 +76,6 @@ export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
 			logo: "https://example.com/path/to/logo.png",
 		},
 		callback: (response: any) => {
-			console.log("Flutterwave payment response:", response);
 			// Check the correct response field for successful payment
 			if (
 				response.status === "successful" ||
@@ -102,28 +99,22 @@ export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
 					orderNote: "Additional notes about the order",
 				};
 
-				console.log("response", response);
-
 				createOrder(orderData)
 					.unwrap()
-					.then((orderResponse) => {
-						console.log("Order created successfully:", orderResponse);
+					.then(() => {
 						ShowToast(true, "Order created successfully!");
 						dispatch(clearCart());
 					})
-					.catch((error) => {
-						console.error("Failed to create order:", error);
+					.catch(() => {
 						ShowToast(false, "Failed to create order");
 					});
 			} else {
-				console.error("Payment was not successful:", response);
 				ShowToast(false, "Payment failed");
 			}
 			closePaymentModal();
 		},
 
 		onClose: () => {
-			console.log("Payment widget closed");
 			ShowToast(false, "Transaction terminated");
 		},
 	};
