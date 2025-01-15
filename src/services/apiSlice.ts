@@ -320,10 +320,17 @@ export const api = createApi({
 				method: "GET",
 			}),
 		}),
+		getAllTransactios: builder.query({
+			query: () => ({
+				url: `/transactions/get/transactions`,
+				method: "GET",
+			}),
+		}),
 	}),
 });
 
 export const {
+	useGetAllTransactiosQuery,
 	useViewAllProductsQuery,
 	useGetNotificationsQuery,
 	useCheckOutPaymentQuery,
