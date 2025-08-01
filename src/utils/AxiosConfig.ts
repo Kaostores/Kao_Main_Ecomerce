@@ -9,7 +9,7 @@ const token = `Bearer ${cookies.get("Kao_cookie_user") || ""}`;
 
 // Configure Axios instance
 export const Instance = axios.create({
-	baseURL: "https://kaostores.onrender.com/api/v1",
+	baseURL: "https://kaostores-3o74.onrender.com/api/v1",
 	headers: {
 		Authorization: token,
 	},

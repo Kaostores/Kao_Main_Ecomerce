@@ -23,6 +23,7 @@ const PaymentSuccess = () => {
 							params: { status, tx_ref, transaction_id },
 						},
 					);
+					// console.log("wallet funding response",);
 					if (response.data.success) {
 						// Handle successful verification if needed
 					} else {

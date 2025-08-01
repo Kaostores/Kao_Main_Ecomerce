@@ -5,7 +5,7 @@ const cookies = new Cookies();
 
 export const api = createApi({
 	baseQuery: fetchBaseQuery({
-		baseUrl: "https://kaostores.onrender.com/api/v1",
+		baseUrl: "https://kaostores-3o74.onrender.com/api/v1",
 		prepareHeaders: (headers) => {
 			const token = cookies.get("Kao_cookie_user");
 			if (token) {

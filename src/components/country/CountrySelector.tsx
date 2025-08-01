@@ -35,7 +35,7 @@ export function CountrySelector() {
 	React.useEffect(() => {
 		const fetchCountries = async () => {
 			try {
-				const response = await fetch("https://restcountries.com/v3.1/all");
+				const response = await fetch("https://restcountries.com/v3.1/all?fields=name,cca2,currencies");
 				const data = await response.json();
 
 				// Map countries to the desired format using cca2 for 2-letter country codes

@@ -230,7 +230,7 @@ const Header = () => {
 					) : (
 						<>
 							{catData?.data?.length > 0 ? (
-								catData.data?.slice(0, 8)?.map((props: any, index: number) => (
+								catData.data?.slice(0, 6)?.map((props: any, index: number) => (
 									<div
 										key={index}
 										onClick={() => {

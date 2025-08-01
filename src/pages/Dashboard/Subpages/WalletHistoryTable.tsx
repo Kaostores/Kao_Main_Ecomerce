@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { useState, useEffect, useMemo } from "react";
 import { CalendarIcon } from "lucide-react";
@@ -38,10 +38,7 @@ export default function PaymentHistory() {
 	const { data: transactions } = useGetAllTransactiosQuery({});
 	console.log("Transactions response:", transactions); // Log the response for debugging
 
-	const [dateRange, setDateRange] = useState<{
-		from: Date | null;
-		to: Date | null;
-	}>({
+	const [dateRange, setDateRange] = useState<any>({
 		from: null,
 		to: null,
 	});
@@ -58,11 +55,14 @@ export default function PaymentHistory() {
 
 		let result = [...transactions.data]; // Copy the transactions data to avoid direct mutation
 
-		// Apply date range filter
+		// Apply date range filter safely
 		if (dateRange.from && dateRange.to) {
 			result = result.filter((item: Transaction) => {
 				const itemDate = new Date(item.date);
-				return itemDate >= dateRange.from && itemDate <= dateRange.to;
+				return (
+					itemDate >= new Date(dateRange.from) &&
+					itemDate <= new Date(dateRange.to)
+				);
 			});
 		}
 
@@ -148,9 +148,12 @@ export default function PaymentHistory() {
 							<Calendar
 								mode='range'
 								selected={dateRange}
-								onSelect={setDateRange}
+								onSelect={(range) =>
+									setDateRange(range || { from: null, to: null })
+								}
 								numberOfMonths={2}
 							/>
+
 							<div className='grid grid-cols-2 gap-2 p-3 text-white'>
 								<Button
 									size='sm'
