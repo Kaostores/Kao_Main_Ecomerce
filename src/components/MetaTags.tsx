@@ -12,7 +12,7 @@ function MetaTags({ title = "", image = "", name = "" }) {
 			<meta property='og:url' content={window.location.href} />
 			<meta property='og:type' content='website' />
 			<meta property='og:title' content={title} />
-			<meta property='og:description' content='Wonderful and amazing product' />
+			<meta property='og:description' content='Shop trusted products on KAO with secure payments and fast delivery.' />
 			{/* OG image tags */}
 			<meta property='og:image' content={image} />
 			<meta property='og:image:secure_url' content={image} />
@@ -26,7 +26,7 @@ function MetaTags({ title = "", image = "", name = "" }) {
 			<meta property='twitter:image' content={image} />
 			<meta
 				name='twitter:description'
-				content='Wonderful and amazing product'
+				content='Shop trusted products on KAO with secure payments and fast delivery.'
 			/>
 		</Helmet>
 	);
