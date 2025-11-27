@@ -2,10 +2,13 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_API_URL || "";
+
+
 
 export const api = createApi({
 	baseQuery: fetchBaseQuery({
-		baseUrl: "https://kaostores-3o74.onrender.com/api/v1",
+		baseUrl: API_URL,
 		prepareHeaders: (headers) => {
 			const token = cookies.get("Kao_cookie_user");
 			if (token) {
