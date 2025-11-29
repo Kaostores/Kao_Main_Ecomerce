@@ -59,8 +59,9 @@ export const FlutterWavePayment: React.FC<FlutterWavePaymentProps> = ({
 
 	const dispatch = useDispatch();
 
+	const publicKey = import.meta.env.VITE_FLUTTERWAVE_PUBLIC_KEY as string | undefined;
 	const config = {
-		public_key: (import.meta.env as any).VITE_FLUTTERWAVE_PUBLIC_KEY,
+		public_key: publicKey ?? "",
 		tx_ref: `KAO-${Date.now()}`,
 		amount,
 		currency: "NGN",
