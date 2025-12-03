@@ -14,7 +14,7 @@ const Hero = () => {
 				<a
 					className='flex-1'
 					target='_blank'
-					href='https://kao-web-seven.vercel.app/'>
+					href='https://sellowexpress.com/'>
 					<div className='bg-ascentBlue rounded-sm min-h-[70px] md:h-[70px] flex justify-between pl-5 pr-5 items-center flex-1 cursor-pointer'>
 						<div className='text-[17px]  sm:text-[14px] md:text-[14px] font-semibold text-primary cursor-pointer'>
 							Become an <br />
@@ -29,7 +29,7 @@ const Hero = () => {
 				<a
 					className='flex-1'
 					target='_blank'
-					href='https://kao-web-seven.vercel.app/'>
+					href=' https://sellowexpress.com/'>
 					<div className='bg-secondaryAscent rounded-sm min-h-[70px] md:h-[70px] flex justify-between pl-5 pr-5 items-center flex-1 '>
 						<div className='text-[17px] sm:text-[14px] md:text-[14px] font-semibold text-secondary  cursor-pointer'>
 							Sell On <br />

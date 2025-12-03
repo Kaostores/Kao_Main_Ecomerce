@@ -136,7 +136,7 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 				// Redirect user to Google OAuth URL
 				window.location.href = response.data.data;
 			} else {
-				console.error("Failed to initiate Google login");
+				// console.error("Failed to initiate Google login");
 			}
 		} catch (error) {
 			console.error("Error initiating Google login", error);
