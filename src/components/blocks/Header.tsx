@@ -66,9 +66,14 @@ const Header = () => {
 		(state) => state.persistedReducer.currentUser,
 	);
 
+	console.log('this is current', currentUser)
+
 	const isAuthenticated =
 		currentUser && Object.keys(currentUser || {}).length !== 0;
-	const { data: userCartData } = useViewAllCartCustomerQuery({});
+	
+	const { data: userCartData } = useViewAllCartCustomerQuery(undefined, {
+		skip: !isAuthenticated,
+	});
 
 	const cartItems = isAuthenticated
 		? userCartData?.data?.cart?.items || []

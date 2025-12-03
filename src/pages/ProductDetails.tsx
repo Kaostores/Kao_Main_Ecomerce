@@ -635,23 +635,17 @@ const ProductDetails = () => {
 							</div>
 						</div>
 						<div className='hidden sm:block md:block'>
-							<AccordionDemo />
+							<AccordionDemo data = {productData?.data}  />
 						</div>
 						<div className='xl:flex lg:flex hidden flex-col my-[20px]  '>
 							<div className='flex text-[16px] gap-10 sm:flex-col'>
-								<div
-									onClick={() => setToggleType("productdetails")}
-									className={` font-semibold cursor-pointer ${
-										toggleType === "productdetails" ? "text-primary" : null
-									}`}>
-									Product details
-								</div>
+							
 								<div
 									onClick={() => setToggleType("description")}
 									className={` font-semibold cursor-pointer ${
 										toggleType === "description" ? "text-primary" : null
 									}`}>
-									Description
+									Product details
 								</div>
 								<div
 									onClick={() => setToggleType("shipping")}

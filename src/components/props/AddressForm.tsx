@@ -29,16 +29,18 @@ const UserForm: React.FC<Iprops> = ({ togleBtn, actionType, addrData }) => {
 		country: "", //required
 	});
 
-	const [countries, setCountries] = useState([]);
+	const [countries, setCountries] = useState<any[]>([]);
 
 	// Fetch the list of countries from the API
 	useEffect(() => {
 		const fetchCountries = async () => {
 			try {
-				const response = await fetch("https://restcountries.com/v3.1/all");
+				const response = await fetch("https://restcountries.com/v3.1/all?fields=name,cca3");
 				const data = await response.json();
-				setCountries(data);
-			} catch (error) {}
+				setCountries(Array.isArray(data) ? data : []);
+			} catch (error) {
+				setCountries([]);
+			}
 		};
 
 		fetchCountries();
@@ -232,8 +234,7 @@ dark:text-white'>
 						<div className='mb-5 flex-1'>
 							<label
 								htmlFor='text'
-								className='block mb-[5px] text-[12px] font-medium 
-text-gray-900 dark:text-white'>
+								className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
 								Street
 							</label>
 							<input
@@ -255,8 +256,7 @@ dark:focus:ring-blue-500 dark:focus:border-blue-500'
 						<div className='mb-5 flex-1'>
 							<label
 								htmlFor='text'
-								className='block mb-[5px] text-[12px] font-medium 
-text-gray-900 dark:text-white'>
+								className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
 								PostalCode
 							</label>
 							<input
@@ -276,8 +276,7 @@ dark:focus:ring-blue-500 dark:focus:border-blue-500'
 						<div className='mb-5 flex-1'>
 							<label
 								htmlFor='text'
-								className='block mb-[5px] text-[12px] font-medium 
-text-gray-900 dark:text-white'>
+								className='block mb-[5px] text-[12px] font-medium text-gray-900 dark:text-white'>
 								country
 							</label>
 							<select
@@ -293,11 +292,11 @@ dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
 								required>
 								<option value=''>--Select a country--</option>
-								{countries.map((country: any) => (
+								{Array.isArray(countries) ? countries.map((country: any) => (
 									<option key={country.cca3} value={country.name.common}>
 										{country.name.common}
 									</option>
-								))}
+								)) : null}
 							</select>
 						</div>
 					</div>
@@ -495,11 +494,11 @@ dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
 dark:focus:ring-blue-500 dark:focus:border-blue-500'
 								required>
 								<option value=''>--Select a country--</option>
-								{countries.map((country: any) => (
+								{Array.isArray(countries) ? countries.map((country: any) => (
 									<option key={country.cca3} value={country.name.common}>
 										{country.name.common}
 									</option>
-								))}
+								)) : null}
 							</select>
 						</div>
 					</div>

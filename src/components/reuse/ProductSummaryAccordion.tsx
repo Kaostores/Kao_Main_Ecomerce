@@ -5,23 +5,18 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import ReviewComponent from "../Reviews/ReviewsComp";
+import TextSanitizer from "@/helpers/TextSanitizer";
 
-export function AccordionDemo() {
+export function AccordionDemo({data}:any) {
 	return (
-		<Accordion type='single' collapsible className='w-full'>
-			<AccordionItem value='item-1'>
+		<Accordion type='single' collapsible className='w-full' defaultValue='item-1'>
+			<AccordionItem  value='item-1'>
 				<AccordionTrigger>Product details</AccordionTrigger>
 				<AccordionContent>
-					Yes. It adheres to the WAI-ARIA design pattern.
+				<TextSanitizer description={data?.description ?? ''} />
 				</AccordionContent>
 			</AccordionItem>
-			<AccordionItem value='item-2'>
-				<AccordionTrigger>Description</AccordionTrigger>
-				<AccordionContent>
-					Yes. It comes with default styles that matches the other
-					components&apos; aesthetic.
-				</AccordionContent>
-			</AccordionItem>
+			
 			<AccordionItem value='item-3'>
 				<AccordionTrigger>Shipping</AccordionTrigger>
 				<AccordionContent>
