@@ -38,7 +38,8 @@ export const Reducers = createSlice({
 	initialState,
 	reducers: {
 		updateUserDetails: (state, action: PayloadAction<UserDetails>) => {
-			state.currentUser = action.payload;
+			const { password, ...safe } = (action.payload || {}) as UserDetails;
+			state.currentUser = safe;
 		},
 
 		logoutUser: () => initialState,
@@ -58,7 +59,7 @@ export const Reducers = createSlice({
 		addToCart: (state, action: PayloadAction<any>) => {
 			const itemToAdd = action.payload;
 
-			console.log("item added", itemToAdd);
+			// removed noisy console logging to prevent leaking user actions
 			const existingItem = state.cart.find(
 				(item) =>
 					item.id === itemToAdd.productID ||
