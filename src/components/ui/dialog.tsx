@@ -18,7 +18,7 @@ const DialogOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<DialogPrimitive.Overlay
 		style={{
-			zIndex: 999999999999999,
+			zIndex: 2147483646,
 		}}
 		ref={ref}
 		className={cn(
@@ -38,7 +38,7 @@ const DialogContent = React.forwardRef<
 		<DialogOverlay />
 		<DialogPrimitive.Content
 			style={{
-				zIndex: 999999999999999,
+				zIndex: 2147483646,
 			}}
 			ref={ref}
 			className={cn(

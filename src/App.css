@@ -40,3 +40,13 @@
 .read-the-docs {
   color: #888;
 }
+
+/* React-Toastify: ensure toast is above all overlays/modals */
+.Toastify__toast-container {
+  z-index: 2147483647 !important;
+  pointer-events: none; /* container ignores clicks */
+}
+.Toastify__toast {
+  pointer-events: auto; /* toast itself can be clicked */
+  z-index: 2147483647 !important;
+}

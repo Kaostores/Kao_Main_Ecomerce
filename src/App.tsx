@@ -13,6 +13,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { getCurrencyByCountry } from "./helpers";
 import { useDispatch } from "react-redux";
 import { setUserLocation, storeSelectedCurrency } from "./services/reducers";
+import { createPortal } from "react-dom";
 
 function App() {
 	const [dialogState, setDialogState] = useState({ type: "", state: false });
@@ -68,7 +69,10 @@ function App() {
 
 	return (
 		<HelmetProvider>
-			<ToastContainer />
+			{createPortal(
+				<ToastContainer style={{ zIndex: 2147483647, position: "fixed" }} />,
+				document.body
+			)}
 			<Provider store={store}>
 				<PersistGate persistor={persistor} loading={null}>
 					<RouterProvider router={createBrowserRouter(routes)} />

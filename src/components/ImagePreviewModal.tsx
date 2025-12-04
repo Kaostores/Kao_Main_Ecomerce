@@ -12,11 +12,13 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
 	const [selectedImage, setSelectedImage] = useState<any>(images[0]);
 
 	return (
-		<div className='fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center'>
+		<div style={{
+			zIndex : 99999999
+		}} className='fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center'>
 			<div className='bg-white p-4 rounded-lg relative w-[500px] h-[90vh] sm:h-[80vh] sm:w-[90%]'>
 				<h1 className='font-bold'>Image Preview</h1>
 				<button
-					className='absolute top-2 right-2 text-gray-600 '
+					className='absolute  top-2 right-2 text-gray-600 '
 					onClick={onClose}>
 					&times;
 				</button>

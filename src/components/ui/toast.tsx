@@ -13,7 +13,7 @@ const ToastViewport = React.forwardRef<
 >(({ className, ...props }, ref) => (
 	<ToastPrimitives.Viewport
 		style={{
-			zIndex: 99999,
+			zIndex: 2147483647,
 		}}
 		ref={ref}
 		className={cn(
