@@ -147,7 +147,7 @@ const Home = () => {
 					<AdvertComp data={posterData?.data[0]?.image} />
 					<AdvertComp data={posterData?.data[2]?.image} />
 				</div>
-				<AdvertComp data={posterData?.data[1]?.image} />
+				<AdvertComp data={'https://ng.jumia.is/cms/0-1-weekly-cps/0-2025/0-0-1-holiday-sales/Brand-days/04-poco/POCO-HOLIDAY-SALE-brands-top-strip-.gif'} />
 			</div>
 
 			<h3 className='mt-7 font-bold mb-3'>Electronics/Appliances</h3>
