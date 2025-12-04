@@ -219,6 +219,8 @@ const Header = () => {
 			<div className='hidden sm:flex flex-1  w-[90%] sm:mb-3'>
 				<SearchInput />
 			</div>
+			{/* Promo GIF banner similar to Jumia */}	
+		
 			<div className='bg-primary sm:hidden flex justify-center items-center text-white w-[100%] h-[45px]'>
 				<div className='w-[85%] text-[14px] md:text-[7px] whitespace-nowrap  h-[100%] flex gap-10 items-center'>
 					<div
