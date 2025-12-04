@@ -6,6 +6,8 @@ const BrandData = () => {
 	const { data: brandData, isLoading: isLoadingBrand } =
 		useViewAllSpotlightQuery({});
 
+		
+
 	return (
 		<div>
 			{isLoadingBrand && !brandData ? (

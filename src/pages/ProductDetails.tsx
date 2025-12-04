@@ -163,7 +163,7 @@ const ProductDetails = () => {
 	}, [productData]);
 
 	const [newBookMark, { data: newBookMarkData }] = useAddNewBookmarkMutation();
-	const [toggleType, setToggleType] = useState("productdetails");
+	const [toggleType, setToggleType] = useState("description");
 
 	// console.log("boooookmark", newBookMarkData);
 
@@ -365,7 +365,7 @@ const ProductDetails = () => {
 									) : (
 										<TextSanitizer
 											description={productData?.data.description}
-											showImages={false}
+											showImages={true}
 										/>
 									)}
 								</div>
@@ -684,7 +684,7 @@ const ProductDetails = () => {
 
 							{toggleType === "description" && (
 								<div className='mt-[15px] text-[14px] '>
-									<TextSanitizer description={productData?.data.description} />
+									<TextSanitizer description={productData?.data.description} showImages={true} />
 								</div>
 							)}
 

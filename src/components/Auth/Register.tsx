@@ -416,10 +416,12 @@ const Auth = ({ open, onClose, onOpenLogin }: any) => {
 
 			// Handle successful registration
 			if (response?.status === 200) {
-				// Set cookies after registration success
+				// Set cookies after registration success (secure attributes)
 				cookies.set("Kao_cookie_user", response?.data?.token, {
 					expires: expiryDate,
 					path: "/",
+					sameSite: "lax",
+					secure: window.location.protocol === "https:",
 				});
 
 				// Dispatch user details to the store

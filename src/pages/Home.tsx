@@ -80,7 +80,6 @@ const Home = () => {
 				params: { code },
 			});
 
-			console.log("this is the response", response);
 			if (response.data.success) {
 				cookies.set("Kao_cookie_user", response?.data?.token, {
 					expires: expiryDate,

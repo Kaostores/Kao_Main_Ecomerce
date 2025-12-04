@@ -102,7 +102,7 @@ const Header = () => {
 						<AiOutlineMenu />
 					</div>
 					<Link to='/'>
-						<img onClick={show} src={pic} className='w-[70px]' />
+						<img onClick={show} src={pic} className='w-[70px]' alt='KAO logo' />
 					</Link>
 				</div>
 
@@ -204,7 +204,7 @@ const Header = () => {
 					)}
 					<Link to='/cart'>
 						<div className='relative inline-block  '>
-							<div className=' text-[20px] p-2 mt-2 rounded-full focus:outline-none text-primary'>
+							<div className=' text-[20px] p-2 mt-2 rounded-full focus:outline-none text-primary' aria-label='View cart'>
 								<MdOutlineShoppingCart />
 							</div>
 

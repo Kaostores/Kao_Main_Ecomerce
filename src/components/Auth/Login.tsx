@@ -34,12 +34,16 @@ import { useAppSelector } from "@/services/store";
 import { Instance } from "@/utils/AxiosConfig";
 
 const formSchema = z.object({
-	email: z.string().min(2, {
-		message: "email is required",
-	}),
-	password: z.string().min(2, {
-		message: "password is required",
-	}),
+  email: z
+    .string({ required_error: "email is required" })
+    .email("please enter a valid email address"),
+  password: z
+    .string({ required_error: "password is required" })
+    .min(8, "password must be at least 8 characters")
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+      "password must include uppercase, lowercase, and a number"
+    ),
 });
 
 const Login = ({ open, onClose, onOpenRegister }: any) => {
@@ -84,10 +88,12 @@ const Login = ({ open, onClose, onOpenRegister }: any) => {
 			if (response?.status === 200) {
 				toast.success("Login Successful");
 
-				// Set cookie after login success
+				// Set cookie after login success with secure attributes
 				cookies.set("Kao_cookie_user", response?.data?.token, {
 					expires: expiryDate,
 					path: "/",
+					sameSite: "lax",
+					secure: window.location.protocol === "https:",
 				});
 
 				// Dispatch user details to the store
